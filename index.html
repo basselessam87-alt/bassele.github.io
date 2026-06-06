@@ -138,13 +138,24 @@
   }
   .video-card:hover { transform: translateY(-5px); border-color: rgba(201,168,76,0.45); }
   .video-thumb {
-    background: rgba(201,168,76,0.05);
-    height: 160px;
+    height: 180px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-bottom: 1px solid rgba(201,168,76,0.1);
+    position: relative;
+    overflow: hidden;
   }
+  .video-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+    transition: transform .4s;
+  }
+  .video-card:hover .video-thumb img { transform: scale(1.05); }
+  .play-btn { position: relative; z-index: 1; }
   .play-btn {
     width: 54px;
     height: 54px;
@@ -291,6 +302,7 @@
   <div class="videos-grid">
     <a class="video-card" href="https://youtu.be/TYRedJ9sD0M?si=ML3FZFbC2KaPleWW" target="_blank">
       <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/TYRedJ9sD0M/hqdefault.jpg" alt="سورة البقرة 1445">
         <div class="play-btn">
           <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
         </div>
@@ -303,6 +315,7 @@
     </a>
     <a class="video-card" href="https://youtu.be/q95qeWIMXa0" target="_blank">
       <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/q95qeWIMXa0/hqdefault.jpg" alt="سورة البقرة 1446">
         <div class="play-btn">
           <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
         </div>
@@ -315,6 +328,7 @@
     </a>
     <a class="video-card" href="https://youtu.be/sEOeiYWu2TE" target="_blank">
       <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/sEOeiYWu2TE/hqdefault.jpg" alt="سورة البقرة 1447">
         <div class="play-btn">
           <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
         </div>
