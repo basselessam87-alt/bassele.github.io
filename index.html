@@ -278,7 +278,7 @@
   </div>
   <div class="stat-row">
     <div class="stat">
-      <div class="stat-num">45K+</div>
+      <div class="stat-num" id="views-count">...</div>
       <div class="stat-label">مشاهدة في سورة البقرة</div>
     </div>
     <div class="stat">
@@ -385,5 +385,29 @@
   صنع بـ ❤️ بواسطة <span>باسل عصام</span> — تدبّر القرآن 360°
 </footer>
 
+<script>
+  const API_KEY = "AIzaSyBSItbiAJqMIaLBQmCqcVpVyEsJuQKhGGw";
+  const VIDEO_ID = "TYRedJ9sD0M";
+
+  function formatViews(num) {
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
+    if (num >= 1000) return (num / 1000).toFixed(1) + "K";
+    return num.toLocaleString();
+  }
+
+  async function fetchViews() {
+    try {
+      const url = `https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${VIDEO_ID}&key=${API_KEY}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      const views = data.items[0].statistics.viewCount;
+      document.getElementById("views-count").textContent = formatViews(Number(views));
+    } catch (e) {
+      document.getElementById("views-count").textContent = "45K+";
+    }
+  }
+
+  fetchViews();
+</script>
 </body>
 </html>
