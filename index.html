@@ -233,6 +233,161 @@
   }
   .contact-btn:hover { background: rgba(201,168,76,0.18); }
 
+  /* QURAN SECTION */
+  .quran-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .surah-search-input {
+    flex: 1;
+    min-width: 200px;
+    background: var(--dark3);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 8px;
+    padding: .65rem 1.1rem;
+    color: var(--text);
+    font-family: 'Cairo', sans-serif;
+    font-size: .88rem;
+    direction: rtl;
+    outline: none;
+    transition: border-color .3s;
+  }
+  .surah-search-input:focus { border-color: var(--gold); }
+  .surah-search-input::placeholder { color: var(--muted); }
+  .surah-filter-btns { display: flex; gap: .5rem; }
+  .filter-btn {
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.25);
+    color: var(--muted);
+    padding: .5rem 1.1rem;
+    border-radius: 8px;
+    font-family: 'Cairo', sans-serif;
+    font-size: .82rem;
+    cursor: pointer;
+    transition: all .3s;
+  }
+  .filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .filter-btn.active { background: rgba(201,168,76,0.15); border-color: var(--gold); color: var(--gold); }
+
+  .surahs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: .85rem;
+  }
+  .surah-card {
+    background: var(--dark3);
+    border: 1px solid rgba(201,168,76,0.12);
+    border-radius: 10px;
+    padding: 1rem .9rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    transition: all .25s;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+  .surah-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.04) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity .25s;
+  }
+  .surah-card:hover { transform: translateY(-3px); border-color: rgba(201,168,76,0.4); box-shadow: 0 4px 20px rgba(201,168,76,0.08); }
+  .surah-card:hover::before { opacity: 1; }
+  .surah-num {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Amiri', serif;
+    font-size: .82rem;
+    color: var(--gold);
+    flex-shrink: 0;
+    font-weight: 700;
+  }
+  .surah-details { flex: 1; min-width: 0; }
+  .surah-name-ar { font-family: 'Amiri', serif; font-size: 1rem; color: #fff; line-height: 1.2; }
+  .surah-meta { font-size: .68rem; color: var(--muted); margin-top: .15rem; }
+  .surah-type-badge {
+    font-size: .6rem;
+    padding: .15rem .45rem;
+    border-radius: 4px;
+    margin-right: .3rem;
+  }
+  .makki { background: rgba(201,168,76,0.12); color: var(--gold); }
+  .madani { background: rgba(100,160,255,0.12); color: #80aaf0; }
+
+  .no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: var(--muted);
+    font-size: .9rem;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(5,8,20,0.92);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 1rem;
+    opacity: 0; pointer-events: none;
+    transition: opacity .3s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: #111827;
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 16px;
+    width: 100%; max-width: 620px;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(20px);
+    transition: transform .3s;
+    position: relative;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal-header {
+    padding: 1.4rem 1.6rem 1rem;
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .modal-title { font-family: 'Amiri', serif; font-size: 1.4rem; color: #fff; }
+  .modal-sub { font-size: .78rem; color: var(--gold); margin-top: .2rem; }
+  .modal-close {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);
+    color: var(--gold); font-size: 1.1rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s; flex-shrink: 0;
+  }
+  .modal-close:hover { background: rgba(201,168,76,0.2); }
+  .modal-body { padding: 1.4rem 1.6rem; }
+  .modal-yt { width: 100%; aspect-ratio: 16/9; border-radius: 10px; border: none; margin-bottom: 1.2rem; background: #000; }
+  .modal-no-yt {
+    width: 100%; aspect-ratio: 16/9; border-radius: 10px;
+    background: rgba(201,168,76,0.04); border: 1px dashed rgba(201,168,76,0.2);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    margin-bottom: 1.2rem; color: var(--muted); font-size: .85rem; gap: .5rem;
+  }
+  .modal-no-yt span { font-size: 2rem; }
+  .audio-section { background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.15); border-radius: 10px; padding: 1.1rem; }
+  .audio-label { font-size: .75rem; color: var(--gold); letter-spacing: 2px; margin-bottom: .6rem; }
+  .audio-player { width: 100%; height: 44px; filter: sepia(30%) saturate(0.6); border-radius: 6px; }
+  .audio-coming { text-align: center; color: var(--muted); font-size: .82rem; padding: .5rem; }
+
   /* FOOTER */
   footer {
     text-align: center;
@@ -262,6 +417,7 @@
   <div class="nav-links">
     <a href="#videos">الفيديوهات</a>
     <a href="#playlist">المصحف المرتل</a>
+    <a href="#quran">السور</a>
     <a href="#about">عني</a>
   </div>
 </nav>
@@ -383,6 +539,46 @@
   </div>
 </section>
 
+<div class="divider"></div>
+
+<!-- QURAN 114 SURAHS -->
+<section id="quran">
+  <div class="section-tag">المصحف المرتل كاملاً</div>
+  <div class="section-title">114 سورة من الحرم المكي</div>
+  <div class="section-sub">بصوت الشيخ ماهر المعيقلي — اضغط على أي سورة للاستماع</div>
+
+  <div class="quran-controls">
+    <input type="text" id="surah-search" placeholder="ابحث عن سورة..." class="surah-search-input" />
+    <div class="surah-filter-btns">
+      <button class="filter-btn active" data-filter="all">الكل</button>
+      <button class="filter-btn" data-filter="makki">مكية</button>
+      <button class="filter-btn" data-filter="madani">مدنية</button>
+    </div>
+  </div>
+
+  <div class="surahs-grid" id="surahs-grid"></div>
+</section>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="surah-modal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modal-title">سورة</div>
+        <div class="modal-sub">الشيخ ماهر المعيقلي • الحرم المكي</div>
+      </div>
+      <button class="modal-close" onclick="closeModalBtn()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="modal-yt-wrap"></div>
+      <div class="audio-section">
+        <div class="audio-label">🎧 استمع إلى السورة</div>
+        <div id="modal-audio-wrap"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <footer>
   صنع بـ  بواسطة <span>باسل عصام</span> — تدبّر القرآن 
 </footer>
@@ -410,6 +606,316 @@
   }
 
   fetchViews();
+
+  // ─── MP3 Map from Archive.org ───
+  const mp3Map = {
+    "إبراهيم": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85.mp3",
+    "آل عمران": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%20%D8%B9%D9%85%D8%B1%D8%A7%D9%86.mp3",
+    "الأحزاب": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%A7%D8%AD%D8%B2%D8%A7%D8%A8.mp3",
+    "الأحقاف": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%A7%D8%AD%D9%82%D8%A7%D9%81.mp3",
+    "الإسراء": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%A7%D8%B3%D8%B1%D8%A7%D8%A1.mp3",
+    "الأعراف": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%A7%D8%B9%D8%B1%D8%A7%D9%81.mp3",
+    "الأعلى": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%A7%D8%B9%D9%84%D9%89.mp3",
+    "الأنبياء": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%A7%D9%86%D8%A8%D9%8A%D8%A7%D8%A1.mp3",
+    "الإنسان": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%A7%D9%86%D8%B3%D8%A7%D9%86.mp3",
+    "الانشقاق": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%A7%D9%86%D8%B4%D9%82%D8%A7%D9%82.mp3",
+    "الأنعام": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%A7%D9%86%D8%B9%D8%A7%D9%85.mp3",
+    "الأنفال": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%A7%D9%86%D9%81%D8%A7%D9%84.mp3",
+    "الانفطار": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%A7%D9%86%D9%81%D8%B7%D8%A7%D8%B1.mp3",
+    "البروج": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AC.mp3",
+    "البقرة": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%A8%D9%82%D8%B1%D8%A9.mp3",
+    "البلد": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%A8%D9%84%D8%AF.mp3",
+    "البينة": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%A8%D9%8A%D9%86%D8%A9.mp3",
+    "التحريم": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AA%D8%AD%D8%B1%D9%8A%D9%85.mp3",
+    "التغابن": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AA%D8%BA%D8%A7%D8%A8%D9%86.mp3",
+    "التكوير": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AA%D9%83%D9%88%D9%8A%D8%B1.mp3",
+    "التوبة": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AA%D9%88%D8%A8%D8%A9.mp3",
+    "التين": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AA%D9%8A%D9%86.mp3",
+    "الجاثية": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AC%D8%A7%D8%AB%D9%8A%D8%A9.mp3",
+    "الجمعة": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AC%D9%85%D8%B9%D8%A9.mp3",
+    "الجن": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AC%D9%86.mp3",
+    "الحاقة": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AD%D8%A7%D9%82%D8%A9.mp3",
+    "الحج": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AD%D8%AC%20.mp3",
+    "الحجر": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AD%D8%AC%D8%B1.mp3",
+    "الحجرات": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AD%D8%AC%D8%B1%D8%A7%D8%AA.mp3",
+    "الحديد": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AD%D8%AF%D9%8A%D8%AF.mp3",
+    "الحشر": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AD%D8%B4%D8%B1.mp3",
+    "الدخان": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AF%D8%AE%D8%A7%D9%86.mp3",
+    "الذاريات": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B0%D8%A7%D8%B1%D9%8A%D8%A7%D8%AA.mp3",
+    "الرحمن": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B1%D8%AD%D9%85%D9%86.mp3",
+    "الرعد": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B1%D8%B9%D8%AF.mp3",
+    "الروم": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B1%D9%88%D9%85.mp3",
+    "الزخرف": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B2%D8%AE%D8%B1%D9%81.mp3",
+    "الزلزلة": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B2%D9%84%D8%B2%D9%84%D8%A9.mp3",
+    "الزمر": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B2%D9%85%D8%B1.mp3",
+    "السجدة": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B3%D8%AC%D8%AF%D8%A9.mp3",
+    "الشرح": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B4%D8%B1%D8%AD.mp3",
+    "الشعراء": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B4%D8%B9%D8%B1%D8%A7%D8%A1.mp3",
+    "الشمس": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B4%D9%85%D8%B3.mp3",
+    "الشورى": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B4%D9%88%D8%B1%D9%89.mp3",
+    "الصافات": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B5%D8%A7%D9%81%D8%A7%D8%AA%20.mp3",
+    "الصف": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B5%D9%81.mp3",
+    "الطارق": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B7%D8%A7%D8%B1%D9%82.mp3",
+    "الطلاق": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B7%D9%84%D8%A7%D9%82.mp3",
+    "الطور": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B7%D9%88%D8%B1%20%D9%83%D8%A7%D9%85%D9%84%D9%87.mp3",
+    "العاديات": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B9%D8%A7%D8%AF%D9%8A%D8%A7%D8%AA.mp3",
+    "العصر": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B9%D8%B5%D8%B1.mp3",
+    "العلق": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B9%D9%84%D9%82.mp3",
+    "العنكبوت": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B9%D9%86%D9%83%D8%A8%D9%88%D8%AA.mp3",
+    "الغاشية": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%BA%D8%A7%D8%B4%D9%8A%D8%A9.mp3",
+    "الفتح": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%81%D8%AA%D8%AD.mp3",
+    "الفجر": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%81%D8%AC%D8%B1.mp3",
+    "الفرقان": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%81%D8%B1%D9%82%D8%A7%D9%86.mp3",
+    "الفلق": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%81%D9%84%D9%82.mp3",
+    "الفيل": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%81%D9%8A%D9%84.mp3",
+    "القارعة": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%82%D8%A7%D8%B1%D8%B9%D8%A9.mp3",
+    "القصص": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%82%D8%B5%D8%B5.mp3",
+    "القلم": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%82%D9%84%D9%85.mp3",
+    "القمر": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%82%D9%85%D8%B1.mp3",
+    "القيامة": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%82%D9%8A%D8%A7%D9%85%D8%A9.mp3",
+    "الكهف": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%83%D9%87%D9%81.mp3",
+    "الكوثر": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%83%D9%88%D8%AB%D8%B1.mp3",
+    "الليل": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%84%D9%8A%D9%84.mp3",
+    "المؤمنون": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%85%D8%A4%D9%85%D9%86%D9%88%D9%86.mp3",
+    "المائدة": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%85%D8%A7%D8%A6%D8%AF%D8%A9.mp3",
+    "الماعون": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%85%D8%A7%D8%B9%D9%88%D9%86.mp3",
+    "المجادلة": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%85%D8%AC%D8%A7%D8%AF%D9%84%D8%A9.mp3",
+    "المدثر": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%85%D8%AF%D8%AB%D8%B1.mp3",
+    "المرسلات": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%85%D8%B1%D8%B3%D9%84%D8%A7%D8%AA.mp3",
+    "المزمل": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%85%D8%B2%D9%85%D9%84.mp3",
+    "المسد": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%85%D8%B3%D8%AF.mp3",
+    "المطففين": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%85%D8%B7%D9%81%D9%81%D9%8A%D9%86.mp3",
+    "المعارج": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D8%B1%D8%AC.mp3",
+    "الملك": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%85%D9%84%D9%83.mp3",
+    "الممتحنة": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%85%D9%85%D8%AA%D8%AD%D9%86%D8%A9.mp3",
+    "المنافقون": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D9%81%D9%82%D9%88%D9%86.mp3",
+    "النازعات": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%86%D8%A7%D8%B2%D8%B9%D8%A7%D8%AA.mp3",
+    "الناس": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%86%D8%A7%D8%B3.mp3",
+    "النبأ": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%86%D8%A8%D8%A7.mp3",
+    "النجم": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%86%D8%AC%D9%85.mp3",
+    "النحل": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%86%D8%AD%D9%84.mp3",
+    "النساء": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%86%D8%B3%D8%A7%D8%A1.mp3",
+    "النصر": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%86%D8%B5%D8%B1.mp3",
+    "النمل": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%86%D9%85%D9%84.mp3",
+    "النور": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%86%D9%88%D8%B1%20.mp3",
+    "الهمزة": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%87%D9%85%D8%B2%D8%A9.mp3",
+    "الواقعة": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%88%D8%A7%D9%82%D8%B9%D8%A9.mp3",
+    "سبأ": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%B3%D8%A8%D8%A7.mp3",
+    "ص": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%B5.mp3",
+    "طه": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%B7%D9%87.mp3",
+    "عبس": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%B9%D8%A8%D8%B3.mp3",
+    "غافر": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D8%BA%D8%A7%D9%81%D8%B1.mp3",
+    "فاطر": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D9%81%D8%A7%D8%B7%D8%B1.mp3",
+    "فصلت": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D9%81%D8%B5%D9%84%D8%AA.mp3",
+    "ق": "https://archive.org/download/20260613_20260613_1334/%D8%A7%D9%84%D9%85%D8%B5%D8%AD%D9%81/%D8%B3%D9%88%D8%B1%D8%A9%20%D9%82.mp3",
+  };
+
+  // YouTube links per surah (to be filled) - using playlist for now
+  const ytMap = {};
+
+  // Modal logic
+  function openSurah(name, num) {
+    document.getElementById("modal-title").textContent = "سورة " + name;
+
+    // YouTube
+    const ytWrap = document.getElementById("modal-yt-wrap");
+    if (ytMap[name]) {
+      ytWrap.innerHTML = `<iframe class="modal-yt" src="https://www.youtube.com/embed/${ytMap[name]}?autoplay=0" allowfullscreen></iframe>`;
+    } else {
+      ytWrap.innerHTML = `<div class="modal-no-yt"><span>▶</span><span>سيتم إضافة رابط اليوتيوب قريباً</span></div>`;
+    }
+
+    // Audio
+    const audioWrap = document.getElementById("modal-audio-wrap");
+    const mp3 = mp3Map[name];
+    if (mp3) {
+      audioWrap.innerHTML = `<audio class="audio-player" controls preload="none"><source src="${mp3}" type="audio/mpeg"></audio>`;
+    } else {
+      audioWrap.innerHTML = `<div class="audio-coming">⏳ سيتم رفع هذه السورة قريباً</div>`;
+    }
+
+    document.getElementById("surah-modal").classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModalBtn() {
+    const modal = document.getElementById("surah-modal");
+    modal.classList.remove("open");
+    document.body.style.overflow = "";
+    document.getElementById("modal-audio-wrap").innerHTML = "";
+    document.getElementById("modal-yt-wrap").innerHTML = "";
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById("surah-modal")) closeModalBtn();
+  }
+
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeModalBtn(); });
+
+  // ─── 114 Surahs Data ───
+  const surahs = [
+    {n:1,  ar:"الفاتحة",     type:"makki",  ayat:7},
+    {n:2,  ar:"البقرة",      type:"madani", ayat:286},
+    {n:3,  ar:"آل عمران",    type:"madani", ayat:200},
+    {n:4,  ar:"النساء",      type:"madani", ayat:176},
+    {n:5,  ar:"المائدة",     type:"madani", ayat:120},
+    {n:6,  ar:"الأنعام",     type:"makki",  ayat:165},
+    {n:7,  ar:"الأعراف",     type:"makki",  ayat:206},
+    {n:8,  ar:"الأنفال",     type:"madani", ayat:75},
+    {n:9,  ar:"التوبة",      type:"madani", ayat:129},
+    {n:10, ar:"يونس",        type:"makki",  ayat:109},
+    {n:11, ar:"هود",         type:"makki",  ayat:123},
+    {n:12, ar:"يوسف",        type:"makki",  ayat:111},
+    {n:13, ar:"الرعد",       type:"madani", ayat:43},
+    {n:14, ar:"إبراهيم",     type:"makki",  ayat:52},
+    {n:15, ar:"الحجر",       type:"makki",  ayat:99},
+    {n:16, ar:"النحل",       type:"makki",  ayat:128},
+    {n:17, ar:"الإسراء",     type:"makki",  ayat:111},
+    {n:18, ar:"الكهف",       type:"makki",  ayat:110},
+    {n:19, ar:"مريم",        type:"makki",  ayat:98},
+    {n:20, ar:"طه",          type:"makki",  ayat:135},
+    {n:21, ar:"الأنبياء",    type:"makki",  ayat:112},
+    {n:22, ar:"الحج",        type:"madani", ayat:78},
+    {n:23, ar:"المؤمنون",    type:"makki",  ayat:118},
+    {n:24, ar:"النور",       type:"madani", ayat:64},
+    {n:25, ar:"الفرقان",     type:"makki",  ayat:77},
+    {n:26, ar:"الشعراء",     type:"makki",  ayat:227},
+    {n:27, ar:"النمل",       type:"makki",  ayat:93},
+    {n:28, ar:"القصص",       type:"makki",  ayat:88},
+    {n:29, ar:"العنكبوت",    type:"makki",  ayat:69},
+    {n:30, ar:"الروم",       type:"makki",  ayat:60},
+    {n:31, ar:"لقمان",       type:"makki",  ayat:34},
+    {n:32, ar:"السجدة",      type:"makki",  ayat:30},
+    {n:33, ar:"الأحزاب",     type:"madani", ayat:73},
+    {n:34, ar:"سبأ",         type:"makki",  ayat:54},
+    {n:35, ar:"فاطر",        type:"makki",  ayat:45},
+    {n:36, ar:"يس",          type:"makki",  ayat:83},
+    {n:37, ar:"الصافات",     type:"makki",  ayat:182},
+    {n:38, ar:"ص",           type:"makki",  ayat:88},
+    {n:39, ar:"الزمر",       type:"makki",  ayat:75},
+    {n:40, ar:"غافر",        type:"makki",  ayat:85},
+    {n:41, ar:"فصلت",        type:"makki",  ayat:54},
+    {n:42, ar:"الشورى",      type:"makki",  ayat:53},
+    {n:43, ar:"الزخرف",      type:"makki",  ayat:89},
+    {n:44, ar:"الدخان",      type:"makki",  ayat:59},
+    {n:45, ar:"الجاثية",     type:"makki",  ayat:37},
+    {n:46, ar:"الأحقاف",     type:"makki",  ayat:35},
+    {n:47, ar:"محمد",        type:"madani", ayat:38},
+    {n:48, ar:"الفتح",       type:"madani", ayat:29},
+    {n:49, ar:"الحجرات",     type:"madani", ayat:18},
+    {n:50, ar:"ق",           type:"makki",  ayat:45},
+    {n:51, ar:"الذاريات",    type:"makki",  ayat:60},
+    {n:52, ar:"الطور",       type:"makki",  ayat:49},
+    {n:53, ar:"النجم",       type:"makki",  ayat:62},
+    {n:54, ar:"القمر",       type:"makki",  ayat:55},
+    {n:55, ar:"الرحمن",      type:"madani", ayat:78},
+    {n:56, ar:"الواقعة",     type:"makki",  ayat:96},
+    {n:57, ar:"الحديد",      type:"madani", ayat:29},
+    {n:58, ar:"المجادلة",    type:"madani", ayat:22},
+    {n:59, ar:"الحشر",       type:"madani", ayat:24},
+    {n:60, ar:"الممتحنة",    type:"madani", ayat:13},
+    {n:61, ar:"الصف",        type:"madani", ayat:14},
+    {n:62, ar:"الجمعة",      type:"madani", ayat:11},
+    {n:63, ar:"المنافقون",   type:"madani", ayat:11},
+    {n:64, ar:"التغابن",     type:"madani", ayat:18},
+    {n:65, ar:"الطلاق",      type:"madani", ayat:12},
+    {n:66, ar:"التحريم",     type:"madani", ayat:12},
+    {n:67, ar:"الملك",       type:"makki",  ayat:30},
+    {n:68, ar:"القلم",       type:"makki",  ayat:52},
+    {n:69, ar:"الحاقة",      type:"makki",  ayat:52},
+    {n:70, ar:"المعارج",     type:"makki",  ayat:44},
+    {n:71, ar:"نوح",         type:"makki",  ayat:28},
+    {n:72, ar:"الجن",        type:"makki",  ayat:28},
+    {n:73, ar:"المزمل",      type:"makki",  ayat:20},
+    {n:74, ar:"المدثر",      type:"makki",  ayat:56},
+    {n:75, ar:"القيامة",     type:"makki",  ayat:40},
+    {n:76, ar:"الإنسان",     type:"madani", ayat:31},
+    {n:77, ar:"المرسلات",    type:"makki",  ayat:50},
+    {n:78, ar:"النبأ",       type:"makki",  ayat:40},
+    {n:79, ar:"النازعات",    type:"makki",  ayat:46},
+    {n:80, ar:"عبس",         type:"makki",  ayat:42},
+    {n:81, ar:"التكوير",     type:"makki",  ayat:29},
+    {n:82, ar:"الانفطار",    type:"makki",  ayat:19},
+    {n:83, ar:"المطففين",    type:"makki",  ayat:36},
+    {n:84, ar:"الانشقاق",    type:"makki",  ayat:25},
+    {n:85, ar:"البروج",      type:"makki",  ayat:22},
+    {n:86, ar:"الطارق",      type:"makki",  ayat:17},
+    {n:87, ar:"الأعلى",      type:"makki",  ayat:19},
+    {n:88, ar:"الغاشية",     type:"makki",  ayat:26},
+    {n:89, ar:"الفجر",       type:"makki",  ayat:30},
+    {n:90, ar:"البلد",       type:"makki",  ayat:20},
+    {n:91, ar:"الشمس",       type:"makki",  ayat:15},
+    {n:92, ar:"الليل",       type:"makki",  ayat:21},
+    {n:93, ar:"الضحى",       type:"makki",  ayat:11},
+    {n:94, ar:"الشرح",       type:"makki",  ayat:8},
+    {n:95, ar:"التين",       type:"makki",  ayat:8},
+    {n:96, ar:"العلق",       type:"makki",  ayat:19},
+    {n:97, ar:"القدر",       type:"makki",  ayat:5},
+    {n:98, ar:"البينة",      type:"madani", ayat:8},
+    {n:99, ar:"الزلزلة",     type:"madani", ayat:8},
+    {n:100,ar:"العاديات",    type:"makki",  ayat:11},
+    {n:101,ar:"القارعة",     type:"makki",  ayat:11},
+    {n:102,ar:"التكاثر",     type:"makki",  ayat:8},
+    {n:103,ar:"العصر",       type:"makki",  ayat:3},
+    {n:104,ar:"الهمزة",      type:"makki",  ayat:9},
+    {n:105,ar:"الفيل",       type:"makki",  ayat:5},
+    {n:106,ar:"قريش",        type:"makki",  ayat:4},
+    {n:107,ar:"الماعون",     type:"makki",  ayat:7},
+    {n:108,ar:"الكوثر",      type:"makki",  ayat:3},
+    {n:109,ar:"الكافرون",    type:"makki",  ayat:6},
+    {n:110,ar:"النصر",       type:"madani", ayat:3},
+    {n:111,ar:"المسد",       type:"makki",  ayat:5},
+    {n:112,ar:"الإخلاص",     type:"makki",  ayat:4},
+    {n:113,ar:"الفلق",       type:"makki",  ayat:5},
+    {n:114,ar:"الناس",       type:"makki",  ayat:6},
+  ];
+
+  // Playlist video IDs mapped by surah number (from the channel playlist)
+  // Using the full playlist link for all surahs
+  const PLAYLIST_URL = "https://youtube.com/playlist?list=PLbmqYj4HTstumH44E4qU7cdNXTJ1TsAJr";
+
+  let activeFilter = "all";
+
+  function renderSurahs(list) {
+    const grid = document.getElementById("surahs-grid");
+    if (list.length === 0) {
+      grid.innerHTML = `<div class="no-results">لا توجد نتائج للبحث</div>`;
+      return;
+    }
+    grid.innerHTML = list.map(s => `
+      <div class="surah-card" onclick="openSurah('${s.ar}', ${s.n})" title="سورة ${s.ar} — ${s.ayat} آية" style="cursor:pointer">
+        <div class="surah-num">${s.n}</div>
+        <div class="surah-details">
+          <div class="surah-name-ar">${s.ar}</div>
+          <div class="surah-meta">
+            <span class="surah-type-badge ${s.type}">${s.type === 'makki' ? 'مكية' : 'مدنية'}</span>
+            ${s.ayat} آية
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function filterAndRender() {
+    const q = document.getElementById("surah-search").value.trim();
+    let list = surahs;
+    if (activeFilter !== "all") list = list.filter(s => s.type === activeFilter);
+    if (q) list = list.filter(s => s.ar.includes(q) || String(s.n).includes(q));
+    renderSurahs(list);
+  }
+
+  document.getElementById("surah-search").addEventListener("input", filterAndRender);
+
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      activeFilter = btn.dataset.filter;
+      filterAndRender();
+    });
+  });
+
+  renderSurahs(surahs);
 </script>
 </body>
 </html>
