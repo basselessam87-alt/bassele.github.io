@@ -75,6 +75,7 @@
 
   /* SURAHS */
   #surahs { padding: 5rem 2rem; max-width: 1200px; margin: 0 auto; }
+  #surahs.section-tag { color: var(--gold); font-size: .78rem; letter-spacing: 3px; margin-bottom: .5rem; }
   .surah-controls { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; align-items: center; }
   .surah-search { flex: 1; min-width: 200px; background: var(--dark3); border: 1px solid rgba(201,168,76,0.25); border-radius: 8px; padding: .65rem 1.1rem; color: var(--text); font-family: 'Cairo', sans-serif; font-size: .9rem; outline: none; transition: border-color .3s; direction: rtl; }
   .surah-search::placeholder { color: var(--muted); }
@@ -111,17 +112,36 @@
   .audio-wrap audio { width: 100%; outline: none; accent-color: var(--gold); margin-top: .5rem; }
   .audio-label { font-size: .78rem; color: var(--muted); margin-bottom: .5rem; display: flex; align-items: center; gap: .4rem; }
   .audio-label::before { content: '🎧'; }
-  .yt-wrap { background: rgba(255,80,80,0.06); border: 1px solid rgba(255,80,80,0.18); border-radius: 10px; padding: 1.1rem 1.4rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem; }
-  .yt-icon { font-size: 2rem; flex-shrink: 0; }
-  .yt-info { flex: 1; }
-  .yt-info p { font-size: .82rem; color: var(--muted); margin-bottom: .6rem; }
+  /* YouTube embed panel */
+  .yt-embed-wrap { margin-bottom: 1rem; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,80,80,0.2); background: #000; }
+  .yt-embed-wrap iframe { width: 100%; height: 240px; display: block; border: none; }
+  .yt-no-embed { background: rgba(255,80,80,0.06); border: 1px solid rgba(255,80,80,0.18); border-radius: 10px; padding: 1rem 1.4rem; margin-bottom: 1rem; display:flex; align-items:center; gap:.8rem; }
+  .yt-no-embed-icon { font-size: 1.6rem; flex-shrink:0; }
+  .yt-no-embed p { font-size: .82rem; color: var(--muted); margin-bottom: .5rem; }
+  .btn-yt { background: #cc0000; color: #fff; padding: .5rem 1rem; border-radius: 8px; text-decoration: none; font-size: .82rem; font-weight: 700; transition: all .3s; display: inline-flex; align-items: center; gap: .4rem; }
+  .btn-yt:hover { background: #ff2020; transform: translateY(-1px); }
+
+  /* Custom audio player */
+  .audio-player-wrap { background: var(--dark3); border: 1px solid rgba(201,168,76,0.15); border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1rem; }
+  .audio-player-label { font-size: .78rem; color: var(--muted); margin-bottom: .8rem; display:flex; align-items:center; gap:.4rem; }
+  .audio-player-label::before { content: '🎧'; }
+  .audio-progress-wrap { margin-bottom: .6rem; }
+  .audio-time-row { display:flex; justify-content:space-between; font-size:.7rem; color:var(--muted); margin-bottom:.3rem; }
+  .audio-progress { width:100%; height:5px; border-radius:99px; background: rgba(201,168,76,0.2); cursor:pointer; appearance:none; -webkit-appearance:none; outline:none; accent-color: var(--gold); }
+  .audio-controls { display:flex; align-items:center; justify-content:center; gap:.8rem; margin-top:.6rem; }
+  .audio-skip-btn { background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.25); color: var(--gold); width:44px; height:44px; border-radius:50%; cursor:pointer; font-family:'Cairo',sans-serif; font-size:.68rem; font-weight:700; transition:all .2s; display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1.1; }
+  .audio-skip-btn:hover { background: rgba(201,168,76,0.22); }
+  .audio-play-btn { background: var(--gold); border:none; color:#0a0f1e; width:54px; height:54px; border-radius:50%; cursor:pointer; font-size:1.3rem; display:flex; align-items:center; justify-content:center; transition:all .2s; flex-shrink:0; }
+  .audio-play-btn:hover { background: var(--gold-light); transform:scale(1.07); }
+  .audio-volume-row { display:flex; align-items:center; gap:.5rem; margin-top:.7rem; }
+  .audio-volume-row span { font-size:.75rem; color:var(--muted); }
+  .audio-volume { flex:1; height:4px; border-radius:99px; appearance:none; -webkit-appearance:none; outline:none; accent-color: var(--gold); cursor:pointer; background: rgba(201,168,76,0.2); }
+
   .coming-soon-box { background: rgba(201,168,76,0.06); border: 1px dashed rgba(201,168,76,0.25); border-radius: 10px; padding: 1.4rem; text-align: center; color: var(--muted); font-size: .9rem; margin-bottom: 1rem; }
   .coming-soon-box .icon { font-size: 2rem; margin-bottom: .5rem; }
   .coming-soon-box strong { color: var(--gold); display: block; margin-bottom: .3rem; }
   .modal-footer { display: flex; gap: .7rem; flex-wrap: wrap; justify-content: flex-end; margin-top: 1rem; }
   .btn-sm { padding: .5rem 1.1rem; font-size: .82rem; }
-  .btn-yt { background: #cc0000; color: #fff; padding: .5rem 1.1rem; border-radius: 8px; text-decoration: none; font-size: .82rem; font-weight: 700; transition: all .3s; display: inline-flex; align-items: center; gap: .4rem; }
-  .btn-yt:hover { background: #ff2020; transform: translateY(-1px); }
 
   footer { text-align: center; padding: 2.5rem; border-top: 1px solid rgba(201,168,76,0.1); color: var(--muted); font-size: .82rem; margin-top: 2rem; }
   footer span { color: var(--gold); }
@@ -145,8 +165,8 @@
   <div class="nav-links">
     <a href="#videos">الفيديوهات</a>
     <a href="#playlist">المصحف المرتل</a>
-    <a href="#surahs">السور</a>
     <a href="#about">عني</a>
+    <a href="#surahs">السور</a>
   </div>
 </nav>
 
@@ -215,24 +235,6 @@
 
 <div class="divider"></div>
 
-<section id="surahs">
-  <div class="section-tag">استمع الآن</div>
-  <div class="section-title">السور الـ 114</div>
-  <div class="section-sub">تلاوة الشيخ ماهر المعيقلي من الحرم المكي</div>
-  <div class="surah-controls">
-    <input class="surah-search" type="text" id="surahSearch" placeholder="ابحث باسم السورة أو رقمها..." oninput="filterSurahs()">
-    <div class="filter-btns">
-      <button class="filter-btn active" onclick="setFilter('all', this)">الكل</button>
-      <button class="filter-btn" onclick="setFilter('مكية', this)">مكية</button>
-      <button class="filter-btn" onclick="setFilter('مدنية', this)">مدنية</button>
-    </div>
-  </div>
-  <div class="surah-count" id="surahCount"><span>114</span> سورة</div>
-  <div class="surahs-grid" id="surahsGrid"></div>
-</section>
-
-<div class="divider"></div>
-
 <section id="about">
   <div class="section-tag">عن صاحب القناة</div>
   <div class="section-title">باسل عصام</div>
@@ -252,6 +254,24 @@
       </div>
     </div>
   </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="surahs">
+  <div class="section-tag">استمع الآن</div>
+  <div class="section-title">السور الـ 114</div>
+  <div class="section-sub">تلاوة الشيخ ماهر المعيقلي من الحرم المكي</div>
+  <div class="surah-controls">
+    <input class="surah-search" type="text" id="surahSearch" placeholder="ابحث باسم السورة أو رقمها..." oninput="filterSurahs()">
+    <div class="filter-btns">
+      <button class="filter-btn active" onclick="setFilter('all', this)">الكل</button>
+      <button class="filter-btn" onclick="setFilter('مكية', this)">مكية</button>
+      <button class="filter-btn" onclick="setFilter('مدنية', this)">مدنية</button>
+    </div>
+  </div>
+  <div class="surah-count" id="surahCount"><span>114</span> سورة</div>
+  <div class="surahs-grid" id="surahsGrid"></div>
 </section>
 
 <footer>
@@ -435,6 +455,15 @@ function buildGrid() {
   });
 }
 
+// Extract YouTube video ID from any youtu.be or youtube.com URL
+function extractYtId(url) {
+  if (!url) return null;
+  const m = url.match(/(?:youtu\.be\/|v=|\/embed\/)([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+let _currentAudio = null;
+
 function openModal(s) {
   document.getElementById('mNum').textContent = `سورة رقم ${s.n}`;
   document.getElementById('mTitle').textContent = s.name;
@@ -447,25 +476,55 @@ function openModal(s) {
   let content = '';
   let footer = '';
 
+  // ── 1. YouTube (on top) ──
+  const ytId = extractYtId(s.yt);
+  if (ytId) {
+    content += `<div class="yt-embed-wrap">
+      <iframe src="https://www.youtube.com/embed/${ytId}?rel=0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen title="سورة ${s.name}"></iframe>
+    </div>`;
+  } else if (s.yt) {
+    // has yt link but ID extraction failed — show link button instead
+    content += `<div class="yt-no-embed">
+      <div class="yt-no-embed-icon">▶</div>
+      <div><p>متاح على يوتيوب بجودة فيديو عالية</p>
+      <a href="${s.yt}" target="_blank" class="btn-yt">▶ شاهد على يوتيوب</a></div>
+    </div>`;
+  }
+
+  // ── 2. MP3 custom player (below YouTube) ──
   if (s.hasMp3) {
     const url = BASE + encodeURIComponent('سورة ' + s.name) + '.mp3';
-    content += `<div class="audio-wrap">
-      <div class="audio-label">استمع إلى التلاوة من الحرم المكي</div>
-      <audio controls preload="none" src="${url}">متصفحك لا يدعم تشغيل الصوت</audio>
+    content += `<div class="audio-player-wrap">
+      <div class="audio-player-label">استمع إلى التلاوة من الحرم المكي</div>
+      <audio id="modalAudio" preload="none" src="${url}" style="display:none"></audio>
+      <div class="audio-progress-wrap">
+        <div class="audio-time-row">
+          <span id="aCurrent">0:00</span>
+          <span id="aDuration">--:--</span>
+        </div>
+        <input class="audio-progress" type="range" id="aProgress" min="0" max="100" value="0" step="0.1">
+      </div>
+      <div class="audio-controls">
+        <button class="audio-skip-btn" onclick="skipAudio(-10)" title="رجوع 10 ثواني">
+          <span>↺</span><span>10</span>
+        </button>
+        <button class="audio-play-btn" id="aPlayBtn" onclick="togglePlay()">▶</button>
+        <button class="audio-skip-btn" onclick="skipAudio(10)" title="تقديم 10 ثواني">
+          <span>↻</span><span>10</span>
+        </button>
+      </div>
+      <div class="audio-volume-row">
+        <span>🔈</span>
+        <input class="audio-volume" type="range" id="aVolume" min="0" max="1" step="0.05" value="1">
+        <span>🔊</span>
+      </div>
     </div>`;
     footer += `<a href="${url}" download class="btn-outline btn-sm">⬇ تنزيل MP3</a>`;
   }
 
-  if (s.yt) {
-    content += `<div class="yt-wrap">
-      <div class="yt-icon">▶</div>
-      <div class="yt-info">
-        <p>متاح أيضاً على يوتيوب بجودة فيديو عالية من الحرم المكي</p>
-        <a href="${s.yt}" target="_blank" class="btn-yt">▶ شاهد على يوتيوب</a>
-      </div>
-    </div>`;
-  }
-
+  // ── 3. Nothing available ──
   if (!s.hasMp3 && !s.yt) {
     content = `<div class="coming-soon-box">
       <div class="icon">🕌</div>
@@ -479,13 +538,55 @@ function openModal(s) {
   document.getElementById('mFooter').innerHTML = footer;
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
+
+  // Wire up audio player events after DOM injection
+  const audio = document.getElementById('modalAudio');
+  if (audio) {
+    _currentAudio = audio;
+    audio.addEventListener('timeupdate', updateProgress);
+    audio.addEventListener('loadedmetadata', () => {
+      document.getElementById('aDuration').textContent = fmtTime(audio.duration);
+    });
+    audio.addEventListener('ended', () => {
+      document.getElementById('aPlayBtn').textContent = '▶';
+    });
+    const prog = document.getElementById('aProgress');
+    prog.addEventListener('input', () => { audio.currentTime = (prog.value / 100) * audio.duration; });
+    const vol = document.getElementById('aVolume');
+    vol.addEventListener('input', () => { audio.volume = vol.value; });
+  }
+}
+
+function togglePlay() {
+  const audio = _currentAudio;
+  if (!audio) return;
+  if (audio.paused) { audio.play(); document.getElementById('aPlayBtn').textContent = '⏸'; }
+  else { audio.pause(); document.getElementById('aPlayBtn').textContent = '▶'; }
+}
+
+function skipAudio(sec) {
+  if (!_currentAudio) return;
+  _currentAudio.currentTime = Math.max(0, Math.min(_currentAudio.duration || 0, _currentAudio.currentTime + sec));
+}
+
+function fmtTime(s) {
+  if (!isFinite(s)) return '--:--';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return `${m}:${sec.toString().padStart(2,'0')}`;
+}
+
+function updateProgress() {
+  const audio = _currentAudio;
+  if (!audio || !audio.duration) return;
+  document.getElementById('aCurrent').textContent = fmtTime(audio.currentTime);
+  document.getElementById('aProgress').value = (audio.currentTime / audio.duration) * 100;
 }
 
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('open');
   document.body.style.overflow = '';
-  const audio = document.querySelector('#mContent audio');
-  if (audio) { audio.pause(); audio.src = ''; }
+  if (_currentAudio) { _currentAudio.pause(); _currentAudio.src = ''; _currentAudio = null; }
 }
 
 function closeModalOutside(e) {
