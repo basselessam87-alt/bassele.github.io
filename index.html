@@ -595,17 +595,28 @@ function closeModalOutside(e) {
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
+
 // YouTube Views
 async function fetchViews() {
+  const apiKey = 'AIzaSyCd3AxQWIepLYYDBqscsmrcm5QoU4AY118'; 
+  const videoId = 'TYRedJ9sD0M';
+  const url = `https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${videoId}&key=${apiKey}`;
+
   try {
-    const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=statistics&id=TYRedJ9sD0M&key=AIzaSyBSItbiAJqMIaLBQmCqcVpVyEsJuQKhGGw`);
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
     const data = await res.json();
+    if (!data.items || data.items.length === 0) throw new Error('Video not found');
+
     const v = Number(data.items[0].statistics.viewCount);
     const fmt = v >= 1e6 ? (v/1e6).toFixed(1)+'M' : v >= 1e3 ? (v/1e3).toFixed(1)+'K' : v.toLocaleString();
     document.getElementById('views-count').textContent = fmt;
-  } catch { document.getElementById('views-count').textContent = '45K+'; }
-}
-
+  } catch (error) { 
+    console.error(error);
+    document.getElementById('views-count').textContent = '45K+'; 
+  }
+} 
 buildGrid();
 fetchViews();
 </script>
