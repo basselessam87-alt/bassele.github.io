@@ -8,6 +8,8 @@
 <meta property="og:description" content="استمع إلى المصحف المرتل كاملاً من الحرم المكي">
 <title>تدبّر القرآن 360° | باسل عصام</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -146,6 +148,13 @@
   footer { text-align: center; padding: 2.5rem; border-top: 1px solid rgba(201,168,76,0.1); color: var(--muted); font-size: .82rem; margin-top: 2rem; }
   footer span { color: var(--gold); }
 
+  /* ===== GSAP Animation Helpers ===== */
+  .anim-init { visibility: hidden; }
+  nav { transition: box-shadow .4s ease, background .4s ease, border-color .4s ease; }
+  nav.scrolled { box-shadow: 0 8px 30px rgba(0,0,0,0.35); border-bottom-color: rgba(201,168,76,0.35); }
+  .video-card, .surah-card { will-change: transform; }
+  .btn-primary, .btn-outline, .contact-btn, .filter-btn { will-change: transform; }
+
   @media (max-width: 600px) {
     .hero h1 { font-size: 2.2rem; }
     .stat-row { gap: 2rem; }
@@ -160,7 +169,7 @@
 </head>
 <body>
 
-<nav>
+<nav class="anim-init">
   <div class="logo">تدبّر القرآن 360°</div>
   <div class="nav-links">
     <a href="#videos">الفيديوهات</a>
@@ -171,15 +180,15 @@
 </nav>
 
 <div class="hero">
-  <div class="quran-deco">﷽</div>
-  <div class="hero-badge">Tadabbur Quran 360°</div>
-  <h1>القرآن الكريم<br>من <span>الحرم المكي</span></h1>
-  <p>استمع إلى المصحف المرتل كاملاً بصوت الشيخ ماهر المعيقلي من المسجد الحرام في مكة المكرمة — تجربة روحانية لا مثيل لها</p>
-  <div class="hero-btns">
+  <div class="quran-deco anim-init">﷽</div>
+  <div class="hero-badge anim-init">Tadabbur Quran 360°</div>
+  <h1 class="anim-init">القرآن الكريم<br>من <span>الحرم المكي</span></h1>
+  <p class="anim-init">استمع إلى المصحف المرتل كاملاً بصوت الشيخ ماهر المعيقلي من المسجد الحرام في مكة المكرمة — تجربة روحانية لا مثيل لها</p>
+  <div class="hero-btns anim-init">
     <a href="https://www.youtube.com/channel/UCs_xCnTruBQzQo-U4fvfFqg?sub_confirmation=1" class="btn-primary" target="_blank">اشترك في القناة</a>
     <a href="https://youtube.com/playlist?list=PLbmqYj4HTstumH44E4qU7cdNXTJ1TsAJr" class="btn-outline" target="_blank">المصحف المرتل كاملاً</a>
   </div>
-  <div class="stat-row">
+  <div class="stat-row anim-init">
     <div class="stat">
       <div class="stat-num" id="views-count">...</div>
       <div class="stat-label">مشاهدة في سورة البقرة</div>
@@ -618,6 +627,186 @@ async function fetchViews() {
 } 
 buildGrid();
 fetchViews();
+
+/* =========================================================
+   GSAP ANIMATIONS — تأثيرات حركية احترافية لكل عناصر الموقع
+   ========================================================= */
+gsap.registerPlugin(ScrollTrigger);
+
+// إظهار العناصر التي كانت مخفية بـ CSS لحظة بدء GSAP (تمنع الفلاش)
+gsap.set('.anim-init', { visibility: 'visible' });
+
+/* ---------- 1) HERO: دخول متتابع للعناصر ---------- */
+const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+heroTl
+  .from('nav', { y: -40, opacity: 0, duration: .7 })
+  .from('.quran-deco', { y: 20, opacity: 0, duration: .6 }, '-=.3')
+  .from('.hero-badge', { y: 16, opacity: 0, scale: .9, duration: .5 }, '-=.35')
+  .from('.hero h1', { y: 30, opacity: 0, duration: .8 }, '-=.3')
+  .from('.hero p', { y: 20, opacity: 0, duration: .7 }, '-=.45')
+  .from('.hero-btns', { y: 18, opacity: 0, duration: .6 }, '-=.4')
+  .from('.hero-btns .btn-primary, .hero-btns .btn-outline', {
+    y: 12, opacity: 0, stagger: .12, duration: .5
+  }, '-=.4')
+  .from('.stat-row', { y: 24, opacity: 0, duration: .7 }, '-=.3')
+  .from('.stat', { y: 16, opacity: 0, stagger: .15, duration: .55 }, '-=.5');
+
+/* ---------- 2) عدّاد الأرقام في الـ stats ---------- */
+function animateCounter(el, finalText, extraDelay) {
+  const num = parseFloat(finalText.replace(/[^\d.]/g, ''));
+  if (isNaN(num)) return; // لو القيمة نصية (مثل "...") تجاهل العد
+  const suffix = finalText.replace(/[\d.]/g, '');
+  const obj = { val: 0 };
+  gsap.to(obj, {
+    val: num,
+    duration: 1.6,
+    ease: 'power2.out',
+    delay: extraDelay != null ? extraDelay : .3,
+    onUpdate: () => {
+      el.textContent = (num % 1 === 0 ? Math.floor(obj.val) : obj.val.toFixed(1)) + suffix;
+    }
+  });
+}
+// عدّاد للأرقام الثابتة (3 إصدارات، 114 سورة) — يبدأ بعد اكتمال ظهور صف الإحصائيات تقريباً
+document.querySelectorAll('.stat-num').forEach(el => {
+  const txt = el.textContent.trim();
+  if (txt !== '...') animateCounter(el, txt, 1.4);
+});
+// عدّاد المشاهدات بعد ما يوصل الرقم الحقيقي من يوتيوب
+const viewsObserver = new MutationObserver(() => {
+  const el = document.getElementById('views-count');
+  if (el.textContent.trim() !== '...') {
+    animateCounter(el, el.textContent.trim(), 0);
+    viewsObserver.disconnect();
+  }
+});
+viewsObserver.observe(document.getElementById('views-count'), { childList: true, characterData: true, subtree: true });
+
+/* ---------- 3) NAV: ظل عند التمرير ---------- */
+ScrollTrigger.create({
+  start: 'top -80',
+  toggleClass: { targets: 'nav', className: 'scrolled' }
+});
+
+/* ---------- 4) العناوين والفواصل: ظهور تدريجي عند الدخول للشاشة ---------- */
+gsap.utils.toArray('section').forEach(sec => {
+  const tag = sec.querySelector('.section-tag');
+  const title = sec.querySelector('.section-title');
+  const sub = sec.querySelector('.section-sub');
+  const tl = gsap.timeline({
+    scrollTrigger: { trigger: sec, start: 'top 82%', once: true }
+  });
+  if (tag) tl.from(tag, { y: 16, opacity: 0, duration: .5, ease: 'power2.out' });
+  if (title) tl.from(title, { y: 22, opacity: 0, duration: .6, ease: 'power2.out' }, '-=.3');
+  if (sub) tl.from(sub, { y: 16, opacity: 0, duration: .5, ease: 'power2.out' }, '-=.35');
+});
+
+gsap.utils.toArray('.divider').forEach(div => {
+  gsap.from(div, {
+    scaleX: 0, opacity: 0, duration: .9, ease: 'power2.out',
+    scrollTrigger: { trigger: div, start: 'top 90%', once: true }
+  });
+});
+
+/* ---------- 5) كروت الفيديوهات: ظهور متتابع ---------- */
+gsap.from('.video-card', {
+  y: 40, opacity: 0, duration: .7, stagger: .15, ease: 'power3.out',
+  scrollTrigger: { trigger: '.videos-grid', start: 'top 80%', once: true }
+});
+
+/* ---------- 6) بانر البلايليست ---------- */
+gsap.from('.playlist-banner', {
+  y: 35, opacity: 0, duration: .8, ease: 'power3.out',
+  scrollTrigger: { trigger: '.playlist-banner', start: 'top 85%', once: true }
+});
+gsap.from('.playlist-icon', {
+  scale: 0, rotate: -25, opacity: 0, duration: .8, ease: 'back.out(1.6)', delay: .15,
+  scrollTrigger: { trigger: '.playlist-banner', start: 'top 85%', once: true }
+});
+
+/* ---------- 7) كارت "عن صاحب القناة" ---------- */
+gsap.from('.about-card', {
+  y: 35, opacity: 0, duration: .8, ease: 'power3.out',
+  scrollTrigger: { trigger: '.about-card', start: 'top 85%', once: true }
+});
+gsap.from('.avatar', {
+  scale: 0, opacity: 0, rotate: -180, duration: .9, ease: 'back.out(1.7)', delay: .1,
+  scrollTrigger: { trigger: '.about-card', start: 'top 85%', once: true }
+});
+gsap.from('.contact-btn', {
+  y: 14, opacity: 0, stagger: .08, duration: .5, ease: 'power2.out', delay: .3,
+  scrollTrigger: { trigger: '.contact-row', start: 'top 90%', once: true }
+});
+
+/* ---------- 8) قسم السور: عناصر التحكم + شبكة السور ---------- */
+gsap.from('.surah-controls', {
+  y: 24, opacity: 0, duration: .6, ease: 'power2.out',
+  scrollTrigger: { trigger: '.surah-controls', start: 'top 85%', once: true }
+});
+
+// شبكة السور (114 عنصر) — تظهر بمجموعات سريعة جداً حسب موضعها في الشاشة
+ScrollTrigger.batch('.surah-card', {
+  start: 'top 92%',
+  once: true,
+  onEnter: batch => gsap.from(batch, {
+    y: 26, opacity: 0, scale: .94, duration: .5,
+    stagger: { each: .045, from: 'start' }, ease: 'power2.out'
+  })
+});
+
+/* ---------- 9) فوتر ---------- */
+gsap.from('footer', {
+  y: 20, opacity: 0, duration: .7, ease: 'power2.out',
+  scrollTrigger: { trigger: 'footer', start: 'top 95%', once: true }
+});
+
+/* ---------- 10) تفاعلات الهوفر بـ GSAP (أنعم من CSS العادي) ---------- */
+function hoverLift(selector, lift, scale) {
+  document.querySelectorAll(selector).forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      gsap.to(el, { y: lift, scale: scale || 1, duration: .3, ease: 'power2.out' });
+    });
+    el.addEventListener('mouseleave', () => {
+      gsap.to(el, { y: 0, scale: 1, duration: .3, ease: 'power2.out' });
+    });
+  });
+}
+hoverLift('.btn-primary', -3);
+hoverLift('.btn-outline', -2);
+hoverLift('.contact-btn', -2);
+
+/* ---------- 11) المودال: انيميشن دخول/خروج أنعم بـ GSAP ---------- */
+const originalOpenModal = openModal;
+openModal = function(s) {
+  originalOpenModal(s);
+  const overlay = document.getElementById('modalOverlay');
+  const box = document.getElementById('modalBox');
+  gsap.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: .25, ease: 'power1.out' });
+  gsap.fromTo(box, { opacity: 0, y: 30, scale: .95 }, { opacity: 1, y: 0, scale: 1, duration: .4, ease: 'back.out(1.4)' });
+};
+
+const originalCloseModal = closeModal;
+closeModal = function() {
+  const overlay = document.getElementById('modalOverlay');
+  const box = document.getElementById('modalBox');
+  gsap.to(box, { opacity: 0, y: 20, scale: .96, duration: .22, ease: 'power1.in' });
+  gsap.to(overlay, {
+    opacity: 0, duration: .25, ease: 'power1.in', delay: .05,
+    onComplete: () => { originalCloseModal(); gsap.set(overlay, { clearProps: 'opacity' }); gsap.set(box, { clearProps: 'opacity,transform' }); }
+  });
+};
+
+/* ---------- 12) تحديث شبكة السور بعد الفلترة/البحث: ظهور سلس للنتائج ---------- */
+const originalFilterSurahs = filterSurahs;
+filterSurahs = function() {
+  originalFilterSurahs();
+  const visibleCards = Array.from(document.querySelectorAll('.surah-card')).filter(c => c.style.display !== 'none');
+  gsap.from(visibleCards, {
+    opacity: 0, y: 10, duration: .35, stagger: .02, ease: 'power1.out'
+  });
+};
+
 </script>
 </body>
 </html>
