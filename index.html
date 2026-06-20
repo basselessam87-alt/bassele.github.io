@@ -152,8 +152,8 @@
   .anim-init { visibility: hidden; }
   nav { transition: box-shadow .4s ease, background .4s ease, border-color .4s ease; }
   nav.scrolled { box-shadow: 0 8px 30px rgba(0,0,0,0.35); border-bottom-color: rgba(201,168,76,0.35); }
-  .video-card, .surah-card { will-change: transform; }
-  .btn-primary, .btn-outline, .contact-btn, .filter-btn { will-change: transform; }
+  .video-card, .surah-card { }
+  .btn-primary, .btn-outline, .contact-btn, .filter-btn { }
 
   @media (max-width: 600px) {
     .hero h1 { font-size: 2.2rem; }
@@ -633,6 +633,13 @@ fetchViews();
    ========================================================= */
 gsap.registerPlugin(ScrollTrigger);
 
+// احترام إعداد "تقليل الحركة" في نظام تشغيل الزائر (Accessibility)
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (prefersReducedMotion) {
+  gsap.defaults({ duration: 0.01 });
+  ScrollTrigger.defaults({ toggleActions: 'play none none none' });
+}
+
 // إظهار العناصر التي كانت مخفية بـ CSS لحظة بدء GSAP (تمنع الفلاش)
 gsap.set('.anim-init', { visibility: 'visible' });
 
@@ -712,7 +719,24 @@ gsap.utils.toArray('.divider').forEach(div => {
 /* ---------- 5) كروت الفيديوهات: ظهور متتابع ---------- */
 gsap.from('.video-card', {
   y: 40, opacity: 0, duration: .7, stagger: .15, ease: 'power3.out',
-  scrollTrigger: { trigger: '.videos-grid', start: 'top 80%', once: true }
+  scrollTrigger: { trigger: '.videos-grid', start: 'top 80%', once: true },
+  onStart: () => gsap.set('.video-card', { willChange: 'transform, opacity' }),
+  onComplete: () => gsap.set('.video-card', { willChange: 'auto' })
+});
+
+// نبضة خفيفة مستمرة على أزرار التشغيل لجذب العين نحو الفيديوهات
+const playBtnPulses = [];
+document.querySelectorAll('.play-btn').forEach(btn => {
+  const pulse = gsap.to(btn, {
+    boxShadow: '0 0 0 12px rgba(201,168,76,0)',
+    duration: 1.6, ease: 'power1.out', repeat: -1,
+    paused: prefersReducedMotion
+  });
+  gsap.set(btn, { boxShadow: '0 0 0 0 rgba(201,168,76,0.35)' });
+  playBtnPulses.push(pulse);
+  const card = btn.closest('.video-card');
+  card.addEventListener('mouseenter', () => pulse.pause());
+  card.addEventListener('mouseleave', () => { if (!prefersReducedMotion) pulse.play(); });
 });
 
 /* ---------- 6) بانر البلايليست ---------- */
@@ -747,11 +771,15 @@ gsap.from('.surah-controls', {
 
 // شبكة السور (114 عنصر) — تظهر بمجموعات سريعة جداً حسب موضعها في الشاشة
 ScrollTrigger.batch('.surah-card', {
-  start: 'top 92%',
+  start: 'top 90%',
   once: true,
+  interval: 0.1, // تجميع أكبر للأحداث المتقاربة لتقليل عدد التحديثات على الأجهزة الضعيفة
+  batchMax: 24,  // حد أقصى لعدد العناصر في الدفعة الواحدة لمنع تحريك كل الشبكة دفعة واحدة
   onEnter: batch => gsap.from(batch, {
     y: 26, opacity: 0, scale: .94, duration: .5,
-    stagger: { each: .045, from: 'start' }, ease: 'power2.out'
+    stagger: { each: .045, from: 'start' }, ease: 'power2.out',
+    onStart: () => gsap.set(batch, { willChange: 'transform, opacity' }),
+    onComplete: () => gsap.set(batch, { willChange: 'auto' })
   })
 });
 
@@ -765,10 +793,11 @@ gsap.from('footer', {
 function hoverLift(selector, lift, scale) {
   document.querySelectorAll(selector).forEach(el => {
     el.addEventListener('mouseenter', () => {
+      gsap.set(el, { willChange: 'transform' });
       gsap.to(el, { y: lift, scale: scale || 1, duration: .3, ease: 'power2.out' });
     });
     el.addEventListener('mouseleave', () => {
-      gsap.to(el, { y: 0, scale: 1, duration: .3, ease: 'power2.out' });
+      gsap.to(el, { y: 0, scale: 1, duration: .3, ease: 'power2.out', onComplete: () => gsap.set(el, { willChange: 'auto' }) });
     });
   });
 }
