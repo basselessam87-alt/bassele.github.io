@@ -802,8 +802,11 @@ const originalFilterSurahs = filterSurahs;
 filterSurahs = function() {
   originalFilterSurahs();
   const visibleCards = Array.from(document.querySelectorAll('.surah-card')).filter(c => c.style.display !== 'none');
+  // إيقاف أي انيميشن سابق على كل كروت السور لمنع تضارب الحركات عند الكتابة السريعة في البحث
+  gsap.killTweensOf('.surah-card');
+  gsap.set(visibleCards, { opacity: 1, y: 0 });
   gsap.from(visibleCards, {
-    opacity: 0, y: 10, duration: .35, stagger: .02, ease: 'power1.out'
+    opacity: 0, y: 10, duration: .35, stagger: .02, ease: 'power1.out', overwrite: true
   });
 };
 
