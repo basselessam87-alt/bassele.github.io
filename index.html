@@ -87,7 +87,7 @@
   .filter-btn.active, .filter-btn:hover { background: rgba(201,168,76,0.15); border-color: var(--gold); color: var(--gold); }
   .surah-count { font-size: .8rem; color: var(--muted); margin-bottom: 1.2rem; }
   .surah-count span { color: var(--gold); }
-  .surahs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
+  .surahs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; align-items: start; }
   .surah-card { background: var(--dark3); border: 1px solid rgba(201,168,76,0.13); border-radius: 10px; padding: 1rem .9rem; cursor: pointer; transition: transform .25s, border-color .25s, background .25s; position: relative; overflow: hidden; }
   .surah-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at top right, rgba(201,168,76,0.05), transparent 70%); pointer-events: none; }
   .surah-card:hover { transform: translateY(-3px); border-color: rgba(201,168,76,0.4); background: #1e2d4a; }
@@ -162,7 +162,7 @@
     .nav-links { gap: .7rem; }
     .nav-links a { font-size: .72rem; }
     section, #surahs { padding: 3rem 1.2rem; }
-    .surahs-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: .7rem; }
+    .surahs-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: .7rem; align-items: start; }
     .modal { padding: 1.4rem; }
   }
 </style>
@@ -643,6 +643,13 @@ if (prefersReducedMotion) {
 // إظهار العناصر التي كانت مخفية بـ CSS لحظة بدء GSAP (تمنع الفلاش)
 gsap.set('.anim-init', { visibility: 'visible' });
 
+// إعادة حساب مواقع عناصر ScrollTrigger بعد اكتمال تحميل الخطوط (Amiri/Cairo)
+// لتفادي أي اختلاف بسيط في الارتفاعات يؤثر على تموضع شبكة السور
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(() => { ScrollTrigger.refresh(); });
+}
+window.addEventListener('load', () => { ScrollTrigger.refresh(); });
+
 /* ---------- 1) HERO: دخول متتابع للعناصر ---------- */
 const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
@@ -773,13 +780,9 @@ gsap.from('.surah-controls', {
 ScrollTrigger.batch('.surah-card', {
   start: 'top 90%',
   once: true,
-  interval: 0.1, // تجميع أكبر للأحداث المتقاربة لتقليل عدد التحديثات على الأجهزة الضعيفة
-  batchMax: 24,  // حد أقصى لعدد العناصر في الدفعة الواحدة لمنع تحريك كل الشبكة دفعة واحدة
   onEnter: batch => gsap.from(batch, {
     y: 26, opacity: 0, scale: .94, duration: .5,
-    stagger: { each: .045, from: 'start' }, ease: 'power2.out',
-    onStart: () => gsap.set(batch, { willChange: 'transform, opacity' }),
-    onComplete: () => gsap.set(batch, { willChange: 'auto' })
+    stagger: { each: .045, from: 'start' }, ease: 'power2.out'
   })
 });
 
