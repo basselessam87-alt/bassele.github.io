@@ -776,14 +776,10 @@ gsap.from('.surah-controls', {
   scrollTrigger: { trigger: '.surah-controls', start: 'top 85%', once: true }
 });
 
-// شبكة السور (114 عنصر) — تظهر بمجموعات سريعة جداً حسب موضعها في الشاشة
-ScrollTrigger.batch('.surah-card', {
-  start: 'top 90%',
-  once: true,
-  onEnter: batch => gsap.from(batch, {
-    y: 26, opacity: 0, scale: .94, duration: .5,
-    stagger: { each: .045, from: 'start' }, ease: 'power2.out'
-  })
+// شبكة السور (114 عنصر) — ظهور واحد بسيط ومضمون لكل الشبكة عند دخولها للشاشة
+gsap.from('.surahs-grid', {
+  opacity: 0, y: 20, duration: .6, ease: 'power2.out',
+  scrollTrigger: { trigger: '.surahs-grid', start: 'top 88%', once: true }
 });
 
 /* ---------- 9) فوتر ---------- */
