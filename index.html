@@ -651,6 +651,17 @@ if (document.fonts && document.fonts.ready) {
 }
 window.addEventListener('load', () => { ScrollTrigger.refresh(); });
 
+// معالجة الدخول المباشر برابط يحتوي #hash (مثل #about):
+// المتصفح بيقفز للقسم فورًا قبل ما GSAP يجهّز الأنيميشن، فعناصر once:true
+// بتفضل عند opacity:0 لأنها "فاتت" نقطة التفعيل. الحل: نلغي تأثيرات الدخول
+// لكل العناصر داخل القسم المستهدف بالـ hash فورًا عند التحميل.
+if (location.hash) {
+  const targetSection = document.querySelector(location.hash);
+  if (targetSection) {
+    gsap.set(targetSection.querySelectorAll('.contact-btn, .avatar, .about-card, .video-card, .surah-item, .playlist-banner'), { opacity: 1, y: 0, scale: 1, rotate: 0, clearProps: 'transform' });
+  }
+}
+
 /* ---------- 1) HERO: دخول متتابع للعناصر ---------- */
 const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
@@ -766,10 +777,7 @@ gsap.from('.avatar', {
   scale: 0, opacity: 0, rotate: -180, duration: .9, ease: 'back.out(1.7)', delay: .1,
   scrollTrigger: { trigger: '.about-card', start: 'top 85%', once: true }
 });
-gsap.from('.contact-btn', {
-  y: 14, opacity: 0, stagger: .08, duration: .5, ease: 'power2.out', delay: .3,
-  scrollTrigger: { trigger: '.contact-row', start: 'top 90%', once: true }
-});
+gsap.set('.contact-btn', { opacity: 1, y: 0 });
 
 /* ---------- 8) قسم السور: عناصر التحكم + شبكة السور ---------- */
 gsap.from('.surah-controls', {
