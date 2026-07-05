@@ -284,7 +284,7 @@
 </section>
 
 <footer>
-  صنع بـ ❤️ بواسطة <span>باسل عصام</span> — تدبّر القرآن
+  صنع بـ بواسطة <span>باسل عصام</span> — تدبّر القرآن
 </footer>
 
 <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
@@ -299,7 +299,7 @@
 </div>
 
 <script>
-const BASE = "https://archive.org/download/20260622_20260622_1052/";
+const BASE = "https://archive.org/download/20260704_20260704_1126/";
 
 const surahs = [
   {n:1, name:"الفاتحة", type:"مكية", ayat:7, hasMp3:true, yt:"https://youtu.be/AiyiMP2biFA?si=nHWiaLn6X7NOjsxH"},
@@ -368,7 +368,7 @@ const surahs = [
   {n:64, name:"التغابن", type:"مدنية", ayat:18, hasMp3:true, yt:"https://youtu.be/1toM4mGdvkY?si=hWx6NXILRVNG4mjr"},
   {n:65, name:"الطلاق", type:"مدنية", ayat:12, hasMp3:true, yt:"https://youtu.be/jJ6_Uqcks30?si=s8iesqMta_bNLK3g"},
   {n:66, name:"التحريم", type:"مدنية", ayat:12, hasMp3:true, yt:"https://youtu.be/mTD-MlPyKaE?si=DNdGuUM1QmRdmyy0"},
-  {n:67, name:"الملك", type:"مكية", ayat:30, hasMp3:true, yt:"https://youtu.be/mTD-MlPyKaE?si=DNdGuUM1QmRdmyy0"},
+  {n:67, name:"الملك", type:"مكية", ayat:30, hasMp3:true, yt:"https://youtu.be/-OychjeiK7c?si=fOu4suxlwA7nvUwY"},
   {n:68, name:"القلم", type:"مكية", ayat:52, hasMp3:true, yt:"https://youtu.be/sEnLDZ6iXJI?si=ZdxZSdu51kkvIIbe"},
   {n:69, name:"الحاقة", type:"مكية", ayat:52, hasMp3:true, yt:"https://youtu.be/t-HKYMseDSY?si=L69EqzPZ0rVN_GiZ"},
   {n:70, name:"المعارج", type:"مكية", ayat:44, hasMp3:true, yt:"https://youtu.be/fjDtZD1Uqr4?si=vXp6Pmr24lwpUBxk"},
@@ -384,7 +384,7 @@ const surahs = [
   {n:80, name:"عبس", type:"مكية", ayat:42, hasMp3:true, yt:"https://youtu.be/kQNqvbJXpy4?si=O1-UfPNqOtyn5qwt"},
   {n:81, name:"التكوير", type:"مكية", ayat:29, hasMp3:true, yt:"https://youtu.be/Bq8bpO1PAkY?si=be-EMGTs9dVC_BGM"},
   {n:82, name:"الانفطار", type:"مكية", ayat:19, hasMp3:true, yt:"https://youtu.be/wXJTczKfnSQ?si=F9ppPIK-u-rtCrRI"},
-  {n:83, name:"المطففين", type:"مكية", ayat:36, hasMp3:true, yt:"https://youtu.be/5y_4S8Gqvvg?si=ez443LdtpC_BBw0Q"},
+  {n:83, name:"المطففين", type:"مكية", ayat:36, hasMp3:true, yt:"https://youtu.be/HB6KDTXoFQQ?si=BeXw50fBQQOPs2jm"},
   {n:84, name:"الانشقاق", type:"مكية", ayat:25, hasMp3:true, yt:"https://youtu.be/yqnbIR-j7J4?si=awsx0dvFaBKD0t-P"},
   {n:85, name:"البروج", type:"مكية", ayat:22, hasMp3:true, yt:"https://youtu.be/9rIW1KDTrRU?si=069fuQ67lEmpMgLV"},
   {n:86, name:"الطارق", type:"مكية", ayat:17, hasMp3:true, yt:"https://youtu.be/W4gn0p7s0uc?si=hL--zxFd28ITt78R"},
@@ -394,26 +394,26 @@ const surahs = [
   {n:90, name:"البلد", type:"مكية", ayat:20, hasMp3:true, yt:"https://youtu.be/LwbIUZmVs3E?si=xwm9h4Yh-JV2aAXv"},
   {n:91, name:"الشمس", type:"مكية", ayat:15, hasMp3:true, yt:"https://youtu.be/_1647QaoYkg?si=dBbVzO5ibfdkJhjZ"},
   {n:92, name:"الليل", type:"مكية", ayat:21, hasMp3:true, yt:"https://youtu.be/0Wkv0oJht3o?si=kXnoI8wBYCdX9UCF"},
-  {n:93, name:"الضحى", type:"مكية", ayat:11, hasMp3:false, yt:null},
-  {n:94, name:"الشرح", type:"مكية", ayat:8, hasMp3:true, yt:null},
+  {n:93, name:"الضحى", type:"مكية", ayat:11, hasMp3:true, yt:"https://youtu.be/NTWQ2TRWEBk?si=21YrESzewZKz64hS"},
+  {n:94, name:"الشرح", type:"مكية", ayat:8, hasMp3:true, yt:"https://youtu.be/9ZyLopmqlCo?si=r6z-uZ_hnzFEhRMP"},
   {n:95, name:"التين", type:"مكية", ayat:8, hasMp3:true, yt:"https://youtu.be/lUKXC8RsMC0?si=qpM6MI9c5kE6uuTq"},
   {n:96, name:"العلق", type:"مكية", ayat:19, hasMp3:true, yt:"https://youtu.be/6ecqwKlolrY?si=eKqgVahAlZ5IWMq_"},
-  {n:97, name:"القدر", type:"مكية", ayat:5, hasMp3:true, yt:null},
+  {n:97, name:"القدر", type:"مكية", ayat:5, hasMp3:true, yt:"https://youtu.be/s2jF2qumusU?si=ovlkxzPZqZ0sChfR"},
   {n:98, name:"البينة", type:"مدنية", ayat:8, hasMp3:true, yt:"https://youtu.be/SNc9I4pi_Bs?si=rQuEqRkFFVG_5QAE"},
   {n:99, name:"الزلزلة", type:"مدنية", ayat:8, hasMp3:true, yt:"https://youtu.be/6Egy5_6C_AU?si=sQCCRhgbEA-beKnS"},
   {n:100, name:"العاديات", type:"مكية", ayat:11, hasMp3:true, yt:"https://youtu.be/QAMFUY6CBsE?si=-TOQZ2M1olX4aAl2"},
   {n:101, name:"القارعة", type:"مكية", ayat:11, hasMp3:true, yt:"https://youtu.be/1ZgzOaa7UqU?si=sSH4YsQtLzYxburn"},
-  {n:102, name:"التكاثر", type:"مكية", ayat:8, hasMp3:true, yt:null},
+  {n:102, name:"التكاثر", type:"مكية", ayat:8, hasMp3:true, yt:"https://youtu.be/CVKmDovqnb0?si=dTLOiFOWPq3Ec46D"},
   {n:103, name:"العصر", type:"مكية", ayat:3, hasMp3:true, yt:"https://youtu.be/xmddJQfVW2c?si=TzYpAhYa1ua9ti80"},
   {n:104, name:"الهمزة", type:"مكية", ayat:9, hasMp3:true, yt:"https://youtu.be/mjA6DgJl3zg?si=gScu-gWHmI1TQNtQ"},
   {n:105, name:"الفيل", type:"مكية", ayat:5, hasMp3:true, yt:"https://youtu.be/YugrQ969b6U?si=_MulR5uVwDgdwVqL"},
-  {n:106, name:"قريش", type:"مكية", ayat:4, hasMp3:false, yt:"https://youtu.be/Gj6CoQEZRWM?si=f2Dj_0XLY1McB2sx"},
+  {n:106, name:"قريش", type:"مكية", ayat:4, hasMp3:true, yt:"https://youtu.be/Gj6CoQEZRWM?si=f2Dj_0XLY1McB2sx"},
   {n:107, name:"الماعون", type:"مكية", ayat:7, hasMp3:true, yt:"https://youtu.be/QHfI7NjRLPM?si=-aCz6fJnK9nsedZQ"},
-  {n:108, name:"الكوثر", type:"مكية", ayat:3, hasMp3:true, yt:null},
-  {n:109, name:"الكافرون", type:"مكية", ayat:6, hasMp3:false, yt:null},
+  {n:108, name:"الكوثر", type:"مكية", ayat:3, hasMp3:true, yt:"https://youtu.be/fEPvWTH_lY0?si=ayUgNi0aKopEj-gq"},
+  {n:109, name:"الكافرون", type:"مكية", ayat:6, hasMp3:true, yt:"https://youtu.be/PsjTSfT9LoA?si=HCIHMc5iOsx1rmd6"},
   {n:110, name:"النصر", type:"مدنية", ayat:3, hasMp3:true, yt:"https://youtu.be/V_5Lc64ONBQ?si=se4YYGzT3Z7uHjbf"},
   {n:111, name:"المسد", type:"مكية", ayat:5, hasMp3:true, yt:"https://youtu.be/xXrlSY1_V4U?si=YIKJsVURw3l_e61N"},
-  {n:112, name:"الإخلاص", type:"مكية", ayat:4, hasMp3:false, yt:null},
+  {n:112, name:"الإخلاص", type:"مكية", ayat:4, hasMp3:true, yt:"https://youtu.be/iVQ47wr0HqU?si=U70U4Lmq2oAl_N4m"},
   {n:113, name:"الفلق", type:"مكية", ayat:5, hasMp3:true, yt:"https://youtu.be/P6Ygh48cbCc?si=Oh0tfOOiugNuYA6s"},
   {n:114, name:"الناس", type:"مكية", ayat:6, hasMp3:true, yt:"https://youtu.be/rxLmQjo39dE?si=EjRk3zcPKdP9bavk"}
 ];
