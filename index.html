@@ -730,22 +730,22 @@ document.getElementById('spVolume').addEventListener('input', function () {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 
-// YouTube Views — بيمر عبر Cloudflare Worker بدل استدعاء YouTube API مباشرة
-// من المتصفح، عشان المفتاح ميبقاش ظاهر في كود الصفحة خالص.
+// YouTube Views — ⚠️ حل مؤقت: استدعاء مباشر بمفتاح API ظاهر في الكود.
+// المفتاح هيفضل مرئي لأي حد يفتح "عرض المصدر" لحد ما يتم إعداد
+// Cloudflare Worker (worker.js) ويتم استبدال هذا الجزء بيه.
 async function fetchViews() {
-  // ⚠️ استبدل الرابط ده برابط الـ Worker بتاعك بعد النشر (شكله https://xxx.workers.dev)
-  const WORKER_URL = 'https://YOUR-WORKER-SUBDOMAIN.workers.dev/views';
+  const apiKey = 'AIzaSyCd3AxQWIepLYYDBqscsmrcm5QoU4AY118';
   const videoId = 'TYRedJ9sD0M';
-  const url = `${WORKER_URL}?id=${videoId}`;
+  const url = `https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${videoId}&key=${apiKey}`;
 
   try {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
     const data = await res.json();
-    if (!data.viewCount) throw new Error('Video not found');
+    if (!data.items || data.items.length === 0) throw new Error('Video not found');
 
-    const v = Number(data.viewCount);
+    const v = Number(data.items[0].statistics.viewCount);
     const fmt = v >= 1e6 ? (v/1e6).toFixed(1)+'M' : v >= 1e3 ? (v/1e3).toFixed(1)+'K' : v.toLocaleString();
     document.getElementById('views-count').textContent = fmt;
   } catch (error) { 
