@@ -13,7 +13,8 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  body { font-family: 'Cairo', sans-serif; background: #0a0f1e; color: #f0e6c8; min-height: 100vh; direction: rtl; }
+  body { font-family: 'Cairo', sans-serif; background: #0a0f1e; color: #f0e6c8; min-height: 100vh; direction: rtl; transition: padding-bottom .4s ease; }
+  body.player-active { padding-bottom: 76px; }
   :root { --gold: #c9a84c; --gold-light: #f0d080; --dark: #0a0f1e; --dark2: #111827; --dark3: #1a2340; --text: #f0e6c8; --muted: #9aabb8; }
 
   nav { background: rgba(10,15,30,0.97); backdrop-filter: blur(10px); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(201,168,76,0.2); position: sticky; top: 0; z-index: 100; }
@@ -138,6 +139,54 @@
   .audio-volume-row { display:flex; align-items:center; gap:.5rem; margin-top:.7rem; }
   .audio-volume-row span { font-size:.75rem; color:var(--muted); }
   .audio-volume { flex:1; height:4px; border-radius:99px; appearance:none; -webkit-appearance:none; outline:none; accent-color: var(--gold); cursor:pointer; background: rgba(201,168,76,0.2); }
+
+  /* ===== Sticky Global Audio Player ===== */
+  .sticky-player {
+    position: fixed; left: 0; right: 0; bottom: -100px; z-index: 400;
+    background: rgba(10,15,30,0.98); backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(201,168,76,0.3);
+    box-shadow: 0 -8px 30px rgba(0,0,0,0.4);
+    padding: .7rem 1.2rem; display: flex; align-items: center; gap: 1.2rem;
+    transition: bottom .4s ease;
+  }
+  .sticky-player.active { bottom: 0; }
+  .sp-info { display: flex; align-items: center; gap: .7rem; min-width: 140px; }
+  .sp-icon { font-size: 1.4rem; flex-shrink: 0; }
+  .sp-name { font-family: 'Amiri', serif; font-size: 1rem; color: #fff; font-weight: 700; line-height: 1.2; }
+  .sp-sub { font-size: .68rem; color: var(--muted); margin-top: .1rem; }
+  .sp-controls { display: flex; align-items: center; gap: .6rem; flex-shrink: 0; }
+  .sp-progress-wrap { flex: 1; display: flex; align-items: center; gap: .6rem; min-width: 140px; }
+  .sp-progress-wrap span { font-size: .7rem; color: var(--muted); flex-shrink: 0; }
+  .sp-volume { width: 90px; flex-shrink: 0; }
+  .sp-close { background: none; border: none; color: var(--muted); font-size: 1.1rem; cursor: pointer; flex-shrink: 0; transition: color .2s; padding: .3rem; }
+  .sp-close:hover { color: #fff; }
+  .sp-controls .audio-skip-btn { width: 36px; height: 36px; font-size: .58rem; }
+  .sp-controls .audio-play-btn { width: 44px; height: 44px; font-size: 1.1rem; }
+
+  /* Now-playing indicator on surah card */
+  .surah-card { position: relative; }
+  .surah-card.playing, .surah-card.paused-playing { border-color: var(--gold); background: #1e2d4a; }
+  .surah-card.playing { box-shadow: 0 0 0 1px rgba(201,168,76,0.5); }
+  .playing-indicator { display: none; align-items: flex-end; gap: 2px; height: 12px; position: absolute; top: .8rem; left: .8rem; }
+  .surah-card.playing .playing-indicator { display: flex; }
+  .surah-card.paused-playing .playing-indicator { display: flex; }
+  .playing-indicator span { width: 3px; height: 12px; background: var(--gold); border-radius: 2px; transform: scaleY(.3); transform-origin: bottom; animation: eqBar 0.9s ease-in-out infinite; will-change: transform; }
+  .surah-card.paused-playing .playing-indicator span { animation-play-state: paused; transform: scaleY(.3) !important; }
+  .playing-indicator span:nth-child(1) { animation-delay: 0s; }
+  .playing-indicator span:nth-child(2) { animation-delay: .2s; }
+  .playing-indicator span:nth-child(3) { animation-delay: .4s; }
+  @keyframes eqBar { 0%, 100% { transform: scaleY(.3); } 50% { transform: scaleY(1); } }
+
+  /* عند فتح المودال: إخفاء المشغل الثابت مؤقتًا (الصوت يستمر بالخلفية) لتفادي
+     ازدحام المساحة الرأسية على الهاتف بين الـ Navbar والمودال والمشغل السفلي معًا */
+  body.modal-open .sticky-player { bottom: -100px !important; }
+
+  @media (max-width: 600px) {
+    .sticky-player { flex-wrap: wrap; padding: .6rem .8rem; gap: .5rem; }
+    .sp-info { min-width: 100px; }
+    .sp-volume { display: none; }
+    .sp-progress-wrap { order: 3; width: 100%; }
+  }
 
   .coming-soon-box { background: rgba(201,168,76,0.06); border: 1px dashed rgba(201,168,76,0.25); border-radius: 10px; padding: 1.4rem; text-align: center; color: var(--muted); font-size: .9rem; margin-bottom: 1rem; }
   .coming-soon-box .icon { font-size: 2rem; margin-bottom: .5rem; }
@@ -299,11 +348,35 @@
   </div>
 </div>
 
+<!-- المشغل الصوتي الثابت — يستمر في العمل عبر كل أقسام الموقع حتى بعد إغلاق النافذة المنبثقة -->
+<div class="sticky-player" id="stickyPlayer">
+  <div class="sp-info">
+    <div class="sp-icon">🎧</div>
+    <div>
+      <div class="sp-name" id="spName">—</div>
+      <div class="sp-sub">الشيخ أ.د ماهر المعيقلي</div>
+    </div>
+  </div>
+  <div class="sp-controls">
+    <button class="audio-skip-btn" onclick="skipAudio(-10)" title="رجوع 10 ثواني"><span>↺</span><span>10</span></button>
+    <button class="audio-play-btn" id="spPlayBtn" onclick="togglePlay()">▶</button>
+    <button class="audio-skip-btn" onclick="skipAudio(10)" title="تقديم 10 ثواني"><span>↻</span><span>10</span></button>
+  </div>
+  <div class="sp-progress-wrap">
+    <span id="spCurrent">0:00</span>
+    <input class="audio-progress" type="range" id="spProgress" min="0" max="100" value="0" step="0.1">
+    <span id="spDuration">--:--</span>
+  </div>
+  <input class="audio-volume sp-volume" type="range" id="spVolume" min="0" max="1" step="0.05" value="1">
+  <button class="sp-close" onclick="stopGlobalAudio()" title="إيقاف">✕</button>
+</div>
+<audio id="globalAudio" preload="none"></audio>
+
 <script>
 const BASE = "https://archive.org/download/20260704_20260704_1126/";
 
 const surahs = [
-  {n:1, name:"الفاتحة", type:"مكية", ayat:7, hasMp3:false , yt:"https://youtu.be/AiyiMP2biFA?si=nHWiaLn6X7NOjsxH"},
+  {n:1, name:"الفاتحة", type:"مكية", ayat:7, hasMp3:true, yt:"https://youtu.be/AiyiMP2biFA?si=nHWiaLn6X7NOjsxH"},
   {n:2, name:"البقرة", type:"مدنية", ayat:286, hasMp3:true, yt:"https://youtu.be/TYRedJ9sD0M?si=cvWP9HpbEscPm9hh"},
   {n:3, name:"آل عمران", type:"مدنية", ayat:200, hasMp3:true, yt:"https://youtu.be/yGZpFdCweDo?si=iIUqhuO8b9ip2sO5"},
   {n:4, name:"النساء", type:"مدنية", ayat:176, hasMp3:true, yt:"https://youtu.be/btYXutGEhpQ?si=yhbK7eM5elPgZkRO"},
@@ -322,7 +395,7 @@ const surahs = [
   {n:17, name:"الإسراء", type:"مكية", ayat:111, hasMp3:true, yt:"https://youtu.be/dXBzUwcoiY4?si=G6NAQjXwsHws2IMR"},
   {n:18, name:"الكهف", type:"مكية", ayat:110, hasMp3:true, yt:"https://youtu.be/jKHgS7WYyCc?si=aJok8F1g4pcXRTJt"},
   {n:19, name:"مريم", type:"مكية", ayat:98, hasMp3:true, yt:"https://youtu.be/oY-_RcnU0dU?si=QyMgBKW1YcG1DX4P"},
-  {n:20, name:"طه", type:"مكية", ayat:135, hasMp3:true, yt: "https://youtu.be/eNEDnjebLJY?si=Hj7pUwThSZqOXa__"},
+  {n:20, name:"طه", type:"مكية", ayat:135, hasMp3:false, yt:null},
   {n:21, name:"الأنبياء", type:"مكية", ayat:112, hasMp3:true, yt:"https://youtu.be/8YH8AdZGmEI?si=AKoFqaHSWlsMT8z0"},
   {n:22, name:"الحج", type:"مدنية", ayat:78, hasMp3:true, yt:"https://youtu.be/pP7yuT3RuPc?si=je6TrodNw2JyEG_V"},
   {n:23, name:"المؤمنون", type:"مكية", ayat:118, hasMp3:true, yt:"https://youtu.be/KGAZ0doGP4A?si=mngzWur13p--5AGn"},
@@ -453,6 +526,7 @@ function buildGrid() {
     if (s.yt) badges.push('<span class="badge-yt">▶ يوتيوب</span>');
     if (s.hasMp3) badges.push('<span class="badge-mp3">🎧 MP3</span>');
     card.innerHTML = `
+      <div class="playing-indicator"><span></span><span></span><span></span></div>
       <div class="surah-num">${s.n}</div>
       <div class="surah-name">${s.name}</div>
       <div class="surah-meta">
@@ -471,8 +545,6 @@ function extractYtId(url) {
   const m = url.match(/(?:youtu\.be\/|v=|\/embed\/)([A-Za-z0-9_-]{11})/);
   return m ? m[1] : null;
 }
-
-let _currentAudio = null;
 
 function openModal(s) {
   document.getElementById('mNum').textContent = `سورة رقم ${s.n}`;
@@ -503,33 +575,17 @@ function openModal(s) {
     </div>`;
   }
 
-  // ── 2. MP3 custom player (below YouTube) ──
+  // ── 2. MP3 — يتحكم في المشغل الثابت أسفل الشاشة (Sticky Player) بدل مشغل داخل النافذة ──
   if (s.hasMp3) {
     const url = BASE + encodeURIComponent('سورة ' + s.name) + '.mp3';
+    const isThisPlaying = currentPlayingSurah && currentPlayingSurah.n === s.n && !globalAudio.paused;
     content += `<div class="audio-player-wrap">
       <div class="audio-player-label">استمع إلى التلاوة من الحرم المكي</div>
-      <audio id="modalAudio" preload="none" src="${url}" style="display:none"></audio>
-      <div class="audio-progress-wrap">
-        <div class="audio-time-row">
-          <span id="aCurrent">0:00</span>
-          <span id="aDuration">--:--</span>
-        </div>
-        <input class="audio-progress" type="range" id="aProgress" min="0" max="100" value="0" step="0.1">
-      </div>
-      <div class="audio-controls">
-        <button class="audio-skip-btn" onclick="skipAudio(-10)" title="رجوع 10 ثواني">
-          <span>↺</span><span>10</span>
-        </button>
-        <button class="audio-play-btn" id="aPlayBtn" onclick="togglePlay()">▶</button>
-        <button class="audio-skip-btn" onclick="skipAudio(10)" title="تقديم 10 ثواني">
-          <span>↻</span><span>10</span>
-        </button>
-      </div>
-      <div class="audio-volume-row">
-        <span>🔈</span>
-        <input class="audio-volume" type="range" id="aVolume" min="0" max="1" step="0.05" value="1">
-        <span>🔊</span>
-      </div>
+      <button class="btn-primary" id="modalPlayBtn" style="width:100%" onclick="playSurahAudio(${s.n})">
+        ${isThisPlaying ? '⏸ إيقاف مؤقت' : '▶ تشغيل في المشغل الثابت'}
+      </button>
+      <div id="modalTimeInfo" style="font-size:.75rem;color:var(--muted);margin-top:.5rem;text-align:center">--:-- / --:--</div>
+      <p style="font-size:.75rem;color:var(--muted);margin-top:.4rem">يستمر التشغيل حتى بعد إغلاق هذه النافذة أو تصفح باقي الموقع</p>
     </div>`;
     footer += `<a href="${url}" download class="btn-outline btn-sm">⬇ تنزيل MP3</a>`;
   }
@@ -548,36 +604,28 @@ function openModal(s) {
   document.getElementById('mFooter').innerHTML = footer;
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
-
-  // Wire up audio player events after DOM injection
-  const audio = document.getElementById('modalAudio');
-  if (audio) {
-    _currentAudio = audio;
-    audio.addEventListener('timeupdate', updateProgress);
-    audio.addEventListener('loadedmetadata', () => {
-      document.getElementById('aDuration').textContent = fmtTime(audio.duration);
-    });
-    audio.addEventListener('ended', () => {
-      document.getElementById('aPlayBtn').textContent = '▶';
-    });
-    const prog = document.getElementById('aProgress');
-    prog.addEventListener('input', () => { audio.currentTime = (prog.value / 100) * audio.duration; });
-    const vol = document.getElementById('aVolume');
-    vol.addEventListener('input', () => { audio.volume = vol.value; });
-  }
+  document.body.classList.add('modal-open');
+  syncModalPlayBtn();
 }
 
-function togglePlay() {
-  const audio = _currentAudio;
-  if (!audio) return;
-  if (audio.paused) { audio.play(); document.getElementById('aPlayBtn').textContent = '⏸'; }
-  else { audio.pause(); document.getElementById('aPlayBtn').textContent = '▶'; }
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.body.classList.remove('modal-open');
+  // ملاحظة: الصوت لا يتوقف عند إغلاق النافذة — يستمر عبر المشغل الثابت (Sticky Player)
 }
 
-function skipAudio(sec) {
-  if (!_currentAudio) return;
-  _currentAudio.currentTime = Math.max(0, Math.min(_currentAudio.duration || 0, _currentAudio.currentTime + sec));
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
 }
+
+/* =========================================================
+   المشغل الصوتي الثابت (Global / Sticky Audio Player)
+   عنصر <audio> واحد يستمر عبر كل الموقع، لا يُدمَّر عند إغلاق
+   النافذة المنبثقة أو عند البحث/التصفح في أقسام أخرى.
+   ========================================================= */
+const globalAudio = document.getElementById('globalAudio');
+let currentPlayingSurah = null;
 
 function fmtTime(s) {
   if (!isFinite(s)) return '--:--';
@@ -586,40 +634,118 @@ function fmtTime(s) {
   return `${m}:${sec.toString().padStart(2,'0')}`;
 }
 
-function updateProgress() {
-  const audio = _currentAudio;
-  if (!audio || !audio.duration) return;
-  document.getElementById('aCurrent').textContent = fmtTime(audio.currentTime);
-  document.getElementById('aProgress').value = (audio.currentTime / audio.duration) * 100;
+function playSurahAudio(n) {
+  const s = surahs.find(x => x.n === n);
+  if (!s || !s.hasMp3) return;
+
+  if (currentPlayingSurah && currentPlayingSurah.n === n) {
+    togglePlay();
+    return;
+  }
+
+  const url = BASE + encodeURIComponent('سورة ' + s.name) + '.mp3';
+  currentPlayingSurah = s;
+  globalAudio.src = url;
+  globalAudio.play();
+  document.getElementById('spName').textContent = s.name;
+  document.getElementById('stickyPlayer').classList.add('active');
+  document.body.classList.add('player-active');
+  document.getElementById('spPlayBtn').textContent = '⏸';
+  syncModalPlayBtn();
+  updatePlayingCardIndicator();
 }
 
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('open');
-  document.body.style.overflow = '';
-  if (_currentAudio) { _currentAudio.pause(); _currentAudio.src = ''; _currentAudio = null; }
+function togglePlay() {
+  if (!currentPlayingSurah) return;
+  if (globalAudio.paused) {
+    globalAudio.play();
+    document.getElementById('spPlayBtn').textContent = '⏸';
+  } else {
+    globalAudio.pause();
+    document.getElementById('spPlayBtn').textContent = '▶';
+  }
+  syncModalPlayBtn();
+  updatePlayingCardIndicator();
 }
 
-function closeModalOutside(e) {
-  if (e.target === document.getElementById('modalOverlay')) closeModal();
+function skipAudio(sec) {
+  if (!currentPlayingSurah || !isFinite(globalAudio.duration)) return;
+  globalAudio.currentTime = Math.max(0, Math.min(globalAudio.duration, globalAudio.currentTime + sec));
 }
+
+function stopGlobalAudio() {
+  globalAudio.pause();
+  globalAudio.removeAttribute('src');
+  currentPlayingSurah = null;
+  document.getElementById('stickyPlayer').classList.remove('active');
+  document.body.classList.remove('player-active');
+  syncModalPlayBtn();
+  updatePlayingCardIndicator();
+}
+
+function syncModalPlayBtn() {
+  const btn = document.getElementById('modalPlayBtn');
+  const timeInfo = document.getElementById('modalTimeInfo');
+  if (!btn) return;
+  const isThisPlaying = currentPlayingSurah && !globalAudio.paused;
+  btn.textContent = isThisPlaying ? '⏸ إيقاف مؤقت' : '▶ تشغيل في المشغل الثابت';
+  if (timeInfo && currentPlayingSurah) {
+    timeInfo.textContent = `${fmtTime(globalAudio.currentTime)} / ${fmtTime(globalAudio.duration)}`;
+  }
+}
+
+function updatePlayingCardIndicator() {
+  document.querySelectorAll('.surah-card').forEach(c => c.classList.remove('playing', 'paused-playing'));
+  if (!currentPlayingSurah) return;
+  const card = document.querySelector(`.surah-card[data-n="${currentPlayingSurah.n}"]`);
+  if (card) card.classList.add(globalAudio.paused ? 'paused-playing' : 'playing');
+}
+
+// نقطة مركزية واحدة لكل الاستماع لحالة عنصر <audio>: تُحدِّث شريط التقدم/الوقت
+// في المشغل الثابت وأيضًا نص الوقت المختصر داخل المودال (لو مفتوح) في نفس الوقت.
+// لا يوجد أي event listener مكرر — مصدر واحد للحقيقة يمنع أي تعارض في المزامنة.
+globalAudio.addEventListener('timeupdate', () => {
+  if (!globalAudio.duration) return;
+  document.getElementById('spCurrent').textContent = fmtTime(globalAudio.currentTime);
+  document.getElementById('spProgress').value = (globalAudio.currentTime / globalAudio.duration) * 100;
+  const timeInfo = document.getElementById('modalTimeInfo');
+  if (timeInfo) timeInfo.textContent = `${fmtTime(globalAudio.currentTime)} / ${fmtTime(globalAudio.duration)}`;
+});
+globalAudio.addEventListener('loadedmetadata', () => {
+  document.getElementById('spDuration').textContent = fmtTime(globalAudio.duration);
+  syncModalPlayBtn();
+});
+globalAudio.addEventListener('ended', () => {
+  document.getElementById('spPlayBtn').textContent = '▶';
+  syncModalPlayBtn();
+  updatePlayingCardIndicator();
+});
+document.getElementById('spProgress').addEventListener('input', function () {
+  if (globalAudio.duration) globalAudio.currentTime = (this.value / 100) * globalAudio.duration;
+});
+document.getElementById('spVolume').addEventListener('input', function () {
+  globalAudio.volume = this.value;
+});
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 
-// YouTube Views
+// YouTube Views — بيمر عبر Cloudflare Worker بدل استدعاء YouTube API مباشرة
+// من المتصفح، عشان المفتاح ميبقاش ظاهر في كود الصفحة خالص.
 async function fetchViews() {
-  const apiKey = 'AIzaSyCd3AxQWIepLYYDBqscsmrcm5QoU4AY118'; 
+  // ⚠️ استبدل الرابط ده برابط الـ Worker بتاعك بعد النشر (شكله https://xxx.workers.dev)
+  const WORKER_URL = 'https://YOUR-WORKER-SUBDOMAIN.workers.dev/views';
   const videoId = 'TYRedJ9sD0M';
-  const url = `https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${videoId}&key=${apiKey}`;
+  const url = `${WORKER_URL}?id=${videoId}`;
 
   try {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
     const data = await res.json();
-    if (!data.items || data.items.length === 0) throw new Error('Video not found');
+    if (!data.viewCount) throw new Error('Video not found');
 
-    const v = Number(data.items[0].statistics.viewCount);
+    const v = Number(data.viewCount);
     const fmt = v >= 1e6 ? (v/1e6).toFixed(1)+'M' : v >= 1e3 ? (v/1e3).toFixed(1)+'K' : v.toLocaleString();
     document.getElementById('views-count').textContent = fmt;
   } catch (error) { 
@@ -659,7 +785,7 @@ window.addEventListener('load', () => { ScrollTrigger.refresh(); });
 if (location.hash) {
   const targetSection = document.querySelector(location.hash);
   if (targetSection) {
-    gsap.set(targetSection.querySelectorAll('.contact-btn, .avatar, .about-card, .video-card, .surah-item, .playlist-banner'), { opacity: 1, y: 0, scale: 1, rotate: 0, clearProps: 'transform' });
+    gsap.set(targetSection.querySelectorAll('.contact-btn, .avatar, .about-card, .video-card, .surah-item, .surah-card, .surah-controls, .playlist-banner'), { opacity: 1, y: 0, scale: 1, rotate: 0, clearProps: 'transform' });
   }
 }
 
@@ -736,12 +862,26 @@ gsap.utils.toArray('.divider').forEach(div => {
   });
 });
 
-/* ---------- 5) كروت الفيديوهات: ظهور متتابع ---------- */
-gsap.from('.video-card', {
-  y: 40, opacity: 0, duration: .7, stagger: .15, ease: 'power3.out',
-  scrollTrigger: { trigger: '.videos-grid', start: 'top 80%', once: true },
-  onStart: () => gsap.set('.video-card', { willChange: 'transform, opacity' }),
-  onComplete: () => gsap.set('.video-card', { willChange: 'auto' })
+/* ---------- 5) كروت الفيديوهات: ظهور متتابع (يختلف حسب حجم الشاشة عبر gsap.matchMedia) ---------- */
+const mm = gsap.matchMedia();
+
+// سطح المكتب: حركة أكثر ثراءً — دخول مع دوران خفيف وتتابع أبطأ وأوضح
+mm.add('(min-width: 601px)', () => {
+  gsap.from('.video-card', {
+    y: 50, opacity: 0, rotateX: -8, transformPerspective: 600,
+    duration: .8, stagger: .18, ease: 'power3.out',
+    scrollTrigger: { trigger: '.videos-grid', start: 'top 80%', once: true },
+    onStart: () => gsap.set('.video-card', { willChange: 'transform, opacity' }),
+    onComplete: () => gsap.set('.video-card', { willChange: 'auto' })
+  });
+});
+
+// الهواتف: حركة أبسط وأسرع — بدون دوران ثلاثي الأبعاد، لأداء أخف على المعالجات الأضعف
+mm.add('(max-width: 600px)', () => {
+  gsap.from('.video-card', {
+    y: 24, opacity: 0, duration: .5, stagger: .1, ease: 'power2.out',
+    scrollTrigger: { trigger: '.videos-grid', start: 'top 85%', once: true }
+  });
 });
 
 // نبضة خفيفة مستمرة على أزرار التشغيل لجذب العين نحو الفيديوهات
@@ -786,10 +926,17 @@ gsap.from('.surah-controls', {
   scrollTrigger: { trigger: '.surah-controls', start: 'top 85%', once: true }
 });
 
-// شبكة السور (114 عنصر) — ظهور واحد بسيط ومضمون لكل الشبكة عند دخولها للشاشة
-gsap.from('.surahs-grid', {
-  opacity: 0, y: 20, duration: .6, ease: 'power2.out',
-  scrollTrigger: { trigger: '.surahs-grid', start: 'top 88%', once: true }
+// شبكة السور (114 عنصر) — استخدام ScrollTrigger.batch بدل تحريك الشبكة كوحدة واحدة
+// كل مجموعة كروت تدخل الشاشة تُحرَّك دفعة واحدة، مما يمنع أي تراكم/تقطيع في
+// التوقيتات عند التمرير السريع (fast scroll) عبر شبكة كبيرة كهذه
+gsap.set('.surah-card', { opacity: 0, y: 18 });
+ScrollTrigger.batch('.surah-card', {
+  start: 'top 92%',
+  once: true,
+  batchMax: 12,
+  onEnter: batch => gsap.to(batch, {
+    opacity: 1, y: 0, duration: .5, ease: 'power2.out', stagger: .04, overwrite: true
+  })
 });
 
 /* ---------- 9) فوتر ---------- */
