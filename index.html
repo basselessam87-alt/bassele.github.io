@@ -7,14 +7,42 @@
 <meta property="og:title" content="تدبر القرآن - Tadabbur Al-Quran | باسل عصام">
 <meta property="og:description" content="استمع إلى المصحف المرتل كاملاً من الحرم المكي">
 <title>تدبر القرآن - Tadabbur Al-Quran | باسل عصام</title>
+<!--
+  Content-Security-Policy: يقيّد مصادر التحميل لمنع حقن سكربتات خارجية (XSS) وتسريب بيانات.
+  ملاحظة: 'unsafe-inline' في script-src ضروري لأن كل جافاسكريبت الموقع inline
+  (بدون ملف .js منفصل ولا nonce) — وده يُضعف الحماية من CSP جزئيًا. الحل
+  الأقوى لاحقًا: نقل كل الكود لملف .js خارجي + إزالة onclick="" من الـ HTML
+  واستبدالها بـ addEventListener، عشان نقدر نشيل unsafe-inline بأمان.
+-->
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src https://fonts.gstatic.com;
+  img-src 'self' https: data:;
+  media-src https://archive.org;
+  connect-src 'self' https://www.googleapis.com https://archive.org;
+  frame-src https://www.youtube.com https://youtube.com;
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<!--
+  ملاحظة: شلت SRI (integrity) عن ملفي GSAP لأني ملقتش وسيلة موثوقة أتحقق بيها
+  من الـ hash الصحيح جوه هذه البيئة، وأي hash غلط يمنع تحميل الملف بالكامل
+  ويكسر كل أنيميشن الموقع (زي ما حصل بالظبط). لو حابب تفعّلها بأمان، روح
+  https://www.srihash.org وحط رابط الملفين، وحط الناتج هنا بنفسك.
+-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   
-  /* المتغيرات الأساسية (الوضع الليلي الافتراضي) */
+  /* المتغيرا الأساسية (الوضع الليلي الافتراضي) */
   :root { 
     --gold: #c9a84c; 
     --gold-light: #f0d080;
@@ -256,6 +284,33 @@
 
   .anim-init { visibility: hidden; }
   nav.scrolled { box-shadow: 0 8px 30px rgba(0,0,0,0.35); border-bottom-color: rgba(201,168,76,0.35); }
+
+  /* ===== Continue Listening Banner (استكمال الاستماع) ===== */
+  .continue-banner {
+    max-width: 640px;
+    margin: 1.2rem auto 0;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 12px;
+    padding: .9rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+  .continue-banner-icon { font-size: 1.3rem; flex-shrink: 0; }
+  .continue-banner-text { color: var(--text); font-size: .88rem; flex: 1; min-width: 180px; }
+  .continue-banner-text strong { color: var(--gold); }
+  .continue-banner-actions { display: flex; gap: .6rem; flex-shrink: 0; }
+  .continue-banner-btn { background: var(--gold); color: #0a0f1e; border: none; padding: .5rem 1.1rem; border-radius: 8px; font-family: 'Cairo', sans-serif; font-size: .82rem; font-weight: 700; cursor: pointer; transition: background .3s; }
+  .continue-banner-btn:hover { background: var(--gold-light); }
+  .continue-banner-dismiss { background: none; border: 1px solid rgba(201,168,76,0.3); color: var(--muted); padding: .5rem .9rem; border-radius: 8px; font-family: 'Cairo', sans-serif; font-size: .82rem; cursor: pointer; transition: all .3s; }
+  .continue-banner-dismiss:hover { color: var(--gold); border-color: var(--gold); }
+  @media (max-width: 600px) {
+    .continue-banner { margin: 1rem 1rem 0; padding: .8rem 1rem; }
+  }
 </style>
 </head>
 <body>
@@ -271,14 +326,16 @@
   </div>
 </nav>
 
+<div id="continueBannerWrap"></div>
+
 <div class="hero">
   <div class="quran-deco anim-init">﷽</div>
   <div class="hero-badge anim-init">Tadabbur Al-Quran</div>
   <h1 class="anim-init">القرآن الكريم<br>من <span>الحرم المكي</span></h1>
   <p class="anim-init">استمع إلى المصحف المرتل كاملاً بصوت الشيخ أ.د ماهر المعيقلي من المسجد الحرام في مكة المكرمة — تجربة روحانية لا مثيل لها</p>
   <div class="hero-btns anim-init">
-    <a href="https://youtube.com/@tadabburquran360?si=goy6cCWoRjpY-2pu" class="btn-primary" target="_blank">اشترك في القناة</a>
-    <a href="https://youtube.com/playlist?list=PLbmqYj4HTstumH44E4qU7cdNXTJ1TsAJr" class="btn-outline" target="_blank">المصحف المرتل كاملاً</a>
+    <a href="https://youtube.com/@tadabburquran360?si=goy6cCWoRjpY-2pu" class="btn-primary" target="_blank" rel="noopener noreferrer">اشترك في القناة</a>
+    <a href="https://youtube.com/playlist?list=PLbmqYj4HTstumH44E4qU7cdNXTJ1TsAJr" class="btn-outline" target="_blank" rel="noopener noreferrer">المصحف المرتل كاملاً</a>
   </div>
   <div class="stat-row anim-init">
     <div class="stat">
@@ -303,15 +360,15 @@
   <div class="section-title">سورة البقرة كاملة</div>
   <div class="section-sub">ثلاثة إصدارات من قلب الحرم المكي الشريف</div>
   <div class="videos-grid">
-    <a class="video-card" href="https://youtu.be/TYRedJ9sD0M?si=ML3FZFbC2KaPleWW" target="_blank">
+    <a class="video-card" href="https://youtu.be/TYRedJ9sD0M?si=ML3FZFbC2KaPleWW" target="_blank" rel="noopener noreferrer">
       <div class="video-thumb"><img src="https://img.youtube.com/vi/TYRedJ9sD0M/hqdefault.jpg" alt="سورة البقرة 1445"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div></div>
       <div class="video-info"><div class="video-year">إصدار 1445 هـ</div><div class="video-title">سورة البقرة كاملة</div><div class="video-sub">الشيخ أ.د ماهر المعيقلي • الحرم المكي</div></div>
     </a>
-    <a class="video-card" href="https://youtu.be/q95qeWIMXa0" target="_blank">
+    <a class="video-card" href="https://youtu.be/q95qeWIMXa0" target="_blank" rel="noopener noreferrer">
       <div class="video-thumb"><img src="https://img.youtube.com/vi/q95qeWIMXa0/hqdefault.jpg" alt="سورة البقرة 1446"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div></div>
       <div class="video-info"><div class="video-year">إصدار 1446 هـ</div><div class="video-title">سورة البقرة كاملة</div><div class="video-sub">الشيخ أ.د ماهر المعيقلي • الحرم المكي</div></div>
     </a>
-    <a class="video-card" href="https://youtu.be/sEOeiYWu2TE" target="_blank">
+    <a class="video-card" href="https://youtu.be/sEOeiYWu2TE" target="_blank" rel="noopener noreferrer">
       <div class="video-thumb"><img src="https://img.youtube.com/vi/sEOeiYWu2TE/hqdefault.jpg" alt="سورة البقرة 1447"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div></div>
       <div class="video-info"><div class="video-year">إصدار 1447 هـ</div><div class="video-title">سورة البقرة كاملة</div><div class="video-sub">الشيخ أ.د ماهر المعيقلي • الحرم المكي</div></div>
     </a>
@@ -330,7 +387,7 @@
       <h3>المصحف المرتل كاملاً</h3>
       <p>مشروع فريد من نوعه يجمع القرآن الكريم كاملاً بتلاوة الشيخ أ.د ماهر المعيقلي من المسجد الحرام بمكة المكرمة، في جودة صوتية عالية وتجربة استماع روحانية مميزة.</p>
     </div>
-    <a href="https://youtube.com/playlist?list=PLbmqYj4HTstumH44E4qU7cdNXTJ1TsAJr" class="btn-primary" target="_blank" style="flex-shrink:0">استمع الآن</a>
+    <a href="https://youtube.com/playlist?list=PLbmqYj4HTstumH44E4qU7cdNXTJ1TsAJr" class="btn-primary" target="_blank" rel="noopener noreferrer" style="flex-shrink:0">استمع الآن</a>
   </div>
 </section>
 
@@ -346,14 +403,13 @@
       <div class="about-meta">يوتيوبر •</div>
       <p>مؤسس قناة " تدبّر القرآن " — أجمع المصحف المرتل للشيخ د.ماهر المعيقلي من الحرم المكي ،لأتيح لكل مستمعين الشيخ ماهر تجربة للمصحف فريدة.</p>
       <div class="contact-row">
-        <a href="https://youtube.com/@tadabburquran360?si=goy6cCWoRjpY-2pu" class="contact-btn" target="_blank">▶ يوتيوب</a>
-        <a href="https://basselessam87-alt.github.io/bassele.github.io" class="contact-btn" target="_blank">🌐 الموقع</a>
-        <a href="https://x.com/1bassele" class="contact-btn" target="_blank">✖ تويتر X</a>
-        <a href="https://www.instagram.com/tadabburquran360/" class="contact-btn" target="_blank">📸 انستجرام</a>
-        <a href="https://t.me/hyfQuran" class="contact-btn" target="_blank">📢 قناة التيليجرام</a>
-        <a href="https://t.me/bassels_bot" class="contact-btn" target="_blank">📨 بوت تيليجرام للتواصل</a>
-        <a href="https://www.facebook.com/share/1BHqQJ416Q/" class="contact-btn" target="_blank">📘 فيسبوك</a>
-        <a href="https://www.tiktok.com/@tadabburquran36?is_from_webapp=1&sender_device=pc" class="contact-btn" target="_blank">🎵 تيك توك</a>
+        <a href="https://youtube.com/@tadabburquran360?si=goy6cCWoRjpY-2pu" class="contact-btn" target="_blank" rel="noopener noreferrer">▶ يوتيوب</a>
+        <a href="https://tadabbur-quran.bassel-essam.workers.dev" class="contact-btn" target="_blank" rel="noopener noreferrer">🌐 الموقع</a>
+        <a href="https://x.com/1bassele" class="contact-btn" target="_blank" rel="noopener noreferrer">✖ تويتر X</a>
+        <a href="https://www.instagram.com/tadabburquran360/" class="contact-btn" target="_blank" rel="noopener noreferrer">📸 انستجرام</a>
+        <a href="https://t.me/hyfQuran" class="contact-btn" target="_blank" rel="noopener noreferrer">📢 قناة التيليجرام</a>
+        <a href="https://t.me/bassels_bot" class="contact-btn" target="_blank" rel="noopener noreferrer">📨 بوت تيليجرام للتواصل</a>
+        <a href="https://www.facebook.com/share/1BHqQJ416Q/" class="contact-btn" target="_blank" rel="noopener noreferrer">📘 فيسبوك</a>
       </div>
     </div>
   </div>
@@ -477,7 +533,7 @@ const surahs = [
   {n:17, name:"الإسراء", type:"مكية", ayat:111, hasMp3:true, yt:"https://youtu.be/dXBzUwcoiY4?si=G6NAQjXwsHws2IMR"},
   {n:18, name:"الكهف", type:"مكية", ayat:110, hasMp3:true, yt:"https://youtu.be/jKHgS7WYyCc?si=aJok8F1g4pcXRTJt"},
   {n:19, name:"مريم", type:"مكية", ayat:98, hasMp3:true, yt:"https://youtu.be/oY-_RcnU0dU?si=QyMgBKW1YcG1DX4P"},
-  {n:20, name:"طه", type:"مكية", ayat:135, hasMp3:false, yt:null},
+  {n:20, name:"طه", type:"مكية", ayat:135, hasMp3:true, yt:"https://youtu.be/eNEDnjebLJY?si=5W-9svTdJDlFcQaT"},
   {n:21, name:"الأنبياء", type:"مكية", ayat:112, hasMp3:true, yt:"https://youtu.be/8YH8AdZGmEI?si=AKoFqaHSWlsMT8z0"},
   {n:22, name:"الحج", type:"مدنية", ayat:78, hasMp3:true, yt:"https://youtu.be/pP7yuT3RuPc?si=je6TrodNw2JyEG_V"},
   {n:23, name:"المؤمنون", type:"مكية", ayat:118, hasMp3:true, yt:"https://youtu.be/KGAZ0doGP4A?si=mngzWur13p--5AGn"},
@@ -648,7 +704,12 @@ function openModal(s) {
   let footer = '';
 
   const ytId = extractYtId(s.yt);
-  if (ytId) {
+  // كل فتح لمودال فيه فيديو = طلب تضمين جديد من يوتيوب — نحدّه بـ 12 كل 20 ثانية
+  const canEmbedVideo = ytId && RateLimiter.allow('yt-embed', 12, 20000);
+  if (ytId && !canEmbedVideo) {
+    notifyRateLimited('برجاء الانتظار قليلاً قبل فتح فيديو آخر');
+  }
+  if (canEmbedVideo) {
     content += `<div class="yt-embed-wrap">
       <iframe src="https://www.youtube.com/embed/${ytId}?rel=0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -658,7 +719,7 @@ function openModal(s) {
     content += `<div class="yt-no-embed">
       <div class="yt-no-embed-icon">▶</div>
       <div><p>متاح على يوتيوب بجودة فيديو عالية</p>
-      <a href="${s.yt}" target="_blank" class="btn-yt">▶ شاهد على يوتيوب</a></div>
+      <a href="${s.yt}" target="_blank" rel="noopener noreferrer" class="btn-yt">▶ شاهد على يوتيوب</a></div>
     </div>`;
   }
 
@@ -690,7 +751,7 @@ function openModal(s) {
       </div>
       <p style="font-size:.72rem;color:var(--muted);margin-top:.6rem;text-align:center">يستمر التشغيل حتى بعد إغلاق هذه النافذة أو تصفح باقي الموقع</p>
     </div>`;
-    footer += `<a href="${url}" download class="btn-outline btn-sm">⬇ تنزيل MP3</a>`;
+    footer += `<a href="${url}" download class="btn-outline btn-sm" onclick="return checkDownloadRateLimit(event)">⬇ تنزيل MP3</a>`;
   }
 
   if (!s.hasMp3 && !s.yt) {
@@ -699,7 +760,7 @@ function openModal(s) {
       <strong>قريباً إن شاء الله</strong>
       هذه السورة ستُضاف قريباً — تابع القناة على يوتيوب وتيليجرام لتُخطَر فور الإضافة.
     </div>`;
-    footer = `<a href="https://t.me/hyfQuran" class="btn-primary btn-sm" target="_blank">📢 تابع للإشعار</a>`;
+    footer = `<a href="https://t.me/hyfQuran" class="btn-primary btn-sm" target="_blank" rel="noopener noreferrer">📢 تابع للإشعار</a>`;
   }
 
   document.getElementById('mContent').innerHTML = content;
@@ -720,6 +781,57 @@ function closeModalOutside(e) {
   if (e.target === document.getElementById('modalOverlay')) closeModal();
 }
 
+/* =========================================================
+   Rate Limiter (تحديد معدل الطلبات)
+   ملاحظة أمنية مهمة: هذا الموقع Static (بدون Backend)، لذلك هذا
+   الحد يعمل بالكامل داخل المتصفح ولا يمنع مستخدمًا متمرسًا من
+   تجاوزه عبر Console (يقدر ينادي الدوال مباشرة). وظيفته الحقيقية:
+   منع الإفراط العرضي/الآلي في الطلبات (نقر متكرر سريع، سكربت تلقائي
+   بسيط) الذي يستهلك حصة archive.org أو يُحمّل خوادم يوتيوب المُضمّنة.
+   لحماية حقيقية ضد إساءة استخدام متعمدة، لازم Rate Limiting من جهة
+   خادم/CDN (مثلاً Cloudflare) — غير ممكن على استضافة ثابتة كهذه.
+   بحسب الطلب: هذا الحد لا يُطبَّق على استدعاء YouTube Data API
+   (دالة fetchViews) لأنه مطلوب استثناؤه.
+   ========================================================= */
+const RateLimiter = (() => {
+  const buckets = {};
+  return {
+    allow(key, maxCalls, windowMs) {
+      const now = Date.now();
+      const bucket = buckets[key] || (buckets[key] = []);
+      while (bucket.length && now - bucket[0] > windowMs) bucket.shift();
+      if (bucket.length >= maxCalls) return false;
+      bucket.push(now);
+      return true;
+    }
+  };
+})();
+
+let rateLimitToastTimer = null;
+function notifyRateLimited(message) {
+  let toast = document.getElementById('rateLimitToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'rateLimitToast';
+    toast.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(10,15,30,0.95);color:#f0e6c8;border:1px solid rgba(201,168,76,0.4);padding:.6rem 1.2rem;border-radius:8px;font-size:.82rem;z-index:9999;font-family:Cairo,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.3)';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.style.display = 'block';
+  clearTimeout(rateLimitToastTimer);
+  rateLimitToastTimer = setTimeout(() => { toast.style.display = 'none'; }, 2200);
+}
+
+function checkDownloadRateLimit(e) {
+  // حد أقصى 5 عمليات تنزيل mp3 كل 30 ثانية
+  if (!RateLimiter.allow('mp3-download', 5, 30000)) {
+    notifyRateLimited('برجاء الانتظار قليلاً قبل تنزيل ملف آخر');
+    if (e) e.preventDefault();
+    return false;
+  }
+  return true;
+}
+
 const globalAudio = document.getElementById('globalAudio');
 let currentPlayingSurah = null;
 
@@ -730,16 +842,25 @@ function fmtTime(s) {
   return `${m}:${sec.toString().padStart(2,'0')}`;
 }
 
-function playSurahAudio(n) {
+let pendingResumeTime = null;
+
+function playSurahAudio(n, resumeAt) {
   const s = surahs.find(x => x.n === n);
   if (!s || !s.hasMp3) return;
-  if (currentPlayingSurah && currentPlayingSurah.n === n) {
+  if (currentPlayingSurah && currentPlayingSurah.n === n && resumeAt == null) {
     togglePlay();
+    return;
+  }
+
+  // كل تبديل سورة = طلب جديد لملف mp3 من archive.org — نحدّه بـ 8 كل 15 ثانية
+  if (!RateLimiter.allow('audio-load', 8, 15000)) {
+    notifyRateLimited('برجاء الانتظار قليلاً قبل تبديل السورة مرة أخرى');
     return;
   }
 
   const url = BASE + encodeURIComponent('سورة ' + s.name) + '.mp3';
   currentPlayingSurah = s;
+  pendingResumeTime = (typeof resumeAt === 'number' && resumeAt > 0) ? resumeAt : null;
   globalAudio.src = url;
   globalAudio.play();
   document.getElementById('spName').textContent = `سورة ${s.name}`;
@@ -748,6 +869,7 @@ function playSurahAudio(n) {
   document.getElementById('spPlayBtn').textContent = '⏸';
   syncModalPlayBtn();
   updatePlayingCardIndicator();
+  hideContinueBanner();
 }
 
 function togglePlay() {
@@ -765,10 +887,16 @@ function togglePlay() {
 
 function skipAudio(sec) {
   if (!currentPlayingSurah || !isFinite(globalAudio.duration)) return;
+  // كل قفزة تسبب طلب Range جديد للملف الصوتي — نحدّها بـ 20 كل 10 ثواني
+  if (!RateLimiter.allow('audio-seek', 20, 10000)) {
+    notifyRateLimited('برجاء الانتظار قليلاً قبل التقديم/الترجيع مرة أخرى');
+    return;
+  }
   globalAudio.currentTime = Math.max(0, Math.min(globalAudio.duration, globalAudio.currentTime + sec));
 }
 
 function stopGlobalAudio() {
+  saveContinueProgress(true);
   globalAudio.pause();
   globalAudio.removeAttribute('src');
   currentPlayingSurah = null;
@@ -785,8 +913,15 @@ function syncModalPlayBtn() {
   btn.textContent = isThisPlaying ? '⏸' : '▶';
 }
 
+let lastSeekTime = 0;
 function seekAudio(val) {
-  if (globalAudio.duration) globalAudio.currentTime = (val / 100) * globalAudio.duration;
+  if (!globalAudio.duration) return;
+  // السحب على الشريط يطلق أحداث كثيرة جدًا؛ نستخدم throttle (بدل حظر صلب)
+  // حتى لا نُفسد تجربة السحب، مع تقليل عدد طلبات الـ Range فعليًا
+  const now = Date.now();
+  if (now - lastSeekTime < 120) return;
+  lastSeekTime = now;
+  globalAudio.currentTime = (val / 100) * globalAudio.duration;
 }
 
 function setAudioVolume(val) {
@@ -819,12 +954,85 @@ globalAudio.addEventListener('loadedmetadata', () => {
   const mDuration = document.getElementById('modalDuration');
   if (mDuration) mDuration.textContent = fmtTime(globalAudio.duration);
   syncModalPlayBtn();
+  if (pendingResumeTime != null && isFinite(globalAudio.duration)) {
+    globalAudio.currentTime = Math.min(pendingResumeTime, Math.max(0, globalAudio.duration - 1));
+    pendingResumeTime = null;
+  }
 });
+
+/* =========================================================
+   استكمال الاستماع (Continue Listening)
+   نحفظ رقم السورة والثانية الحالية في localStorage، بشرط:
+   - تجاوزنا أول 15 ثانية (مش هيفيد نحفظ لحظة البداية)
+   - وباقي أكتر من 15 ثانية على النهاية (لو قرب يخلص محتاجينش نستأنف)
+   الحفظ نفسه محدود بمرة كل 10 ثواني (throttle) عشان منكتبش على
+   القرص باستمرار مع كل tick من timeupdate.
+   ========================================================= */
+const CONTINUE_KEY = 'continueListening';
+const CONTINUE_SAVE_INTERVAL = 10000; // 10 ثواني
+let lastContinueSave = 0;
+
+function saveContinueProgress(force) {
+  if (!currentPlayingSurah || !isFinite(globalAudio.duration)) return;
+  const now = Date.now();
+  if (!force && now - lastContinueSave < CONTINUE_SAVE_INTERVAL) return;
+  lastContinueSave = now;
+  const t = globalAudio.currentTime;
+  if (t < 15 || (globalAudio.duration - t) < 15) return;
+  try {
+    localStorage.setItem(CONTINUE_KEY, JSON.stringify({ n: currentPlayingSurah.n, time: t }));
+  } catch (e) { /* localStorage قد يكون معطلاً (وضع التصفح الخاص) — نتجاهل بصمت */ }
+}
+
+function clearContinueProgress() {
+  try { localStorage.removeItem(CONTINUE_KEY); } catch (e) {}
+}
+
+function hideContinueBanner() {
+  const wrap = document.getElementById('continueBannerWrap');
+  if (wrap) wrap.innerHTML = '';
+}
+
+function showContinueBannerIfNeeded() {
+  let saved;
+  try { saved = JSON.parse(localStorage.getItem(CONTINUE_KEY) || 'null'); } catch (e) { saved = null; }
+  if (!saved || typeof saved.n !== 'number' || typeof saved.time !== 'number') return;
+
+  const s = surahs.find(x => x.n === saved.n && x.hasMp3);
+  if (!s) { clearContinueProgress(); return; }
+
+  const wrap = document.getElementById('continueBannerWrap');
+  if (!wrap) return;
+  wrap.innerHTML = `
+    <div class="continue-banner">
+      <div class="continue-banner-icon">🎧</div>
+      <div class="continue-banner-text">استكمال سورة <strong>${s.name}</strong> من <strong>${fmtTime(saved.time)}</strong>؟</div>
+      <div class="continue-banner-actions">
+        <button class="continue-banner-btn" id="continueResumeBtn">استكمال</button>
+        <button class="continue-banner-dismiss" id="continueDismissBtn">تجاهل</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('continueResumeBtn').addEventListener('click', () => {
+    playSurahAudio(s.n, saved.time);
+  });
+  document.getElementById('continueDismissBtn').addEventListener('click', () => {
+    clearContinueProgress();
+    hideContinueBanner();
+  });
+}
+
+globalAudio.addEventListener('timeupdate', () => saveContinueProgress(false));
+globalAudio.addEventListener('pause', () => saveContinueProgress(true));
+window.addEventListener('beforeunload', () => saveContinueProgress(true));
+
+showContinueBannerIfNeeded();
 
 /* =========================================================
    Auto-Play Logic (التشغيل المتواصل)
    ========================================================= */
 globalAudio.addEventListener('ended', () => {
+  clearContinueProgress();
   document.getElementById('spPlayBtn').textContent = '▶';
   syncModalPlayBtn();
   updatePlayingCardIndicator();
@@ -853,7 +1061,51 @@ document.getElementById('spVolume').addEventListener('input', function () {
   setAudioVolume(this.value);
 });
 
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+/* =========================================================
+   اختصارات لوحة المفاتيح (Keyboard Shortcuts)
+   Space: تشغيل/إيقاف — →/←: تقديم/ترجيع 10 ثواني — ↑/↓: رفع/خفض الصوت
+   نستثني أي تفاعل والمستخدم بيكتب (بحث، أي input/textarea/select
+   أو عنصر contenteditable) عشان الاختصارات متبوظش الكتابة.
+   ========================================================= */
+function isTypingContext(target) {
+  if (!target) return false;
+  const tag = target.tagName ? target.tagName.toLowerCase() : '';
+  return tag === 'input' || tag === 'textarea' || tag === 'select' || target.isContentEditable;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); return; }
+
+  if (isTypingContext(e.target)) return;
+
+  switch (e.key) {
+    case ' ':
+    case 'Spacebar':
+      if (currentPlayingSurah) {
+        e.preventDefault();
+        togglePlay();
+      }
+      break;
+    case 'ArrowRight':
+      if (currentPlayingSurah) { e.preventDefault(); skipAudio(10); }
+      break;
+    case 'ArrowLeft':
+      if (currentPlayingSurah) { e.preventDefault(); skipAudio(-10); }
+      break;
+    case 'ArrowUp':
+      if (currentPlayingSurah) {
+        e.preventDefault();
+        setAudioVolume(Math.min(1, Math.round((globalAudio.volume + 0.1) * 100) / 100));
+      }
+      break;
+    case 'ArrowDown':
+      if (currentPlayingSurah) {
+        e.preventDefault();
+        setAudioVolume(Math.max(0, Math.round((globalAudio.volume - 0.1) * 100) / 100));
+      }
+      break;
+  }
+});
 
 async function fetchViews() {
   const apiKey = 'AIzaSyCd3AxQWIepLYYDBqscsmrcm5QoU4AY118';
