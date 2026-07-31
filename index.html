@@ -938,18 +938,19 @@ gsap.utils.toArray('.divider').forEach(div => {
 const mm = gsap.matchMedia();
 mm.add('(min-width: 601px)', () => {
   gsap.from('.video-card', {
-    y: 50, opacity: 0, rotateX: -8, transformPerspective: 600,
-    duration: .8, stagger: .18, ease: 'power3.out',
-    scrollTrigger: { trigger: '.videos-grid', start: 'top 80%', once: true },
+    y: 24, opacity: 0, rotateX: -4, transformPerspective: 600,
+    duration: .5, stagger: .1, ease: 'power2.out',
+    scrollTrigger: { trigger: '.videos-grid', start: 'top 95%', once: true },
     onStart: () => gsap.set('.video-card', { willChange: 'transform, opacity' }),
-    onComplete: () => gsap.set('.video-card', { willChange: 'auto' })
+    onComplete: () => gsap.set('.video-card', { clearProps: 'transform,opacity,willChange' })
   });
 });
 
 mm.add('(max-width: 600px)', () => {
   gsap.from('.video-card', {
-    y: 24, opacity: 0, duration: .5, stagger: .1, ease: 'power2.out',
-    scrollTrigger: { trigger: '.videos-grid', start: 'top 85%', once: true }
+    y: 16, opacity: 0, duration: .4, stagger: .08, ease: 'power2.out',
+    scrollTrigger: { trigger: '.videos-grid', start: 'top 95%', once: true },
+    onComplete: () => gsap.set('.video-card', { clearProps: 'transform,opacity' })
   });
 });
 
