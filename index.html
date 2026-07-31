@@ -153,14 +153,14 @@
   .btn-yt { background: #cc0000; color: #fff; padding: .5rem 1rem; border-radius: 8px; text-decoration: none; font-size: .82rem; font-weight: 700; transition: all .3s; display: inline-flex; align-items: center; gap: .4rem; }
   .btn-yt:hover { background: #ff2020; transform: translateY(-1px); }
 
-  .audio-player-wrap { background: var(--dark3); border: 1px solid rgba(201,168,76,0.15); border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1rem; }
-  .audio-player-label { font-size: .78rem; color: var(--muted); margin-bottom: .8rem; display:flex; align-items:center; gap:.4rem; }
+  .audio-player-wrap { background: var(--dark3); border: 1px solid rgba(201,168,76,0.15); border-radius: 10px; padding: .9rem 1.1rem; margin-bottom: .8rem; }
+  .audio-player-label { font-size: .78rem; color: var(--muted); margin-bottom: .6rem; display:flex; align-items:center; gap:.4rem; }
   .audio-player-label::before { content: '🎧'; }
-  .modal-player-name { font-family: 'Amiri', serif; font-size: 1.1rem; color: #fff; font-weight: 700; text-align: center; margin-bottom: .9rem; }
-  .audio-progress-wrap { margin-bottom: .3rem; }
-  .audio-time-row { display:flex; justify-content:space-between; font-size:.7rem; color:var(--muted); margin-bottom:.35rem; }
-  .audio-controls { display:flex; align-items:center; justify-content:center; gap:1rem; margin-top:.9rem; }
-  .audio-volume-row { display:flex; align-items:center; gap:.6rem; margin-top:1rem; }
+  .modal-player-name { font-family: 'Amiri', serif; font-size: 1rem; color: #fff; font-weight: 700; text-align: center; margin-bottom: .6rem; }
+  .audio-progress-wrap { margin-bottom: .1rem; }
+  .audio-time-row { display:flex; justify-content:space-between; font-size:.7rem; color:var(--muted); margin-bottom:.3rem; }
+  .audio-controls { display:flex; align-items:center; justify-content:center; gap:.8rem; margin-top:.6rem; }
+  .audio-volume-row { display:flex; align-items:center; gap:.6rem; margin-top:.6rem; }
   .audio-volume-row span { font-size:.9rem; flex-shrink:0; }
 
   /* ===== Floating Oval Sticky Player ===== */
@@ -638,7 +638,7 @@ function extractYtId(url) {
 
 function openModal(s) {
   document.getElementById('mNum').textContent = `سورة رقم ${s.n}`;
-  document.getElementById('mTitle').textContent = s.name;
+  document.getElementById('mTitle').textContent = `سورة ${s.name}`;
   document.getElementById('mMeta').innerHTML = `
     <span class="${s.type === 'مكية' ? 'tag-maki' : 'tag-madani'}">${s.type}</span>
     <span>·</span><span>${s.ayat} آية</span>
@@ -671,7 +671,7 @@ function openModal(s) {
     const progressVal = (isThisSurah && durTime) ? (curTime / durTime) * 100 : 0;
     content += `<div class="audio-player-wrap">
       <div class="audio-player-label">استمع إلى التلاوة من الحرم المكي</div>
-      <div class="modal-player-name">${s.name}</div>
+      <div class="modal-player-name">سورة ${s.name}</div>
       <div class="audio-progress-wrap">
         <div class="audio-time-row">
           <span id="modalCurrent">${fmtTime(curTime)}</span>
@@ -688,7 +688,7 @@ function openModal(s) {
         <span>🔉</span>
         <input class="audio-volume" type="range" id="modalVolume" min="0" max="1" step="0.05" value="${globalAudio.volume}" oninput="setAudioVolume(this.value)">
       </div>
-      <p style="font-size:.75rem;color:var(--muted);margin-top:.8rem;text-align:center">يستمر التشغيل حتى بعد إغلاق هذه النافذة أو تصفح باقي الموقع</p>
+      <p style="font-size:.72rem;color:var(--muted);margin-top:.6rem;text-align:center">يستمر التشغيل حتى بعد إغلاق هذه النافذة أو تصفح باقي الموقع</p>
     </div>`;
     footer += `<a href="${url}" download class="btn-outline btn-sm">⬇ تنزيل MP3</a>`;
   }
@@ -742,7 +742,7 @@ function playSurahAudio(n) {
   currentPlayingSurah = s;
   globalAudio.src = url;
   globalAudio.play();
-  document.getElementById('spName').textContent = s.name;
+  document.getElementById('spName').textContent = `سورة ${s.name}`;
   document.getElementById('stickyPlayer').classList.add('active');
   document.body.classList.add('player-active');
   document.getElementById('spPlayBtn').textContent = '⏸';
