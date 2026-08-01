@@ -13,6 +13,12 @@
   (بدون ملف .js منفصل ولا nonce) — وده يُضعف الحماية من CSP جزئيًا. الحل
   الأقوى لاحقًا: نقل كل الكود لملف .js خارجي + إزالة onclick="" من الـ HTML
   واستبدالها بـ addEventListener، عشان نقدر نشيل unsafe-inline بأمان.
+
+  ملاحظة مهمة عن media-src/connect-src: روابط archive.org/download/...
+  بتعمل 302 redirect لسيرفر CDN فرعي (زي ia601508.us.archive.org) مش
+  archive.org نفسه، والمتصفح بيطبّق الـ CSP على الرابط النهائي بعد الـ
+  redirect. لو media-src مقصور على archive.org فقط، هيتحجب تشغيل كل
+  ملفات mp3 من غير أي رسالة خطأ واضحة. عشان كده لازم *.archive.org.
 -->
 <meta http-equiv="Content-Security-Policy" content="
   default-src 'self';
@@ -20,8 +26,8 @@
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
   font-src https://fonts.gstatic.com;
   img-src 'self' https: data:;
-  media-src https://archive.org;
-  connect-src 'self' https://www.googleapis.com https://archive.org;
+  media-src https://archive.org https://*.archive.org;
+  connect-src 'self' https://www.googleapis.com https://archive.org https://*.archive.org;
   frame-src https://www.youtube.com https://youtube.com;
   object-src 'none';
   base-uri 'self';
