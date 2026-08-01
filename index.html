@@ -219,7 +219,8 @@
     transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .sticky-player.active { bottom: 25px; }
-  .sp-info { display: flex; align-items: center; gap: 0.8rem; min-width: 150px; }
+  .sp-info { display: flex; align-items: center; gap: 0.8rem; min-width: 150px; cursor: pointer; border-radius: 12px; transition: background .2s; padding: .2rem .4rem; margin: -.2rem -.4rem; }
+  .sp-info:hover, .sp-info:focus-visible { background: rgba(201,168,76,0.1); outline: none; }
   .sp-icon { font-size: 1.4rem; flex-shrink: 0; }
   .sp-name { font-family: 'Amiri', serif; font-size: 1rem; color: #fff; font-weight: 700; line-height: 1.2; }
   .sp-sub { font-size: 0.7rem; color: var(--muted); margin-top: 0.1rem; }
@@ -290,33 +291,6 @@
 
   .anim-init { visibility: hidden; }
   nav.scrolled { box-shadow: 0 8px 30px rgba(0,0,0,0.35); border-bottom-color: rgba(201,168,76,0.35); }
-
-  /* ===== Continue Listening Banner (استكمال الاستماع) ===== */
-  .continue-banner {
-    max-width: 640px;
-    margin: 1.2rem auto 0;
-    background: rgba(201,168,76,0.08);
-    border: 1px solid rgba(201,168,76,0.3);
-    border-radius: 12px;
-    padding: .9rem 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
-    text-align: center;
-  }
-  .continue-banner-icon { font-size: 1.3rem; flex-shrink: 0; }
-  .continue-banner-text { color: var(--text); font-size: .88rem; flex: 1; min-width: 180px; }
-  .continue-banner-text strong { color: var(--gold); }
-  .continue-banner-actions { display: flex; gap: .6rem; flex-shrink: 0; }
-  .continue-banner-btn { background: var(--gold); color: #0a0f1e; border: none; padding: .5rem 1.1rem; border-radius: 8px; font-family: 'Cairo', sans-serif; font-size: .82rem; font-weight: 700; cursor: pointer; transition: background .3s; }
-  .continue-banner-btn:hover { background: var(--gold-light); }
-  .continue-banner-dismiss { background: none; border: 1px solid rgba(201,168,76,0.3); color: var(--muted); padding: .5rem .9rem; border-radius: 8px; font-family: 'Cairo', sans-serif; font-size: .82rem; cursor: pointer; transition: all .3s; }
-  .continue-banner-dismiss:hover { color: var(--gold); border-color: var(--gold); }
-  @media (max-width: 600px) {
-    .continue-banner { margin: 1rem 1rem 0; padding: .8rem 1rem; }
-  }
 </style>
 </head>
 <body>
@@ -331,8 +305,6 @@
     <button id="themeToggle" class="theme-toggle-btn" title="تغيير المظهر">☀️</button>
   </div>
 </nav>
-
-<div id="continueBannerWrap"></div>
 
 <div class="hero">
   <div class="quran-deco anim-init">﷽</div>
@@ -455,7 +427,7 @@
 </div>
 
 <div class="sticky-player" id="stickyPlayer">
-  <div class="sp-info">
+  <div class="sp-info" onclick="openCurrentSurahModal()" onkeydown="if(event.key==='Enter')openCurrentSurahModal()" title="فتح صفحة السورة الحالية" role="button" tabindex="0">
     <div class="sp-icon">🎧</div>
     <div>
       <div class="sp-name" id="spName">—</div>
@@ -707,6 +679,12 @@ function extractYtId(url) {
   return m ? m[1] : null;
 }
 
+// بيرجّع لمودال السورة اللي شغالة حاليًا لما تدوس على المشغل العائم —
+// عشان المستخدم ميضطرش يدور تاني على السورة اللي كان بيسمعها.
+function openCurrentSurahModal() {
+  if (currentPlayingSurah) openModal(currentPlayingSurah);
+}
+
 function openModal(s) {
   document.getElementById('mNum').textContent = `سورة رقم ${s.n}`;
   document.getElementById('mTitle').textContent = `سورة ${s.name}`;
@@ -857,12 +835,10 @@ function fmtTime(s) {
   return `${m}:${sec.toString().padStart(2,'0')}`;
 }
 
-let pendingResumeTime = null;
-
-function playSurahAudio(n, resumeAt) {
+function playSurahAudio(n) {
   const s = surahs.find(x => x.n === n);
   if (!s || !s.hasMp3) return;
-  if (currentPlayingSurah && currentPlayingSurah.n === n && resumeAt == null) {
+  if (currentPlayingSurah && currentPlayingSurah.n === n) {
     togglePlay();
     return;
   }
@@ -875,7 +851,6 @@ function playSurahAudio(n, resumeAt) {
 
   const url = getMp3Url(s);
   currentPlayingSurah = s;
-  pendingResumeTime = (typeof resumeAt === 'number' && resumeAt > 0) ? resumeAt : null;
   globalAudio.src = url;
   globalAudio.play();
   document.getElementById('spName').textContent = `سورة ${s.name}`;
@@ -884,7 +859,6 @@ function playSurahAudio(n, resumeAt) {
   document.getElementById('spPlayBtn').textContent = '⏸';
   syncModalPlayBtn();
   updatePlayingCardIndicator();
-  hideContinueBanner();
 }
 
 function togglePlay() {
@@ -911,7 +885,6 @@ function skipAudio(sec) {
 }
 
 function stopGlobalAudio() {
-  saveContinueProgress(true);
   globalAudio.pause();
   globalAudio.removeAttribute('src');
   currentPlayingSurah = null;
@@ -969,85 +942,12 @@ globalAudio.addEventListener('loadedmetadata', () => {
   const mDuration = document.getElementById('modalDuration');
   if (mDuration) mDuration.textContent = fmtTime(globalAudio.duration);
   syncModalPlayBtn();
-  if (pendingResumeTime != null && isFinite(globalAudio.duration)) {
-    globalAudio.currentTime = Math.min(pendingResumeTime, Math.max(0, globalAudio.duration - 1));
-    pendingResumeTime = null;
-  }
 });
-
-/* =========================================================
-   استكمال الاستماع (Continue Listening)
-   نحفظ رقم السورة والثانية الحالية في localStorage، بشرط:
-   - تجاوزنا أول 15 ثانية (مش هيفيد نحفظ لحظة البداية)
-   - وباقي أكتر من 15 ثانية على النهاية (لو قرب يخلص محتاجينش نستأنف)
-   الحفظ نفسه محدود بمرة كل 10 ثواني (throttle) عشان منكتبش على
-   القرص باستمرار مع كل tick من timeupdate.
-   ========================================================= */
-const CONTINUE_KEY = 'continueListening';
-const CONTINUE_SAVE_INTERVAL = 10000; // 10 ثواني
-let lastContinueSave = 0;
-
-function saveContinueProgress(force) {
-  if (!currentPlayingSurah || !isFinite(globalAudio.duration)) return;
-  const now = Date.now();
-  if (!force && now - lastContinueSave < CONTINUE_SAVE_INTERVAL) return;
-  lastContinueSave = now;
-  const t = globalAudio.currentTime;
-  if (t < 15 || (globalAudio.duration - t) < 15) return;
-  try {
-    localStorage.setItem(CONTINUE_KEY, JSON.stringify({ n: currentPlayingSurah.n, time: t }));
-  } catch (e) { /* localStorage قد يكون معطلاً (وضع التصفح الخاص) — نتجاهل بصمت */ }
-}
-
-function clearContinueProgress() {
-  try { localStorage.removeItem(CONTINUE_KEY); } catch (e) {}
-}
-
-function hideContinueBanner() {
-  const wrap = document.getElementById('continueBannerWrap');
-  if (wrap) wrap.innerHTML = '';
-}
-
-function showContinueBannerIfNeeded() {
-  let saved;
-  try { saved = JSON.parse(localStorage.getItem(CONTINUE_KEY) || 'null'); } catch (e) { saved = null; }
-  if (!saved || typeof saved.n !== 'number' || typeof saved.time !== 'number') return;
-
-  const s = surahs.find(x => x.n === saved.n && x.hasMp3);
-  if (!s) { clearContinueProgress(); return; }
-
-  const wrap = document.getElementById('continueBannerWrap');
-  if (!wrap) return;
-  wrap.innerHTML = `
-    <div class="continue-banner">
-      <div class="continue-banner-icon">🎧</div>
-      <div class="continue-banner-text">استكمال سورة <strong>${s.name}</strong> من <strong>${fmtTime(saved.time)}</strong>؟</div>
-      <div class="continue-banner-actions">
-        <button class="continue-banner-btn" id="continueResumeBtn">استكمال</button>
-        <button class="continue-banner-dismiss" id="continueDismissBtn">تجاهل</button>
-      </div>
-    </div>
-  `;
-  document.getElementById('continueResumeBtn').addEventListener('click', () => {
-    playSurahAudio(s.n, saved.time);
-  });
-  document.getElementById('continueDismissBtn').addEventListener('click', () => {
-    clearContinueProgress();
-    hideContinueBanner();
-  });
-}
-
-globalAudio.addEventListener('timeupdate', () => saveContinueProgress(false));
-globalAudio.addEventListener('pause', () => saveContinueProgress(true));
-window.addEventListener('beforeunload', () => saveContinueProgress(true));
-
-showContinueBannerIfNeeded();
 
 /* =========================================================
    Auto-Play Logic (التشغيل المتواصل)
    ========================================================= */
 globalAudio.addEventListener('ended', () => {
-  clearContinueProgress();
   document.getElementById('spPlayBtn').textContent = '▶';
   syncModalPlayBtn();
   updatePlayingCardIndicator();
