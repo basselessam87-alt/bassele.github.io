@@ -207,11 +207,14 @@
   .modal-title { font-family: 'Amiri', serif; font-size: 2rem; color: #fff; margin-bottom: .3rem; }
   .modal-meta { font-size: .82rem; color: var(--muted); margin-bottom: 1.4rem; display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; }
   
-  .yt-embed-wrap { margin-bottom: 1rem; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,80,80,0.2); background: #000; }
-  .yt-embed-wrap iframe { width: 100%; height: 240px; display: block; border: none; }
-  .yt-no-embed { background: rgba(255,80,80,0.06); border: 1px solid rgba(255,80,80,0.18); border-radius: 10px; padding: 1rem 1.4rem; margin-bottom: 1rem; display:flex; align-items:center; gap:.8rem; }
-  .yt-no-embed-icon { font-size: 1.6rem; flex-shrink:0; }
-  .yt-no-embed p { font-size: .82rem; color: var(--muted); margin-bottom: .5rem; }
+  .yt-thumb-link { display: block; position: relative; margin-bottom: 1rem; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,80,80,0.2); background: #000; line-height: 0; }
+  .yt-thumb-link img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; transition: transform .25s ease, filter .25s ease; }
+  .yt-thumb-link::after { content: '▶'; position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); width: 3.2rem; height: 2.25rem; border-radius: .65rem; display: grid; place-items: center; background: rgba(204,0,0,.94); color: #fff; font-size: 1rem; line-height: 1; box-shadow: 0 4px 18px rgba(0,0,0,.35); transition: transform .2s ease, background .2s ease; }
+  .yt-thumb-link:hover img { transform: scale(1.025); filter: brightness(.9); }
+  .yt-thumb-link:hover::after { transform: translate(-50%, -50%) scale(1.06); background: #f00; }
+  .yt-thumb-link:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+  .yt-thumb-link--fallback { min-height: 4rem; }
+  .yt-thumb-link--fallback::after { content: '▶'; }
   .btn-yt { background: #cc0000; color: #fff; padding: .5rem 1rem; border-radius: 8px; text-decoration: none; font-size: .82rem; font-weight: 700; transition: all .3s; display: inline-flex; align-items: center; gap: .4rem; }
   .btn-yt:hover { background: #ff2020; transform: translateY(-1px); }
 
@@ -362,6 +365,9 @@
   .surah-card:hover { box-shadow: 0 10px 22px rgba(0,0,0,.16); }
   .card-play-btn { position: absolute; bottom: .7rem; left: .72rem; display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border: 1px solid rgba(201,168,76,.34); border-radius: 50%; background: rgba(201,168,76,.1); color: var(--gold); cursor: pointer; font-size: .78rem; line-height: 1; transition: transform .2s, background .2s, color .2s, box-shadow .2s; z-index: 2; }
   .card-play-btn:hover, .card-play-btn.is-playing { transform: scale(1.08); background: var(--gold); color: #0a0f1e; box-shadow: 0 0 0 4px rgba(201,168,76,.1); }
+  /* استجابة لمسة مباشرة؛ لا تغيّر شكل أو مؤثرات الأزرار. */
+  .card-play-btn, .fav-btn, .modal-close, .sp-close { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  .modal-close { z-index: 4; }
   .card-play-btn.is-playing { animation: cardPlayPulse 1.5s ease-in-out infinite; }
   @keyframes cardPlayPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(201,168,76,.22); } 50% { box-shadow: 0 0 0 5px rgba(201,168,76,0); } }
 
@@ -612,15 +618,15 @@
   <div class="section-sub">ثلاثة إصدارات من قلب الحرم المكي الشريف</div>
   <div class="videos-grid">
     <a class="video-card" href="https://youtu.be/TYRedJ9sD0M?si=ML3FZFbC2KaPleWW" target="_blank" rel="noopener noreferrer">
-      <div class="video-thumb"><img src="https://img.youtube.com/vi/TYRedJ9sD0M/hqdefault.jpg" alt="سورة البقرة 1445"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div></div>
+      <div class="video-thumb"><img loading="lazy" decoding="async" src="https://img.youtube.com/vi/TYRedJ9sD0M/hqdefault.jpg" alt="سورة البقرة 1445"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div></div>
       <div class="video-info"><div class="video-year">إصدار 1445 هـ</div><div class="video-title">سورة البقرة كاملة</div><div class="video-sub">الشيخ أ.د ماهر المعيقلي • الحرم المكي</div></div>
     </a>
     <a class="video-card" href="https://youtu.be/q95qeWIMXa0" target="_blank" rel="noopener noreferrer">
-      <div class="video-thumb"><img src="https://img.youtube.com/vi/q95qeWIMXa0/hqdefault.jpg" alt="سورة البقرة 1446"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div></div>
+      <div class="video-thumb"><img loading="lazy" decoding="async" src="https://img.youtube.com/vi/q95qeWIMXa0/hqdefault.jpg" alt="سورة البقرة 1446"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div></div>
       <div class="video-info"><div class="video-year">إصدار 1446 هـ</div><div class="video-title">سورة البقرة كاملة</div><div class="video-sub">الشيخ أ.د ماهر المعيقلي • الحرم المكي</div></div>
     </a>
     <a class="video-card" href="https://youtu.be/sEOeiYWu2TE" target="_blank" rel="noopener noreferrer">
-      <div class="video-thumb"><img src="https://img.youtube.com/vi/sEOeiYWu2TE/hqdefault.jpg" alt="سورة البقرة 1447"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div></div>
+      <div class="video-thumb"><img loading="lazy" decoding="async" src="https://img.youtube.com/vi/sEOeiYWu2TE/hqdefault.jpg" alt="سورة البقرة 1447"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div></div>
       <div class="video-info"><div class="video-year">إصدار 1447 هـ</div><div class="video-title">سورة البقرة كاملة</div><div class="video-sub">الشيخ أ.د ماهر المعيقلي • الحرم المكي</div></div>
     </a>
   </div>
@@ -948,9 +954,11 @@ function filterSurahs() {
   document.getElementById('surahCount').innerHTML = `<span>${visible}</span> سورة`;
 }
 
+const surahByNumber = new Map(surahs.map(s => [s.n, s]));
+
 function buildGrid() {
   const grid = document.getElementById('surahsGrid');
-  grid.innerHTML = '';
+  const fragment = document.createDocumentFragment();
   surahs.forEach(s => {
     const isFav = favoriteSurahs.includes(s.n);
     const card = document.createElement('div');
@@ -958,14 +966,13 @@ function buildGrid() {
     card.dataset.n = s.n;
     card.dataset.name = s.name;
     card.dataset.type = s.type;
-    card.onclick = () => openModal(s);
-    
+
     const badges = [];
     if (s.yt) badges.push('<span class="badge-yt">▶ يوتيوب</span>');
     if (s.hasMp3) badges.push('<span class="badge-mp3">🎧 MP3</span>');
-    
+
     card.innerHTML = `
-      <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, ${s.n})" title="أضف للمفضلة">♥</button>
+      <button class="fav-btn ${isFav ? 'active' : ''}" data-card-action="favorite" data-n="${s.n}" title="أضف للمفضلة" aria-label="أضف سورة ${s.name} للمفضلة">♥</button>
       <div class="playing-indicator"><span></span><span></span><span></span></div>
       <div class="surah-num" style="margin-top:10px">${s.n}</div>
       <div class="surah-name">${s.name}</div>
@@ -974,9 +981,54 @@ function buildGrid() {
         · ${s.ayat} آية
       </div>
       ${badges.length ? `<div class="surah-badges">${badges.join('')}</div>` : '<div class="surah-badges"><span style="font-size:.62rem;color:var(--muted);font-style:italic">قريباً</span></div>'}
-      ${s.hasMp3 ? `<button class="card-play-btn" data-n="${s.n}" onclick="event.stopPropagation(); playSurahAudio(${s.n})" aria-label="تشغيل سورة ${s.name}" title="تشغيل مباشر">▶</button>` : ''}
+      ${s.hasMp3 ? `<button class="card-play-btn" data-card-action="play" data-n="${s.n}" aria-label="تشغيل سورة ${s.name}" title="تشغيل مباشر">▶</button>` : ''}
     `;
-    grid.appendChild(card);
+    fragment.appendChild(card);
+  });
+  grid.replaceChildren(fragment);
+}
+
+function runSurahCardAction(control) {
+  const n = Number(control.dataset.n);
+  if (control.dataset.cardAction === 'play') {
+    playSurahAudio(n);
+    return;
+  }
+  if (control.dataset.cardAction === 'favorite') {
+    const isActive = favoriteSurahs.includes(n);
+    toggleFavorite({ stopPropagation() {}, target: control }, n);
+    control.setAttribute('aria-label', `${isActive ? 'أزل' : 'أضف'} سورة ${surahByNumber.get(n)?.name || ''} ${isActive ? 'من' : 'إلى'} المفضلة`);
+  }
+}
+
+function setupSurahGridInteractions() {
+  const grid = document.getElementById('surahsGrid');
+  if (!grid || grid.dataset.performanceReady) return;
+  grid.dataset.performanceReady = 'true';
+
+  grid.addEventListener('pointerup', event => {
+    if (event.pointerType !== 'touch') return;
+    const control = event.target.closest('button[data-card-action]');
+    if (!control || !grid.contains(control)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    control.dataset.handledUntil = String(Date.now() + 450);
+    runSurahCardAction(control);
+  }, { passive: false });
+
+  grid.addEventListener('click', event => {
+    const control = event.target.closest('button[data-card-action]');
+    if (control && grid.contains(control)) {
+      event.preventDefault();
+      event.stopPropagation();
+      if (Number(control.dataset.handledUntil || 0) > Date.now()) return;
+      runSurahCardAction(control);
+      return;
+    }
+    const card = event.target.closest('.surah-card');
+    if (!card || !grid.contains(card)) return;
+    const surah = surahByNumber.get(Number(card.dataset.n));
+    if (surah) openModal(surah);
   });
 }
 
@@ -984,6 +1036,17 @@ function extractYtId(url) {
   if (!url) return null;
   const m = url.match(/(?:youtu\.be\/|v=|\/embed\/)([A-Za-z0-9_-]{11})/);
   return m ? m[1] : null;
+}
+
+function deferredYoutubeMarkup(ytId, title, url) {
+  if (!url) return '';
+  const label = `${title || 'الفيديو'} على يوتيوب`;
+  if (!ytId) {
+    return `<a class="yt-thumb-link yt-thumb-link--fallback" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="مشاهدة ${label}" title="مشاهدة ${label}"></a>`;
+  }
+  return `<a class="yt-thumb-link" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="مشاهدة ${label}" title="مشاهدة ${label}">
+    <img loading="lazy" decoding="async" src="https://img.youtube.com/vi/${ytId}/hqdefault.jpg" alt="صورة مصغرة لـ${label}">
+  </a>`;
 }
 
 function buildJuzGrid() {
@@ -1040,21 +1103,10 @@ function openJuzModal(part) {
   let content = '';
   let footer = '';
   const ytId = extractYtId(part.yt);
-  const canEmbedVideo = ytId && RateLimiter.allow('yt-embed', 12, 20000);
-  if (ytId && !canEmbedVideo) notifyRateLimited('برجاء الانتظار قليلاً قبل فتح فيديو آخر');
-
-  if (canEmbedVideo) {
-    content += `<div class="yt-embed-wrap">
-      <iframe src="https://www.youtube.com/embed/${ytId}?rel=0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen title="${part.name}"></iframe>
-    </div>`;
+  if (ytId) {
+    content += deferredYoutubeMarkup(ytId, part.name, part.yt);
   } else if (part.yt) {
-    content += `<div class="yt-no-embed">
-      <div class="yt-no-embed-icon">▶</div>
-      <div><p>التجميع متاح على يوتيوب بجودة فيديو عالية</p>
-      <a href="${part.yt}" target="_blank" rel="noopener noreferrer" class="btn-yt">▶ شاهد على يوتيوب</a></div>
-    </div>`;
+    content += deferredYoutubeMarkup(extractYtId(part.yt), part.name, part.yt);
   }
 
   if (part.hasMp3) {
@@ -1121,23 +1173,10 @@ function openModal(s) {
   let footer = '';
 
   const ytId = extractYtId(s.yt);
-  // كل فتح لمودال فيه فيديو = طلب تضمين جديد من يوتيوب — نحدّه بـ 12 كل 20 ثانية
-  const canEmbedVideo = ytId && RateLimiter.allow('yt-embed', 12, 20000);
-  if (ytId && !canEmbedVideo) {
-    notifyRateLimited('برجاء الانتظار قليلاً قبل فتح فيديو آخر');
-  }
-  if (canEmbedVideo) {
-    content += `<div class="yt-embed-wrap">
-      <iframe src="https://www.youtube.com/embed/${ytId}?rel=0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen title="سورة ${s.name}"></iframe>
-    </div>`;
+  if (ytId) {
+    content += deferredYoutubeMarkup(ytId, `سورة ${s.name}`, s.yt);
   } else if (s.yt) {
-    content += `<div class="yt-no-embed">
-      <div class="yt-no-embed-icon">▶</div>
-      <div><p>متاح على يوتيوب بجودة فيديو عالية</p>
-      <a href="${s.yt}" target="_blank" rel="noopener noreferrer" class="btn-yt">▶ شاهد على يوتيوب</a></div>
-    </div>`;
+    content += deferredYoutubeMarkup(extractYtId(s.yt), `سورة ${s.name}`, s.yt);
   }
 
   if (s.hasMp3) {
@@ -1295,7 +1334,7 @@ function fmtTime(s) {
 }
 
 function playSurahAudio(n) {
-  const s = surahs.find(x => x.n === n);
+  const s = surahByNumber.get(n);
   if (!s || !s.hasMp3) return;
   if (currentPlayingItem && currentPlayingItem.kind !== 'juz' && currentPlayingItem.n === n) {
     togglePlay();
@@ -1537,6 +1576,17 @@ document.addEventListener('keydown', e => {
 });
 
 async function fetchViews() {
+  const target = document.getElementById('views-count');
+  const cacheKey = 'tadabburViewsV1';
+  const ttl = 6 * 60 * 60 * 1000;
+  try {
+    const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
+    if (cached && cached.value && Date.now() - cached.savedAt < ttl) {
+      target.textContent = cached.value;
+      return;
+    }
+  } catch (_) {}
+
   const apiKey = 'AIzaSyCd3AxQWIepLYYDBqscsmrcm5QoU4AY118';
   const videoId = 'TYRedJ9sD0M';
   const url = `https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${videoId}&key=${apiKey}`;
@@ -1548,16 +1598,23 @@ async function fetchViews() {
 
     const v = Number(data.items[0].statistics.viewCount);
     const fmt = v >= 1e6 ? (v/1e6).toFixed(1)+'M' : v >= 1e3 ? (v/1e3).toFixed(1)+'K' : v.toLocaleString();
-    document.getElementById('views-count').textContent = fmt;
-  } catch (error) { 
-    console.error(error);
-    document.getElementById('views-count').textContent = '45K+'; 
+    target.textContent = fmt;
+    try { localStorage.setItem(cacheKey, JSON.stringify({ value: fmt, savedAt: Date.now() })); } catch (_) {}
+  } catch (_) {
+    target.textContent = '45K+';
   }
-} 
+}
+
+function scheduleViewsFetch() {
+  const run = () => fetchViews();
+  if ('requestIdleCallback' in window) window.requestIdleCallback(run, { timeout: 2800 });
+  else window.setTimeout(run, 1200);
+}
 
 buildGrid();
+setupSurahGridInteractions();
 buildJuzGrid();
-fetchViews();
+scheduleViewsFetch();
 
 /* =========================================================
    تحسين مانوس ل 26 — UX Layer
@@ -1662,18 +1719,35 @@ fetchViews();
     }
   };
 
-  const baseIndicator = updatePlayingCardIndicator;
+  let lastPlaybackCard = null;
+  let activeCardPlayButton = null;
+  const setCardButtonState = (button, isPlaying) => {
+    if (!button) return;
+    const n = Number(button.dataset.n);
+    button.classList.toggle('is-playing', Boolean(isPlaying));
+    button.textContent = isPlaying ? '⏸' : '▶';
+    button.setAttribute('aria-label', isPlaying ? 'إيقاف سورة مؤقتاً' : `تشغيل سورة ${surahByNumber.get(n)?.name || ''}`);
+  };
   const syncCardButtons = () => {
-    document.querySelectorAll('.card-play-btn').forEach(btn => {
-      const n = Number(btn.dataset.n);
-      const isPlaying = currentPlayingItem && currentPlayingItem.kind !== 'juz' && currentPlayingItem.n === n && !globalAudio.paused;
-      btn.classList.toggle('is-playing', Boolean(isPlaying));
-      btn.textContent = isPlaying ? '⏸' : '▶';
-      btn.setAttribute('aria-label', isPlaying ? 'إيقاف مؤقت' : `تشغيل سورة ${surahs.find(s => s.n === n)?.name || ''}`);
-    });
+    const activeN = currentPlayingItem && currentPlayingItem.kind !== 'juz' ? currentPlayingItem.n : null;
+    const nextButton = activeN ? document.querySelector(`.card-play-btn[data-n="${activeN}"]`) : null;
+    if (activeCardPlayButton && activeCardPlayButton !== nextButton) setCardButtonState(activeCardPlayButton, false);
+    if (nextButton) setCardButtonState(nextButton, !globalAudio.paused);
+    activeCardPlayButton = nextButton;
   };
   updatePlayingCardIndicator = function() {
-    baseIndicator();
+    if (lastPlaybackCard) lastPlaybackCard.classList.remove('playing', 'paused-playing');
+    lastPlaybackCard = null;
+    if (currentPlayingItem) {
+      const selector = currentPlayingItem.kind === 'juz'
+        ? `.juz-card[data-id="${currentPlayingItem.id}"]`
+        : `.surah-card[data-n="${currentPlayingItem.n}"]`;
+      const card = document.querySelector(selector);
+      if (card) {
+        card.classList.add(globalAudio.paused ? 'paused-playing' : 'playing');
+        lastPlaybackCard = card;
+      }
+    }
     syncCardButtons();
   };
   globalAudio.addEventListener('play', syncCardButtons);
@@ -1921,21 +1995,36 @@ hoverLift('.contact-btn', -2);
 
 const originalOpenModal = openModal;
 openModal = function(s) {
-  originalOpenModal(s);
   const overlay = document.getElementById('modalOverlay');
   const box = document.getElementById('modalBox');
-  gsap.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: .25, ease: 'power1.out' });
-  gsap.fromTo(box, { opacity: 0, y: 30, scale: .95 }, { opacity: 1, y: 0, scale: 1, duration: .4, ease: 'back.out(1.4)' });
+  gsap.killTweensOf([overlay, box]);
+  modalCloseInProgress = false;
+  box.style.pointerEvents = '';
+  gsap.set([overlay, box], { clearProps: 'opacity,transform' });
+  originalOpenModal(s);
+  gsap.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: .2, ease: 'power1.out' });
+  gsap.fromTo(box, { opacity: 0, y: 24, scale: .97 }, { opacity: 1, y: 0, scale: 1, duration: .3, ease: 'back.out(1.4)' });
 };
 
 const originalCloseModal = closeModal;
+let modalCloseInProgress = false;
 closeModal = function() {
   const overlay = document.getElementById('modalOverlay');
   const box = document.getElementById('modalBox');
-  gsap.to(box, { opacity: 0, y: 20, scale: .96, duration: .22, ease: 'power1.in' });
+  if (!overlay.classList.contains('open') || modalCloseInProgress) return;
+  modalCloseInProgress = true;
+  gsap.killTweensOf([overlay, box]);
+  box.style.pointerEvents = 'none';
+  gsap.to(box, { opacity: 0, y: 14, scale: .975, duration: .14, ease: 'power1.in' });
   gsap.to(overlay, {
-    opacity: 0, duration: .25, ease: 'power1.in', delay: .05,
-    onComplete: () => { originalCloseModal(); gsap.set(overlay, { clearProps: 'opacity' }); gsap.set(box, { clearProps: 'opacity,transform' }); }
+    opacity: 0, duration: .16, ease: 'power1.in',
+    onComplete: () => {
+      originalCloseModal();
+      modalCloseInProgress = false;
+      box.style.pointerEvents = '';
+      gsap.set(overlay, { clearProps: 'opacity' });
+      gsap.set(box, { clearProps: 'opacity,transform' });
+    }
   });
 };
 
