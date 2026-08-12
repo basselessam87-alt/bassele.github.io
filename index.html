@@ -407,7 +407,99 @@
     .card-play-btn { width: 32px; height: 32px; }
     .sp-name { font-size: .92rem; }
   }
-  /* تحسين مشغل مانوس — واجهة انسيابية */
+  /* ===== Smooth player + subtle audio waves ===== */
+  .sticky-player {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-50%) translateY(18px) scale(.98);
+    transition: bottom .5s cubic-bezier(.22,1,.36,1), opacity .35s ease, transform .5s cubic-bezier(.22,1,.36,1), box-shadow .3s ease;
+  }
+  .sticky-player.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+  .sticky-player.is-playing {
+    box-shadow: 0 14px 42px rgba(0,0,0,.48), 0 0 0 1px rgba(201,168,76,.08);
+  }
+  .sp-info {
+    position: relative;
+    min-width: 0;
+    gap: .72rem;
+    padding: .28rem .42rem;
+  }
+  .sp-copy { min-width: 0; }
+  .sp-name {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .sp-waveform {
+    width: 44px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 0 .42rem;
+    border: 1px solid rgba(201,168,76,.2);
+    border-radius: 999px;
+    background: rgba(201,168,76,.055);
+    opacity: .42;
+    transition: opacity .3s ease, border-color .3s ease, background .3s ease;
+    flex-shrink: 0;
+  }
+  .sp-waveform span {
+    width: 2px;
+    height: 14px;
+    border-radius: 999px;
+    background: linear-gradient(to top, var(--gold), var(--gold-light));
+    transform: scaleY(.3);
+    transform-origin: center;
+    animation: spWave 1.05s ease-in-out infinite;
+    animation-play-state: paused;
+  }
+  .sp-waveform span:nth-child(1) { animation-delay: -.72s; }
+  .sp-waveform span:nth-child(2) { animation-delay: -.48s; }
+  .sp-waveform span:nth-child(3) { animation-delay: -.2s; }
+  .sp-waveform span:nth-child(4) { animation-delay: -.6s; }
+  .sp-waveform span:nth-child(5) { animation-delay: -.35s; }
+  .sp-waveform span:nth-child(6) { animation-delay: -.08s; }
+  .sp-waveform span:nth-child(7) { animation-delay: -.52s; }
+  .sticky-player.is-playing .sp-waveform {
+    opacity: 1;
+    border-color: rgba(201,168,76,.42);
+    background: rgba(201,168,76,.1);
+  }
+  .sticky-player.is-playing .sp-waveform span { animation-play-state: running; }
+  .sticky-player.is-loading .sp-waveform { opacity: .78; animation: spPulse 1.2s ease-in-out infinite; }
+  .sticky-player:not(.is-playing) .sp-waveform span { transform: scaleY(.3); }
+  @keyframes spWave {
+    0%, 100% { transform: scaleY(.28); opacity: .62; }
+    50% { transform: scaleY(1); opacity: 1; }
+  }
+  @keyframes spPulse {
+    0%, 100% { box-shadow: 0 0 0 rgba(201,168,76,0); }
+    50% { box-shadow: 0 0 0 4px rgba(201,168,76,.07); }
+  }
+  body.modal-open .sticky-player {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translateX(-50%) translateY(18px) scale(.98) !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sticky-player, .sp-waveform, .sp-waveform span { animation: none !important; transition-duration: .01ms !important; }
+  }
+  @media (max-width: 768px) {
+    .sticky-player { gap: .72rem; }
+    .sp-info { flex: 1; gap: .58rem; }
+    .sp-name { max-width: 125px; }
+    .sp-waveform { width: 38px; height: 25px; gap: 2px; padding: 0 .34rem; }
+    .sp-waveform span { height: 12px; }
+  }
+
+  /* تحسين مشغل مانوس — الطبقة الكاملة المدمجة */
   .sticky-player {
     width: min(94%, 980px);
     max-width: 980px;
@@ -446,7 +538,6 @@
   .sp-close:hover { background: rgba(201,168,76,.12); transform: rotate(90deg) scale(1.05); }
   body.light-mode .sticky-player { background: rgba(255,255,255,.94); box-shadow: 0 18px 45px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.04) inset; }
   body.light-mode .sp-controls .audio-skip-btn, body.light-mode .sp-volume-wrap { background: rgba(0,0,0,.025); }
-
   @media (max-width: 768px) {
     body.player-active { padding-bottom: 132px; }
     .sticky-player { width: min(94%, 520px); padding: .78rem .9rem; border-radius: 21px; grid-template-columns: minmax(0,1fr) auto auto; gap: .6rem; }
@@ -463,6 +554,7 @@
     .sp-controls .audio-play-btn { width: 43px; height: 43px; }
     .sp-name, .sp-sub { max-width: calc(100vw - 138px); }
   }
+
 </style>
 </head>
 <body>
@@ -603,26 +695,29 @@
 <div class="sticky-player" id="stickyPlayer">
   <div class="sp-info" onclick="openCurrentSurahModal()" onkeydown="if(event.key==='Enter')openCurrentSurahModal()" title="فتح صفحة السورة الحالية" role="button" tabindex="0">
     <div class="sp-icon">🎧</div>
-    <div>
-      <div class="sp-name" id="spName">—</div>
+    <div class="sp-copy">
+      <div class="sp-name" id="spName" aria-live="polite">—</div>
       <div class="sp-sub">الشيخ أ.د ماهر المعيقلي</div>
+    </div>
+    <div class="sp-waveform" id="spWaveform" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
     </div>
   </div>
   <div class="sp-controls">
-    <button class="audio-skip-btn" onclick="skipAudio(-10)" title="رجوع 10 ثواني"><span>↺</span><span>10</span></button>
-    <button class="audio-play-btn" id="spPlayBtn" onclick="togglePlay()">▶</button>
-    <button class="audio-skip-btn" onclick="skipAudio(10)" title="تقديم 10 ثواني"><span>↻</span><span>10</span></button>
+    <button class="audio-skip-btn" onclick="skipAudio(-10)" title="رجوع 10 ثواني" aria-label="الرجوع 10 ثواني"><span>↺</span><span>10</span></button>
+    <button class="audio-play-btn" id="spPlayBtn" onclick="togglePlay()" aria-label="تشغيل أو إيقاف التلاوة">▶</button>
+    <button class="audio-skip-btn" onclick="skipAudio(10)" title="تقديم 10 ثواني" aria-label="التقديم 10 ثواني"><span>↻</span><span>10</span></button>
   </div>
   <div class="sp-progress-wrap">
     <span id="spCurrent">0:00</span>
-    <input class="audio-progress" type="range" id="spProgress" min="0" max="100" value="0" step="0.1">
+    <input class="audio-progress" type="range" id="spProgress" min="0" max="100" value="0" step="0.1" aria-label="تقدم التلاوة">
     <span id="spDuration">--:--</span>
   </div>
   <div class="sp-volume-wrap">
     <span class="sp-vol-icon">🔊</span>
-    <input class="audio-volume sp-volume" type="range" id="spVolume" min="0" max="1" step="0.05" value="1">
+    <input class="audio-volume sp-volume" type="range" id="spVolume" min="0" max="1" step="0.05" value="1" aria-label="مستوى الصوت">
   </div>
-  <button class="sp-close" onclick="stopGlobalAudio()" title="إيقاف">✕</button>
+  <button class="sp-close" onclick="stopGlobalAudio()" title="إيقاف" aria-label="إغلاق المشغل وإيقاف التلاوة">✕</button>
 </div>
 <audio id="globalAudio" preload="none"></audio>
 
@@ -1146,8 +1241,30 @@ function checkDownloadRateLimit(e) {
 }
 
 const globalAudio = document.getElementById('globalAudio');
+const stickyPlayerEl = document.getElementById('stickyPlayer');
 let currentPlayingItem = null;
 let currentPlayingSurah = null; // يظل محفوظاً للتشغيل المتواصل بين السور فقط
+
+function syncStickyPlayerState(loading = false) {
+  if (!stickyPlayerEl) return;
+  const isPlaying = Boolean(currentPlayingItem && !globalAudio.paused);
+  stickyPlayerEl.classList.toggle('is-playing', isPlaying);
+  stickyPlayerEl.classList.toggle('is-loading', Boolean(loading));
+}
+
+function requestGlobalPlayback() {
+  if (!currentPlayingItem) return;
+  stickyPlayerEl.classList.add('active', 'is-loading');
+  const playRequest = globalAudio.play();
+  if (playRequest && typeof playRequest.catch === 'function') {
+    playRequest.catch(() => {
+      stickyPlayerEl.classList.remove('is-loading', 'is-playing');
+      document.getElementById('spPlayBtn').textContent = '▶';
+      syncModalPlayBtn();
+      updatePlayingCardIndicator();
+    });
+  }
+}
 
 function fmtTime(s) {
   if (!isFinite(s)) return '--:--';
@@ -1174,11 +1291,11 @@ function playSurahAudio(n) {
   currentPlayingItem = s;
   currentPlayingSurah = s;
   globalAudio.src = url;
-  globalAudio.play();
   document.getElementById('spName').textContent = `سورة ${s.name}`;
   document.getElementById('stickyPlayer').classList.add('active');
   document.body.classList.add('player-active');
   document.getElementById('spPlayBtn').textContent = '⏸';
+  requestGlobalPlayback();
   syncModalPlayBtn();
   updatePlayingCardIndicator();
 }
@@ -1200,11 +1317,11 @@ function playJuzAudio(id) {
   currentPlayingItem = part;
   currentPlayingSurah = null;
   globalAudio.src = url;
-  globalAudio.play();
   document.getElementById('spName').textContent = part.name;
   document.getElementById('stickyPlayer').classList.add('active');
   document.body.classList.add('player-active');
   document.getElementById('spPlayBtn').textContent = '⏸';
+  requestGlobalPlayback();
   syncModalPlayBtn();
   updatePlayingCardIndicator();
 }
@@ -1212,12 +1329,13 @@ function playJuzAudio(id) {
 function togglePlay() {
   if (!currentPlayingItem) return;
   if (globalAudio.paused) {
-    globalAudio.play();
+    requestGlobalPlayback();
     document.getElementById('spPlayBtn').textContent = '⏸';
   } else {
     globalAudio.pause();
     document.getElementById('spPlayBtn').textContent = '▶';
   }
+  syncStickyPlayerState();
   syncModalPlayBtn();
   updatePlayingCardIndicator();
 }
@@ -1237,8 +1355,9 @@ function stopGlobalAudio() {
   globalAudio.removeAttribute('src');
   currentPlayingItem = null;
   currentPlayingSurah = null;
-  document.getElementById('stickyPlayer').classList.remove('active');
+  document.getElementById('stickyPlayer').classList.remove('active', 'is-playing', 'is-loading');
   document.body.classList.remove('player-active');
+  syncStickyPlayerState();
   syncModalPlayBtn();
   updatePlayingCardIndicator();
 }
@@ -1293,13 +1412,35 @@ globalAudio.addEventListener('loadedmetadata', () => {
   document.getElementById('spDuration').textContent = fmtTime(globalAudio.duration);
   const mDuration = document.getElementById('modalDuration');
   if (mDuration) mDuration.textContent = fmtTime(globalAudio.duration);
+  syncStickyPlayerState(true);
   syncModalPlayBtn();
+});
+
+globalAudio.addEventListener('playing', () => {
+  syncStickyPlayerState(false);
+  document.getElementById('spPlayBtn').textContent = '⏸';
+  syncModalPlayBtn();
+  updatePlayingCardIndicator();
+});
+
+globalAudio.addEventListener('waiting', () => {
+  if (currentPlayingItem) syncStickyPlayerState(true);
+});
+
+globalAudio.addEventListener('pause', () => {
+  syncStickyPlayerState(false);
+  if (currentPlayingItem) {
+    document.getElementById('spPlayBtn').textContent = '▶';
+    syncModalPlayBtn();
+    updatePlayingCardIndicator();
+  }
 });
 
 /* =========================================================
    Auto-Play Logic (التشغيل المتواصل)
    ========================================================= */
 globalAudio.addEventListener('ended', () => {
+  syncStickyPlayerState(false);
   document.getElementById('spPlayBtn').textContent = '▶';
   syncModalPlayBtn();
   updatePlayingCardIndicator();
@@ -1808,6 +1949,63 @@ if (smoothPlayer && typeof globalAudio !== 'undefined') {
     globalAudio.addEventListener(eventName, () => smoothPlayer.classList.remove('is-loading'));
   });
 }
+
+/* تحسين UX إضافي: أزرار الوسائط وشاشة القفل على الهاتف والكمبيوتر */
+(function setupMediaSession() {
+  if (!('mediaSession' in navigator) || typeof globalAudio === 'undefined') return;
+
+  const setAction = (action, handler) => {
+    try { navigator.mediaSession.setActionHandler(action, handler); } catch (_) { /* الإجراء غير مدعوم في هذا المتصفح */ }
+  };
+
+  const updateMetadata = () => {
+    if (!currentPlayingItem || typeof MediaMetadata === 'undefined') return;
+    const title = currentPlayingItem.kind === 'juz'
+      ? currentPlayingItem.name
+      : `سورة ${currentPlayingItem.name}`;
+    try {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title,
+        artist: 'الشيخ أ.د ماهر المعيقلي',
+        album: 'تدبر القرآن — المصحف المرتل'
+      });
+    } catch (_) {}
+  };
+
+  setAction('play', () => requestGlobalPlayback());
+  setAction('pause', () => globalAudio.pause());
+  setAction('stop', () => stopGlobalAudio());
+  setAction('seekbackward', details => skipAudio(-(details.seekOffset || 10)));
+  setAction('seekforward', details => skipAudio(details.seekOffset || 10));
+  setAction('seekto', details => {
+    if (!Number.isFinite(globalAudio.duration) || !Number.isFinite(details.seekTime)) return;
+    if (details.fastSeek && typeof globalAudio.fastSeek === 'function') globalAudio.fastSeek(details.seekTime);
+    else globalAudio.currentTime = details.seekTime;
+  });
+
+  globalAudio.addEventListener('loadedmetadata', updateMetadata);
+  globalAudio.addEventListener('playing', () => {
+    updateMetadata();
+    navigator.mediaSession.playbackState = 'playing';
+  });
+  globalAudio.addEventListener('pause', () => {
+    navigator.mediaSession.playbackState = currentPlayingItem ? 'paused' : 'none';
+  });
+  globalAudio.addEventListener('ended', () => {
+    navigator.mediaSession.playbackState = 'none';
+  });
+  globalAudio.addEventListener('timeupdate', () => {
+    const duration = globalAudio.duration;
+    if (typeof navigator.mediaSession.setPositionState !== 'function' || !Number.isFinite(duration) || duration <= 0) return;
+    try {
+      navigator.mediaSession.setPositionState({
+        duration,
+        playbackRate: globalAudio.playbackRate || 1,
+        position: Math.min(globalAudio.currentTime, duration)
+      });
+    } catch (_) {}
+  });
+})();
 
 </script>
 </body>
