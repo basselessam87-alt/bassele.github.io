@@ -4,8 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="تدبر القرآن - Tadabbur Al-Quran — باسل عصام، يوتيوبر متخصص في المصحف المرتل من الحرم المكي بصوت الشيخ أ.د ماهر المعيقلي">
+<meta name="theme-color" content="#0a0f1e" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f8f9fa" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="dark light">
 <meta property="og:title" content="تدبر القرآن - Tadabbur Al-Quran | باسل عصام">
 <meta property="og:description" content="استمع إلى المصحف المرتل كاملاً من الحرم المكي">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ar_SA">
 <title>تدبر القرآن - Tadabbur Al-Quran | باسل عصام</title>
 <!--
   Content-Security-Policy: يقيّد مصادر التحميل لمنع حقن سكربتات خارجية (XSS) وتسريب بيانات.
@@ -48,49 +53,63 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   
-  /* المتغيرا الأساسية (الوضع الليلي الافتراضي) */
+  /* المتغيرات الأساسية (الوضع الليلي الافتراضي) */
   :root { 
     --gold: #c9a84c; 
     --gold-light: #f0d080;
+    --gold-dim: rgba(201,168,76,0.12);
     --dark: #0a0f1e; 
     --dark2: #111827; 
     --dark3: #1a2340; 
     --text: #f0e6c8; 
-    --muted: #9aabb8; 
+    --muted: #9aabb8;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    --shadow-soft: 0 10px 28px rgba(0,0,0,0.18);
+    --focus-ring: 0 0 0 3px rgba(201,168,76,0.35);
   }
 
-  /* إعدادات الوضع النهاري (Light Mode) */
+  /* إعدادات الوضع النهاري (Light Mode) — تباين محسّن */
   body.light-mode {
-    --dark: #f8f9fa;
+    --dark: #f5f6f8;
     --dark2: #ffffff;
     --dark3: #ffffff;
     --text: #1a1a1a;
-    --muted: #5a6b7c;
-    --gold: #b38b22;
+    --muted: #4a5a6a;
+    --gold: #a67c1a;
+    --gold-light: #c9a84c;
+    --gold-dim: rgba(166,124,26,0.1);
+    --shadow-soft: 0 10px 28px rgba(0,0,0,0.08);
+    --focus-ring: 0 0 0 3px rgba(166,124,26,0.3);
   }
-  body.light-mode nav { background: rgba(255,255,255,0.95); border-bottom-color: rgba(0,0,0,0.1); }
-  body.light-mode .hero h1, body.light-mode .section-title, body.light-mode .surah-name, body.light-mode .playlist-info h3, body.light-mode .about-info h3, body.light-mode .modal-title, body.light-mode .sp-name { color: #1a1a1a; }
-  body.light-mode .surah-card, body.light-mode .video-card, body.light-mode .about-card, body.light-mode .playlist-banner, body.light-mode .audio-wrap, body.light-mode .audio-player-wrap, body.light-mode .modal, body.light-mode .surah-search, body.light-mode .filter-btn { border-color: rgba(0,0,0,0.15); }
-  body.light-mode .sticky-player { background: rgba(255, 255, 255, 0.9); box-shadow: 0 10px 40px rgba(0,0,0,0.12); border-color: rgba(0,0,0,0.12); }
-  body.light-mode .surah-card:hover, body.light-mode .video-card:hover, body.light-mode .juz-card:hover { background: #f0f0f0; }
-  body.light-mode .juz-card { border-color: rgba(0,0,0,0.15); }
-  body.light-mode .modal-overlay { background: rgba(255,255,255,0.85); }
-  body.light-mode .modal { background: #f8f9fa; }
+  body.light-mode nav { background: rgba(255,255,255,0.92); border-bottom-color: rgba(0,0,0,0.08); }
+  body.light-mode .hero h1, body.light-mode .section-title, body.light-mode .surah-name, body.light-mode .playlist-info h3, body.light-mode .about-info h3, body.light-mode .modal-title, body.light-mode .sp-name, body.light-mode .juz-card-name { color: #1a1a1a; }
+  body.light-mode .surah-card, body.light-mode .video-card, body.light-mode .about-card, body.light-mode .playlist-banner, body.light-mode .audio-wrap, body.light-mode .audio-player-wrap, body.light-mode .modal, body.light-mode .surah-search, body.light-mode .filter-btn { border-color: rgba(0,0,0,0.1); }
+  body.light-mode .sticky-player { background: rgba(255, 255, 255, 0.94); box-shadow: 0 14px 40px rgba(0,0,0,0.1); border-color: rgba(0,0,0,0.1); }
+  body.light-mode .surah-card:hover, body.light-mode .video-card:hover, body.light-mode .juz-card:hover { background: #f0f2f5; }
+  body.light-mode .juz-card { border-color: rgba(0,0,0,0.1); background: linear-gradient(145deg, #fff, #f8f9fb); }
+  body.light-mode .modal-overlay { background: rgba(248,249,250,0.88); }
+  body.light-mode .modal { background: #fff; }
+  body.light-mode .hero::before { background: radial-gradient(ellipse at center top, rgba(166,124,26,0.06) 0%, transparent 60%); }
 
   html { scroll-padding-bottom: 168px; }
   body { font-family: 'Cairo', sans-serif; background: var(--dark); color: var(--text); min-height: 100vh; direction: rtl; transition: padding-bottom .4s ease, background-color 0.4s, color 0.4s; }
   body.player-active { padding-bottom: 118px; }
 
-  nav { background: rgba(10,15,30,0.97); backdrop-filter: blur(10px); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(201,168,76,0.2); position: sticky; top: 0; z-index: 100; transition: box-shadow .4s ease, background .4s ease, border-color .4s ease; }
-  .logo { font-family: 'Amiri', serif; font-size: 1.4rem; color: var(--gold); letter-spacing: 1px; }
+  nav { background: rgba(10,15,30,0.97); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(201,168,76,0.2); position: sticky; top: 0; z-index: 100; transition: box-shadow .4s ease, background .4s ease, border-color .4s ease; }
+  .logo { font-family: 'Amiri', serif; font-size: 1.35rem; color: var(--gold); letter-spacing: 0.5px; display: flex; align-items: center; gap: .55rem; text-decoration: none; }
+  .logo-text { line-height: 1.2; }
+  .logo-text small { display: block; font-family: 'Cairo', sans-serif; font-size: .62rem; font-weight: 400; color: var(--muted); letter-spacing: 0.5px; margin-top: 1px; }
   .nav-links { display: flex; gap: 1.5rem; align-items: center; }
   .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.88rem; transition: color .3s; font-weight: 400; }
   .nav-links a:hover { color: var(--gold); }
+  .nav-links a:focus-visible, .theme-toggle-btn:focus-visible, .btn-primary:focus-visible, .btn-outline:focus-visible, .filter-btn:focus-visible, .card-play-btn:focus-visible, .fav-btn:focus-visible, .audio-play-btn:focus-visible, .audio-skip-btn:focus-visible, .sp-close:focus-visible, .modal-close:focus-visible { outline: none; box-shadow: var(--focus-ring); }
   .new-nav-badge { display: inline-block; color: var(--gold); font-size: .58rem; font-weight: 700; letter-spacing: .5px; margin-right: .2rem; vertical-align: top; }
 
   /* زر تغيير المظهر (Light/Dark Toggle) */
-  .theme-toggle-btn { background: none; border: none; cursor: pointer; font-size: 1.1rem; color: var(--muted); transition: transform 0.3s, color 0.3s; margin-right: 10px; }
-  .theme-toggle-btn:hover { color: var(--gold); transform: rotate(15deg); }
+  .theme-toggle-btn { background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2); border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 1rem; color: var(--muted); transition: transform 0.3s, color 0.3s, background 0.3s, border-color 0.3s; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .theme-toggle-btn:hover { color: var(--gold); transform: rotate(15deg); background: rgba(201,168,76,0.15); border-color: rgba(201,168,76,0.4); }
 
   /* زر المفضلة (القلب) */
   .fav-btn { position: absolute; top: 12px; left: 12px; z-index: 10; background: none; border: none; font-size: 1.3rem; color: rgba(201,168,76,0.3); cursor: pointer; transition: all 0.3s; line-height: 1; padding: 5px; }
@@ -98,12 +117,12 @@
   .fav-btn.active { color: #e74c3c; text-shadow: 0 0 10px rgba(231,76,60,0.4); }
 
   .hero { min-height: 92vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4rem 2rem; position: relative; overflow: hidden; }
-  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center top, rgba(201,168,76,0.07) 0%, transparent 60%); pointer-events: none; }
-  .quran-deco { font-size: 1.1rem; color: rgba(201,168,76,0.5); letter-spacing: 4px; margin-bottom: 1.2rem; }
-  .hero-badge { background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3); color: var(--gold); padding: .4rem 1.4rem; border-radius: 999px; font-size: .78rem; margin-bottom: 1.5rem; letter-spacing: 2px; }
-  .hero h1 { font-family: 'Amiri', serif; font-size: 3.6rem; line-height: 1.3; margin-bottom: 1rem; color: #fff; }
-  .hero h1 span { color: var(--gold); }
-  .hero p { color: var(--muted); max-width: 600px; line-height: 1.9; font-size: 1rem; margin-bottom: 2.2rem; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center top, rgba(201,168,76,0.08) 0%, transparent 55%), radial-gradient(ellipse at 80% 20%, rgba(201,168,76,0.04) 0%, transparent 40%); pointer-events: none; }
+  .quran-deco { font-size: 1.25rem; color: rgba(201,168,76,0.55); letter-spacing: 6px; margin-bottom: 1.2rem; }
+  .hero-badge { background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3); color: var(--gold); padding: .4rem 1.4rem; border-radius: 999px; font-size: .78rem; margin-bottom: 1.5rem; letter-spacing: 2px; backdrop-filter: blur(4px); }
+  .hero h1 { font-family: 'Amiri', serif; font-size: clamp(2.4rem, 5vw, 3.6rem); line-height: 1.3; margin-bottom: 1rem; color: #fff; }
+  .hero h1 span { color: var(--gold); position: relative; }
+  .hero p { color: var(--muted); max-width: 580px; line-height: 1.95; font-size: 1.02rem; margin-bottom: 2.2rem; }
   .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
   .btn-primary { background: var(--gold); color: #0a0f1e; padding: .75rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: .9rem; transition: all .3s; display: inline-block; border: none; cursor: pointer; font-family: 'Cairo', sans-serif; }
   .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
@@ -390,8 +409,9 @@
 
   @media (max-width: 768px) {
     nav { padding-inline: .85rem; gap: .6rem; }
-    .logo { font-size: 1.08rem; white-space: nowrap; }
-    .nav-links { overflow-x: auto; justify-content: flex-start; scrollbar-width: none; max-width: 65vw; }
+    .logo { font-size: 1.05rem; white-space: nowrap; gap: .4rem; }
+    .logo-text small { font-size: .55rem; }
+    .nav-links { overflow-x: auto; justify-content: flex-start; scrollbar-width: none; max-width: 62vw; }
     .nav-links::-webkit-scrollbar { display: none; }
     .nav-links a { white-space: nowrap; padding-inline: .52rem; }
     .surah-controls { display: block; }
@@ -570,18 +590,90 @@
     .sp-close, .modal-close { width: 40px; height: 40px; }
   }
 
+  /* ===== زر العودة للأعلى ===== */
+  .back-to-top {
+    position: fixed;
+    bottom: 28px;
+    left: 22px;
+    z-index: 350;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.35);
+    background: rgba(10,15,30,0.88);
+    backdrop-filter: blur(10px);
+    color: var(--gold);
+    font-size: 1.15rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition: opacity .3s, visibility .3s, transform .3s, background .25s, border-color .25s, box-shadow .25s;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  }
+  .back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+  .back-to-top:hover { background: rgba(201,168,76,0.18); border-color: var(--gold); box-shadow: 0 10px 28px rgba(0,0,0,0.3); }
+  body.player-active .back-to-top { bottom: 150px; }
+  body.light-mode .back-to-top { background: rgba(255,255,255,0.92); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+  @media (max-width: 768px) {
+    .back-to-top { left: 14px; bottom: 18px; width: 42px; height: 42px; }
+    body.player-active .back-to-top { bottom: 175px; }
+  }
+
+  /* تحسين بطاقات السور — لمسة احترافية إضافية */
+  .surah-card {
+    background: linear-gradient(160deg, var(--dark3) 0%, rgba(20,31,56,0.92) 100%);
+  }
+  .surah-card:hover {
+    border-color: rgba(201,168,76,0.45);
+  }
+  body.light-mode .surah-card {
+    background: linear-gradient(160deg, #fff 0%, #f7f8fa 100%);
+  }
+
+  /* تحسين قسم الأجزاء */
+  .juz-card {
+    transition: transform .3s cubic-bezier(.22,1,.36,1), border-color .3s, background .3s, box-shadow .3s;
+  }
+
+  /* شريط تقدم التمرير العلوي الخفيف */
+  .scroll-progress {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 2px;
+    z-index: 200;
+    background: transparent;
+    pointer-events: none;
+  }
+  .scroll-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(to left, var(--gold), var(--gold-light));
+    transition: width 0.08s linear;
+    box-shadow: 0 0 8px rgba(201,168,76,0.4);
+  }
+
 </style>
 </head>
 <body>
 
+<div class="scroll-progress" aria-hidden="true"><div class="scroll-progress-bar" id="scrollProgressBar"></div></div>
+
 <nav class="anim-init">
-  <div class="logo">تدبر القرآن - Tadabbur Al-Quran</div>
+  <a href="#" class="logo" aria-label="تدبر القرآن — الصفحة الرئيسية">
+    <span class="logo-text">تدبر القرآن<small>Tadabbur Al-Quran</small></span>
+  </a>
   <div class="nav-links">
     <a href="#videos">الفيديوهات</a>
     <a href="#about">عني</a>
     <a href="#surahs">المصحف المرتل</a>
     <a href="#juz">الأجزاء <span class="new-nav-badge">New</span></a>
-    <button id="themeToggle" class="theme-toggle-btn" title="تغيير المظهر">☀️</button>
+    <button id="themeToggle" class="theme-toggle-btn" title="تغيير المظهر" aria-label="تبديل الوضع الليلي/النهاري">☀️</button>
   </div>
 </nav>
 
@@ -693,7 +785,8 @@
 </section>
 
 <footer>
-  صنع بـ بواسطة <span>باسل عصام</span> — تدبّر القرآن
+  <p>صنع بـ ❤ بواسطة <span>باسل عصام</span> — تدبّر القرآن</p>
+  <p style="margin-top:.55rem;font-size:.72rem;opacity:.75">المصحف المرتل من الحرم المكي • الشيخ أ.د ماهر المعيقلي</p>
 </footer>
 
 <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
@@ -736,6 +829,8 @@
 </div>
 <audio id="globalAudio" preload="none"></audio>
 
+<button class="back-to-top" id="backToTop" title="العودة للأعلى" aria-label="العودة إلى أعلى الصفحة">↑</button>
+
 <script>
 /* =========================================================
    Theme Toggle Logic (الوضع النهاري/الليلي)
@@ -748,11 +843,26 @@ if(savedTheme === 'light') {
   themeBtn.textContent = '🌙';
 }
 
+function syncThemeColor(isLight) {
+  const metas = document.querySelectorAll('meta[name="theme-color"]');
+  metas.forEach(m => {
+    if (m.media && m.media.includes('dark') && isLight) return;
+    if (m.media && m.media.includes('light') && !isLight) return;
+    m.content = isLight ? '#f5f6f8' : '#0a0f1e';
+  });
+  // fallback single meta if present
+  const single = document.querySelector('meta[name="theme-color"]:not([media])');
+  if (single) single.content = isLight ? '#f5f6f8' : '#0a0f1e';
+}
+
+if (savedTheme === 'light') syncThemeColor(true);
+
 themeBtn.addEventListener('click', () => {
   document.body.classList.toggle('light-mode');
   const isLight = document.body.classList.contains('light-mode');
   themeBtn.textContent = isLight ? '🌙' : '☀️';
   localStorage.setItem('siteTheme', isLight ? 'light' : 'dark');
+  syncThemeColor(isLight);
 });
 
 /* =========================================================
@@ -829,13 +939,13 @@ const surahs = [
   {n:14, name:"إبراهيم", type:"مكية", ayat:52, hasMp3:true, yt:"https://youtu.be/ysNZhg_0t4c?si=VfySMTb0weUYP6VM"},
   {n:15, name:"الحجر", type:"مكية", ayat:99, hasMp3:true, yt:"https://youtu.be/psrS7MnON8c?si=iooulXfqkJ1Ws4_O"},
   {n:16, name:"النحل", type:"مكية", ayat:128, hasMp3:true, yt:"https://youtu.be/NRZomxMviak?si=xxRkwE7p5mPssqvd"},
-  {n:17, name:"الإسراء", type:"مكية", ayat:111, hasMp3:true, yt:"https://youtu.be/N_iBw8mF6xQ?si=0g1k6r5J8j3X7W9A"},
+  {n:17, name:"الإسراء", type:"مكية", ayat:111, hasMp3:true, yt:"https://youtu.be/N_iBw8mF6xQ"},
   {n:18, name:"الكهف", type:"مكية", ayat:110, hasMp3:true, yt:"https://youtu.be/jKHgS7WYyCc?si=aJok8F1g4pcXRTJt"},
-  {n:19, name:"مريم", type:"مكية", ayat:98, hasMp3:true, yt:"https://youtu.be/_13CEJb-mXQ"},
+  {n:19, name:"مريم", type:"مكية", ayat:98, hasMp3:true, yt:"https://youtu.be/oY-_RcnU0dU?si=QyMgBKW1YcG1DX4P"},
   {n:20, name:"طه", type:"مكية", ayat:135, hasMp3:true, yt:"https://youtu.be/eNEDnjebLJY?si=5W-9svTdJDlFcQaT"},
   {n:21, name:"الأنبياء", type:"مكية", ayat:112, hasMp3:true, yt:"https://youtu.be/8YH8AdZGmEI?si=AKoFqaHSWlsMT8z0"},
   {n:22, name:"الحج", type:"مدنية", ayat:78, hasMp3:true, yt:"https://youtu.be/pP7yuT3RuPc?si=je6TrodNw2JyEG_V", mp3File:"سورة الحج .mp3"},
-  {n:23, name:"المؤمنون", type:"مكية", ayat:118, hasMp3:true, yt:"https://youtu.be/Mw0kIVO5q4g?si=0g1k6r5J8j3X7W9A"},
+  {n:23, name:"المؤمنون", type:"مكية", ayat:118, hasMp3:true, yt:"https://youtu.be/KGAZ0doGP4A?si=mngzWur13p--5AGn"},
   {n:24, name:"النور", type:"مدنية", ayat:64, hasMp3:true, yt:"https://youtu.be/3AUqQP5BB8Q?si=zG5WLs8S5V-ZwqiF", mp3File:"سورة النور .mp3"},
   {n:25, name:"الفرقان", type:"مكية", ayat:77, hasMp3:true, yt:"https://youtu.be/N34JB9e0pcg?si=F_o5UTYiN66Lkafu"},
   {n:26, name:"الشعراء", type:"مكية", ayat:227, hasMp3:true, yt:"https://youtu.be/N34JB9e0pcg?si=6w2iyP8ZRCkeWWyN"},
@@ -2059,6 +2169,37 @@ if (smoothPlayer && typeof globalAudio !== 'undefined') {
     globalAudio.addEventListener(eventName, () => smoothPlayer.classList.remove('is-loading'));
   });
 }
+
+/* ===== شريط تقدم التمرير + زر العودة للأعلى ===== */
+(function setupScrollUX() {
+  const bar = document.getElementById('scrollProgressBar');
+  const btn = document.getElementById('backToTop');
+  if (!bar && !btn) return;
+
+  let ticking = false;
+  const update = () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    if (bar) bar.style.width = progress + '%';
+    if (btn) btn.classList.toggle('visible', scrollTop > 420);
+    ticking = false;
+  };
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(update);
+      ticking = true;
+    }
+  }, { passive: true });
+  update();
+
+  if (btn) {
+    btn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+})();
 
 /* تحسين UX إضافي: أزرار الوسائط وشاشة القفل على الهاتف والكمبيوتر */
 (function setupMediaSession() {
