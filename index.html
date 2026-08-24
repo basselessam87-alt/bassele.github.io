@@ -193,7 +193,7 @@
 
   /* ===== أقسام الأجزاء الجديدة ===== */
   .juz-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; align-items: stretch; }
-  .juz-card { background: linear-gradient(145deg, var(--dark3), rgba(20,31,56,.88)); border: 1px solid rgba(201,168,76,0.2); border-radius: 16px; padding: 1.35rem 1.25rem 1.15rem; position: relative; overflow: hidden; cursor: pointer; transition: transform .3s, border-color .3s, background .3s, box-shadow .3s; min-height: 245px; display: flex; flex-direction: column; }
+  .juz-card { background: linear-gradient(145deg, var(--dark3), rgba(20,31,56,.88)); border: 1px solid rgba(201,168,76,0.2); border-radius: 16px; padding: 1.35rem 1.25rem 1.15rem; position: relative; overflow: hidden; cursor: pointer; transition: transform .3s, border-color .3s, background .3s, box-shadow .3s; min-height: 268px; display: flex; flex-direction: column; }
   .juz-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at top right, rgba(201,168,76,0.13), transparent 67%); pointer-events: none; }
   .juz-card::after { content: ''; position: absolute; top: 0; right: 12%; left: 12%; height: 2px; background: linear-gradient(to right, transparent, rgba(201,168,76,.65), transparent); opacity: .65; }
   .juz-card:hover { transform: translateY(-5px); border-color: rgba(201,168,76,0.55); background: #1e2d4a; box-shadow: 0 14px 28px rgba(0,0,0,.16); }
@@ -335,12 +335,85 @@
     .modal { padding: 1.4rem; }
   }
 
-  .coming-soon-box { background: rgba(201,168,76,0.06); border: 1px dashed rgba(201,168,76,0.25); border-radius: 10px; padding: 1.4rem; text-align: center; color: var(--muted); font-size: .9rem; margin-bottom: 1rem; }
-  .coming-soon-box .icon { font-size: 2rem; margin-bottom: .5rem; }
-  .coming-soon-box strong { color: var(--gold); display: block; margin-bottom: .45rem; font-size: 1rem; }
-  .coming-soon-box p { color: var(--muted); font-size: .78rem; line-height: 1.8; margin: 0; }
+  .coming-soon-box { background: rgba(201,168,76,0.06); border: 1px dashed rgba(201,168,76,0.28); border-radius: 14px; padding: 1.55rem 1.3rem; text-align: center; color: var(--muted); font-size: .9rem; margin-bottom: 1rem; }
+  .coming-soon-box .icon { font-size: 2.1rem; margin-bottom: .55rem; }
+  .coming-soon-box strong { color: var(--gold); display: block; margin-bottom: .45rem; font-size: 1.05rem; font-family: 'Amiri', serif; }
+  .coming-soon-box p { color: var(--muted); font-size: .78rem; line-height: 1.85; margin: 0; }
   .modal-footer { display: flex; gap: .7rem; flex-wrap: wrap; justify-content: flex-end; margin-top: 1rem; }
   .btn-sm { padding: .5rem 1.1rem; font-size: .82rem; }
+  .btn-share {
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.32);
+    color: var(--gold);
+    padding: .5rem 1.1rem;
+    border-radius: 8px;
+    font-size: .82rem;
+    font-weight: 600;
+    font-family: 'Cairo', sans-serif;
+    cursor: pointer;
+    transition: all .25s;
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+  }
+  .btn-share:hover { background: rgba(201,168,76,0.2); border-color: var(--gold); transform: translateY(-1px); }
+  .btn-share.copied { background: rgba(80,200,120,0.15); border-color: rgba(80,200,120,0.4); color: #80e0a0; }
+
+  /* تحسين قسم الأجزاء — قريباً */
+  .juz-section-cta {
+    margin-top: 1.6rem;
+    background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03));
+    border: 1px solid rgba(201,168,76,0.22);
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+  }
+  .juz-section-cta-text { flex: 1; min-width: 200px; }
+  .juz-section-cta-text strong { display: block; color: var(--gold); font-size: .95rem; margin-bottom: .25rem; }
+  .juz-section-cta-text p { color: var(--muted); font-size: .8rem; line-height: 1.7; margin: 0; }
+  .juz-notify-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    background: var(--gold);
+    color: #0a0f1e;
+    border: none;
+    border-radius: 10px;
+    padding: .65rem 1.2rem;
+    font-family: 'Cairo', sans-serif;
+    font-size: .84rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all .25s;
+    flex-shrink: 0;
+    box-shadow: 0 6px 18px rgba(201,168,76,0.2);
+  }
+  .juz-notify-btn:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(201,168,76,0.28); }
+  .juz-card-actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .85rem; position: relative; z-index: 2; }
+  .juz-card-notify {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold);
+    border-radius: 8px;
+    padding: .4rem .75rem;
+    font-size: .72rem;
+    font-weight: 600;
+    font-family: 'Cairo', sans-serif;
+    text-decoration: none;
+    transition: all .2s;
+    cursor: pointer;
+  }
+  .juz-card-notify:hover { background: rgba(201,168,76,0.22); border-color: var(--gold); }
+  body.light-mode .juz-section-cta { background: linear-gradient(135deg, rgba(166,124,26,0.08), rgba(166,124,26,0.02)); }
+  body.light-mode .juz-notify-btn { color: #fff; }
 
   footer { text-align: center; padding: 2.5rem; border-top: 1px solid rgba(201,168,76,0.1); color: var(--muted); font-size: .82rem; margin-top: 2rem; }
   footer span { color: var(--gold); }
@@ -780,8 +853,15 @@
 <section id="juz">
   <div class="section-tag">إصدارات جديدة • قريباً</div>
   <div class="section-title">الأجزاء الثلاثة</div>
-  <div class="section-sub">نعمل على تجهيز تجميعات كاملة لأجزاء عمّ وتبارك والمجادلة، بتلاوة الشيخ أ.د ماهر المعيقلي من الحرم المكي.</div>
+  <div class="section-sub">نجهّز تجميعات كاملة لأجزاء عمّ وتبارك والمجادلة بتلاوة الشيخ أ.د ماهر المعيقلي من الحرم المكي — اشترك في قناة التيليجرام ليصلك الإشعار فور النشر.</div>
   <div class="juz-grid" id="juzGrid"></div>
+  <div class="juz-section-cta">
+    <div class="juz-section-cta-text">
+      <strong>📢 عايز تعرف أول ما تنزل؟</strong>
+      <p>انضم لقناة التيليجرام وهنبعتلك إشعار فور صدور أي جزء جديد من الحرم المكي.</p>
+    </div>
+    <a href="https://t.me/hyfQuran" class="juz-notify-btn" target="_blank" rel="noopener noreferrer">نبّهني على تيليجرام</a>
+  </div>
 </section>
 
 <footer>
@@ -1176,7 +1256,12 @@ function buildJuzGrid() {
     const status = isReady
       ? '<span class="juz-status ready">✓ متاح الآن</span>'
       : '<span class="juz-status coming">⏳ قريباً بإذن الله</span>';
-    const hint = isReady ? 'اضغط للمشاهدة والاستماع ↗' : 'اضغط لمعرفة المزيد ↗';
+    const hint = isReady ? 'اضغط للمشاهدة والاستماع ↗' : 'اضغط لمعرفة التفاصيل ↗';
+    const notifyAction = !isReady
+      ? `<div class="juz-card-actions">
+           <a href="https://t.me/hyfQuran" class="juz-card-notify" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">📢 نبّهني على تيليجرام</a>
+         </div>`
+      : '';
 
     card.innerHTML = `
       <span class="juz-new-badge">NEW</span>
@@ -1190,6 +1275,7 @@ function buildJuzGrid() {
       <div class="juz-card-meta">${part.range}</div>
       ${status}
       ${badges.length ? `<div class="juz-card-badges">${badges.join('')}</div>` : ''}
+      ${notifyAction}
       <div class="juz-hint">${hint}</div>
     `;
     grid.appendChild(card);
@@ -1254,9 +1340,9 @@ function openJuzModal(part) {
     content = `<div class="coming-soon-box">
       <div class="icon">⏳</div>
       <strong>قريباً بإذن الله</strong>
-      <p>نجهّز هذا التجميع بعناية ليكون تجربة استماع مميزة من الحرم المكي.<br>تابع القناة ليصلك خبر النشر فوراً.</p>
+      <p>نجهّز <b style="color:var(--gold)">${part.name}</b> بعناية ليكون تجربة استماع مميزة من الحرم المكي.<br>اضغط الزر بالأسفل ليصلك إشعار فور النشر على تيليجرام.</p>
     </div>`;
-    footer = `<a href="https://t.me/hyfQuran" class="btn-primary btn-sm" target="_blank" rel="noopener noreferrer">📢 تابع للإشعار</a>`;
+    footer = `<a href="https://t.me/hyfQuran" class="btn-primary btn-sm" target="_blank" rel="noopener noreferrer">📢 نبّهني على تيليجرام</a>`;
   }
 
   document.getElementById('mContent').innerHTML = content;
@@ -1265,6 +1351,9 @@ function openJuzModal(part) {
   document.body.style.overflow = 'hidden';
   document.body.classList.add('modal-open');
   syncModalPlayBtn();
+  try {
+    history.replaceState(null, '', `#juz=${part.id}`);
+  } catch (_) {}
 }
 
 function openModal(s) {
@@ -1326,8 +1415,11 @@ function openModal(s) {
       <strong>قريباً إن شاء الله</strong>
       هذه السورة ستُضاف قريباً — تابع القناة على يوتيوب وتيليجرام لتُخطَر فور الإضافة.
     </div>`;
-    footer = `<a href="https://t.me/hyfQuran" class="btn-primary btn-sm" target="_blank" rel="noopener noreferrer">📢 تابع للإشعار</a>`;
+    footer = `<a href="https://t.me/hyfQuran" class="btn-primary btn-sm" target="_blank" rel="noopener noreferrer">📢 نبّهني على تيليجرام</a>`;
   }
+
+  // زر مشاركة رابط السورة (يعمل دائماً)
+  footer += `<button type="button" class="btn-share btn-sm" id="shareSurahBtn" onclick="shareSurah(${s.n})" title="نسخ رابط السورة">🔗 نسخ الرابط</button>`;
 
   document.getElementById('mContent').innerHTML = content;
   document.getElementById('mFooter').innerHTML = footer;
@@ -1335,16 +1427,120 @@ function openModal(s) {
   document.body.style.overflow = 'hidden';
   document.body.classList.add('modal-open');
   syncModalPlayBtn();
+
+  // حدّث الـ hash بدون ما يعمل jump للصفحة
+  try {
+    history.replaceState(null, '', `#surah=${s.n}`);
+  } catch (_) {}
 }
 
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('open');
   document.body.style.overflow = '';
   document.body.classList.remove('modal-open');
+  // امسح hash السورة لما تقفل المودال عشان الرجوع بالمتصفح يبقى نظيف
+  try {
+    if (/^#surah=\d+/i.test(location.hash) || /^#juz=/i.test(location.hash)) {
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+  } catch (_) {}
 }
 
 function closeModalOutside(e) {
   if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+/* =========================================================
+   مشاركة السورة (Deep Link)
+   الرابط يكون بالشكل: الموقع#surah=18
+   لما حد يفتحه، المودال بيتفتح مباشرة على السورة.
+   ========================================================= */
+function getSurahShareUrl(n) {
+  const base = location.origin + location.pathname.replace(/\/$/, '') || location.href.split('#')[0];
+  return `${base}#surah=${n}`;
+}
+
+function showCopyToast(message) {
+  let toast = document.getElementById('shareToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'shareToast';
+    toast.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(10,15,30,0.95);color:#f0e6c8;border:1px solid rgba(201,168,76,0.4);padding:.65rem 1.3rem;border-radius:10px;font-size:.84rem;z-index:9999;font-family:Cairo,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.35);transition:opacity .25s';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.style.display = 'block';
+  toast.style.opacity = '1';
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => { toast.style.display = 'none'; }, 250);
+  }, 2200);
+}
+
+async function shareSurah(n) {
+  const url = getSurahShareUrl(n);
+  const surah = surahByNumber.get(n);
+  const title = surah ? `سورة ${surah.name}` : `سورة رقم ${n}`;
+  const btn = document.getElementById('shareSurahBtn');
+
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(url);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = url;
+      ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    if (btn) {
+      btn.classList.add('copied');
+      btn.textContent = '✓ تم النسخ';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.textContent = '🔗 نسخ الرابط';
+      }, 1800);
+    }
+    showCopyToast(`تم نسخ رابط ${title}`);
+  } catch (_) {
+    // fallback: حاول Web Share API
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, url, text: `${title} — تدبر القرآن` });
+        return;
+      } catch (__) {}
+    }
+    showCopyToast('تعذّر النسخ — انسخ الرابط يدوياً من شريط العنوان');
+    try { prompt('انسخ الرابط:', url); } catch (___) {}
+  }
+}
+
+function handleDeepLink() {
+  const hash = location.hash || '';
+  const surahMatch = hash.match(/^#surah=(\d{1,3})$/i);
+  if (surahMatch) {
+    const n = Number(surahMatch[1]);
+    const s = surahByNumber.get(n);
+    if (s) {
+      const section = document.getElementById('surahs');
+      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => openModal(s), 350);
+    }
+    return;
+  }
+  const juzMatch = hash.match(/^#juz=([\w-]+)$/i);
+  if (juzMatch) {
+    const part = juzParts.find(p => p.id === juzMatch[1]);
+    if (part) {
+      const section = document.getElementById('juz');
+      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => openModal(part), 350);
+    }
+  }
 }
 
 /* =========================================================
@@ -1725,6 +1921,9 @@ buildGrid();
 setupSurahGridInteractions();
 buildJuzGrid();
 scheduleViewsFetch();
+// فتح السورة/الجزء مباشرة لو الرابط فيه #surah=18 أو #juz=amma
+handleDeepLink();
+window.addEventListener('hashchange', handleDeepLink);
 
 /* =========================================================
    تحسين مانوس ل 26 — UX Layer
