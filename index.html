@@ -979,6 +979,78 @@ body.player-active .top-btn { bottom: 110px; }
   .q-actions .icon-btn { width: 25px; height: 25px; }
   .pd-extras { flex-wrap: wrap; }
 }
+
+/* =========================================================
+   20) MODAL INLINE PLAYER (v3) — مطابق للتصميم القديم
+   ========================================================= */
+.audio-player-wrap {
+  background: var(--surface-2); border: 1px solid var(--border-2); border-radius: 14px;
+  padding: 1rem 1.15rem; margin-bottom: 0.9rem;
+}
+.audio-player-head { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.5rem; }
+.audio-player-label { font-size: 0.76rem; color: var(--muted); display: flex; align-items: center; gap: 0.4rem; font-weight: 600; }
+.audio-player-label svg { color: var(--accent); }
+.modal-player-name { font-family: 'Amiri', serif; font-size: 1.15rem; color: var(--text-strong); font-weight: 700; text-align: center; margin-bottom: 0.65rem; }
+.audio-progress-wrap { margin-bottom: 0.2rem; }
+.audio-time-row { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted); margin-bottom: 0.35rem; font-variant-numeric: tabular-nums; direction: ltr; }
+.audio-controls { display: flex; align-items: center; justify-content: center; gap: 0.6rem; margin-top: 0.75rem; flex-wrap: wrap; }
+.audio-volume-row { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.8rem; }
+.audio-volume-row svg { color: var(--muted); flex-shrink: 0; }
+.audio-note { font-size: 0.72rem; color: var(--muted); margin-top: 0.7rem; text-align: center; line-height: 1.6; }
+
+.audio-nav-btn {
+  background: var(--accent-soft); border: 1px solid var(--border-2); color: var(--accent);
+  width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 0.78rem;
+  transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.audio-nav-btn:hover:not(:disabled) { background: var(--accent-glow); border-color: var(--accent); transform: translateY(-1px); }
+.audio-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.audio-skip-btn {
+  background: var(--accent-soft); border: 1px solid var(--border-2); color: var(--accent);
+  width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-family: 'Cairo', sans-serif;
+  font-size: 0.58rem; font-weight: 700; transition: all 0.2s ease;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.05; flex-shrink: 0;
+}
+.audio-skip-btn:hover { background: var(--accent-glow); border-color: var(--accent); transform: translateY(-1px); }
+
+.audio-play-btn {
+  background: var(--accent); border: none; color: #0a0f1a; width: 50px; height: 50px; border-radius: 50%;
+  cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s ease; flex-shrink: 0; box-shadow: 0 6px 18px var(--accent-glow);
+}
+.audio-play-btn:hover { filter: brightness(1.08); transform: scale(1.06); box-shadow: 0 8px 24px var(--accent-glow); }
+.audio-play-btn:active { transform: scale(0.96); }
+
+.speed-btn {
+  background: var(--accent-soft); border: 1px solid var(--border-2); color: var(--accent);
+  padding: 0.3rem 0.7rem; border-radius: 999px; font-family: 'Cairo', sans-serif; font-size: 0.72rem;
+  font-weight: 700; cursor: pointer; transition: all 0.2s ease; flex-shrink: 0; direction: ltr; min-width: 44px; text-align: center;
+}
+.speed-btn:hover { background: var(--accent-glow); border-color: var(--accent); }
+
+.audio-progress, .audio-volume {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 99px;
+  background: linear-gradient(to left, var(--accent) 0%, var(--accent-2) var(--pct, 0%), var(--track) var(--pct, 0%), var(--track) 100%);
+  cursor: pointer; outline: none;
+}
+.audio-volume { height: 5px; }
+.audio-progress::-webkit-slider-thumb, .audio-volume::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 15px; height: 15px;
+  border: 2.5px solid var(--surface); border-radius: 50%; background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft); transition: transform 0.15s;
+}
+.audio-progress::-webkit-slider-thumb:hover, .audio-volume::-webkit-slider-thumb:hover { transform: scale(1.2); }
+.audio-progress::-moz-range-thumb, .audio-volume::-moz-range-thumb {
+  width: 12px; height: 12px; border: 2.5px solid var(--surface); border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+@media (max-width: 620px) {
+  .audio-play-btn { width: 46px; height: 46px; }
+  .audio-skip-btn { width: 34px; height: 34px; }
+  .audio-nav-btn { width: 30px; height: 30px; }
+}
 </style>
 </head>
 <body>
@@ -2210,12 +2282,14 @@ function applyVolume() {
   $('#pdMute').setAttribute('aria-label', state.muted ? 'إلغاء كتم الصوت' : 'كتم الصوت');
   Store.set('tq_vol', state.volume);
   Store.set('tq_muted', state.muted);
+  syncModalPlayer();
 }
 function applyRate() {
   audio.playbackRate = state.rate;
   $('#pdSpeed').textContent = state.rate + 'x';
   Store.set('tq_rate', state.rate);
   $$('#speedMenu .pop-item').forEach((b) => b.classList.toggle('active', Number(b.dataset.rate) === state.rate));
+  syncModalPlayer();
 }
 
 /* =========================================================
@@ -2310,6 +2384,12 @@ function openItemModal(item) {
     ? `<span>${esc(item.range)}</span><span class="dot">•</span><span>تجميع كامل</span>`
     : `<span>${item.ayat} آية</span><span class="dot">•</span><span>${esc(item.type)}</span><span class="dot">•</span><span>${esc(item.name)}</span>`;
 
+  const isThis = state.current && itemKey(state.current) === itemKey(item);
+  const curTime = isThis ? (audio.currentTime || 0) : (state.positions[itemKey(item)] || 0);
+  const durTime = isThis && isFinite(audio.duration) && audio.duration > 0 ? audio.duration : NaN;
+  const progressVal = (isThis && isFinite(durTime) && durTime > 0) ? (curTime / durTime) * 100 : 0;
+  const labelTxt = isJuz ? 'استمع إلى التجميع من الحرم المكي' : 'استمع إلى التلاوة من الحرم المكي';
+
   $('#mBody').innerHTML = `
     ${vid ? `
     <button type="button" class="yt-frame" data-yt="${esc(vid)}" aria-label="تشغيل ${esc(itemLabel(item))} على يوتيوب">
@@ -2320,23 +2400,35 @@ function openItemModal(item) {
       </span>
     </button>` : ''}
 
-    ${item.hasMp3 ? `
-    <div class="audio-box">
-      <div class="audio-box-head">
-        <span class="audio-box-lbl">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 14v-2a9 9 0 0 1 18 0v2"/><path d="M3 14h3v6H4a1 1 0 0 1-1-1zM21 14h-3v6h2a1 1 0 0 0 1-1z"/></svg>
-          استماع صوتي
-        </span>
-        <span class="audio-box-lbl" style="color:var(--accent)">${pos > 5 ? 'موضعك: ' + fmt(pos) : 'من البداية'}</span>
+  ${item.hasMp3 ? `
+    <div class="audio-player-wrap">
+      <div class="audio-player-head">
+        <div class="audio-player-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+          ${labelTxt}
+        </div>
+        <button type="button" class="speed-btn" id="modalSpeedBtn" title="سرعة التلاوة">${state.rate}x</button>
+      </div>
+      <div class="modal-player-name">${esc(itemLabel(item))}</div>
+      <div class="audio-progress-wrap">
+        <div class="audio-time-row">
+          <span id="modalCurrent">${fmt(curTime)}</span>
+          <span id="modalDuration">${fmt(durTime)}</span>
+        </div>
+        <input class="audio-progress" type="range" id="modalProgress" min="0" max="100" value="${progressVal}" step="0.1" style="--pct:${progressVal}%">
       </div>
       <div class="audio-controls">
-        <button type="button" class="btn btn-primary btn-sm" data-modal-play="${isJuz ? esc(item.id) : item.n}">▶ تشغيل الآن</button>
-        ${pos > 5 ? `<button type="button" class="btn btn-surface btn-sm" data-modal-play="${isJuz ? esc(item.id) : item.n}" data-restart="1">من البداية</button>` : ''}
-        <button type="button" class="btn btn-surface btn-sm" data-modal-queue="${isJuz ? esc(item.id) : item.n}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> أضف للقائمة</button>
+        ${!isJuz ? `<button type="button" class="audio-nav-btn" id="modalPrev" ${item.n <= 1 ? 'disabled' : ''} title="السورة السابقة">⏮</button>` : ''}
+        <button type="button" class="audio-skip-btn" id="modalBack10" title="رجوع 10 ثوانٍ"><span>↺</span><span>10</span></button>
+        <button type="button" class="audio-play-btn" id="modalPlayBtn">${isThis && !audio.paused ? '⏸' : '▶'}</button>
+        <button type="button" class="audio-skip-btn" id="modalFwd10" title="تقديم 10 ثوانٍ"><span>↻</span><span>10</span></button>
+        ${!isJuz ? `<button type="button" class="audio-nav-btn" id="modalNext" ${item.n >= 114 ? 'disabled' : ''} title="السورة التالية">⏭</button>` : ''}
       </div>
-      <div class="audio-volume">
-        <span style="font-size:0.72rem;color:var(--muted)">ملف صوتي بجودة عالية من أرشيف الإنترنت</span>
+      <div class="audio-volume-row">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></svg>
+        <input class="audio-volume" type="range" id="modalVolume" min="0" max="1" step="0.05" value="${state.muted ? 0 : state.volume}" style="--pct:${(state.muted ? 0 : state.volume) * 100}%">
       </div>
+      <p class="audio-note">يستمر التشغيل حتى بعد إغلاق هذه النافذة أو تصفح باقي الموقع</p>
     </div>` : `
     <div class="coming-box">
       <span class="coming-icon" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20M7 4v5M17 4v5M7 20v-5M17 20v-5"/></svg></span>
@@ -2352,9 +2444,98 @@ function openItemModal(item) {
   `;
 
   openDialog(modal, '#closeDetail');
+  if (item.hasMp3) { bindModalPlayer(item); syncModalPlayer(); }
   if (!isJuz && location.hash !== `#surah-${item.n}`) {
     history.replaceState(null, '', `#surah-${item.n}`);
   }
+}
+
+
+function bindModalPlayer(item) {
+  const prog = $('#modalProgress');
+  const play = $('#modalPlayBtn');
+  const back = $('#modalBack10');
+  const fwd = $('#modalFwd10');
+  const speed = $('#modalSpeedBtn');
+  const vol = $('#modalVolume');
+  const prev = $('#modalPrev');
+  const next = $('#modalNext');
+
+  if (prog) {
+    prog.addEventListener('input', () => {
+      prog.dataset.dragging = '1';
+      const dur = audio.duration;
+      const v = Number(prog.value);
+      prog.style.setProperty('--pct', v + '%');
+      const cur = $('#modalCurrent');
+      if (cur && isFinite(dur) && dur > 0) cur.textContent = fmt((v / 100) * dur);
+    });
+    prog.addEventListener('change', () => {
+      delete prog.dataset.dragging;
+      const dur = audio.duration;
+      if (isFinite(dur) && dur > 0) audio.currentTime = (Number(prog.value) / 100) * dur;
+    });
+  }
+  if (play) play.addEventListener('click', () => {
+    if (!state.current || itemKey(state.current) !== itemKey(item)) playItem(item);
+    else togglePlay();
+  });
+  if (back) back.addEventListener('click', () => { audio.currentTime = Math.max(0, audio.currentTime - 10); });
+  if (fwd) fwd.addEventListener('click', () => { audio.currentTime = Math.min(audio.duration || 1e9, audio.currentTime + 10); });
+  if (speed) speed.addEventListener('click', cycleModalSpeed);
+  if (vol) vol.addEventListener('input', () => {
+    state.volume = Number(vol.value);
+    state.muted = state.volume === 0;
+    applyVolume();
+    vol.style.setProperty('--pct', ((state.muted ? 0 : state.volume) * 100) + '%');
+  });
+  if (prev) prev.addEventListener('click', () => { if (item.kind !== 'juz' && item.n > 1) playItem(surahMap.get(item.n - 1)); });
+  if (next) next.addEventListener('click', () => { if (item.kind !== 'juz' && item.n < 114) playItem(surahMap.get(item.n + 1)); });
+}
+
+function syncModalPlayer() {
+  const modal = $('#detailModal');
+  if (!modal || !modal.classList.contains('open')) return;
+  const item = state.modalItem;
+  if (!item || !item.hasMp3) return;
+  const isThis = state.current && itemKey(state.current) === itemKey(item);
+  const play = $('#modalPlayBtn');
+  if (play) play.textContent = (isThis && !audio.paused) ? '⏸' : '▶';
+  const prog = $('#modalProgress');
+  const cur = $('#modalCurrent');
+  const dur = $('#modalDuration');
+  if (isThis && isFinite(audio.duration) && audio.duration > 0) {
+    if (prog && !prog.dataset.dragging) {
+      const pct = (audio.currentTime / audio.duration) * 100;
+      prog.value = pct;
+      prog.style.setProperty('--pct', pct + '%');
+    }
+    if (cur) cur.textContent = fmt(audio.currentTime);
+    if (dur) dur.textContent = fmt(audio.duration);
+  } else if (!isThis) {
+    const saved = state.positions[itemKey(item)] || 0;
+    if (prog && !prog.dataset.dragging) { prog.value = 0; prog.style.setProperty('--pct', '0%'); }
+    if (cur) cur.textContent = fmt(saved);
+    if (dur) dur.textContent = '--:--';
+  }
+  const vol = $('#modalVolume');
+  if (vol) {
+    vol.value = state.muted ? 0 : state.volume;
+    vol.style.setProperty('--pct', ((state.muted ? 0 : state.volume) * 100) + '%');
+  }
+  const speed = $('#modalSpeedBtn');
+  if (speed) speed.textContent = state.rate + 'x';
+}
+
+function cycleModalSpeed() {
+  const cycle = [1, 1.25, 1.5, 2, 0.75];
+  const idx = cycle.indexOf(state.rate);
+  state.rate = cycle[(idx + 1) % cycle.length];
+  applyRate();
+  const btn = $('#modalSpeedBtn');
+  if (btn) btn.textContent = state.rate + 'x';
+  $$('#speedMenu .pop-item').forEach((b) => b.classList.toggle('active', Number(b.dataset.rate) === state.rate));
+  toast(`سرعة التلاوة ${state.rate}x`);
 }
 
 function openSurahModal(n) {
@@ -2839,14 +3020,15 @@ function wireEvents() {
   });
 
   /* audio events */
-  audio.addEventListener('play', () => { syncPlayIcon(); dockSubtitle(); updateMediaSession(); });
-  audio.addEventListener('pause', () => { syncPlayIcon(); savePosition(true); });
-  audio.addEventListener('ended', onEnded);
+  audio.addEventListener('play', () => { syncPlayIcon(); dockSubtitle(); updateMediaSession(); syncModalPlayer(); });
+  audio.addEventListener('pause', () => { syncPlayIcon(); savePosition(true); syncModalPlayer(); });
+  audio.addEventListener('ended', () => { onEnded(); syncModalPlayer(); });
   audio.addEventListener('timeupdate', () => {
     updateDockTimes();
     savePosition(false);
+    syncModalPlayer();
   });
-  audio.addEventListener('loadedmetadata', () => { updateDockTimes(); syncPlayIcon(); });
+  audio.addEventListener('loadedmetadata', () => { updateDockTimes(); syncPlayIcon(); syncModalPlayer(); });
   audio.addEventListener('waiting', () => { if (state.current) $('#pdSub').textContent = 'جارٍ التحميل...'; });
   audio.addEventListener('playing', () => { syncPlayIcon(); dockSubtitle(); });
   audio.addEventListener('error', () => {
