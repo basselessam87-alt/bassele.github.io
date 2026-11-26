@@ -491,6 +491,21 @@
     .sp-controls .audio-play-btn { width: 43px; height: 43px; }
   }
 </style>
+<style>
+  .surahs-grid.list { grid-template-columns: 1fr !important; gap: .5rem; }
+  .surahs-grid.list .surah-card { flex-direction: row; align-items: center; justify-content: space-between; padding: .7rem 1rem; }
+  .mobile-menu { display:none; position:fixed; top:82px; left:1.2rem; right:1.2rem; z-index:290; background:rgba(10,15,30,0.96); backdrop-filter:blur(20px); border:1px solid rgba(201,168,76,0.2); border-radius:18px; padding:.8rem; flex-direction:column; gap:.35rem; box-shadow:0 24px 80px rgba(0,0,0,0.48); }
+  .mobile-menu.open { display:flex; }
+  .mobile-menu a { padding:.78rem 1rem; border-radius:12px; text-decoration:none; font-weight:700; font-size:.92rem; color:var(--text); }
+  .mobile-menu a:hover { background:rgba(201,168,76,0.12); color:var(--gold); }
+  #openQueueBtn, #openCmdBtn, #mobileToggle { position:relative; }
+  .view-btn.active { background:var(--gold) !important; color:#0a0f1e !important; }
+  .queue-item { display:flex; align-items:center; justify-content:space-between; gap:.6rem; padding:.65rem .8rem; border-radius:11px; background:var(--dark3); border:1px solid rgba(201,168,76,0.14); }
+  .cmd-row { display:flex; align-items:center; justify-content:space-between; gap:.7rem; padding:.62rem .85rem; border-radius:10px; border:1px solid transparent; background:transparent; color:var(--text); text-align:right; width:100%; font-size:.86rem; font-weight:600; cursor:pointer; font-family:'Cairo',sans-serif; }
+  .cmd-row:hover { background:rgba(201,168,76,0.1); border-color:rgba(201,168,76,0.2); color:var(--gold); }
+  .cmd-row small { color:var(--muted); font-size:.74rem; }
+  @media (min-width:769px) { #mobileToggle { display:none; } }
+</style>
 </head>
 <body>
 
@@ -505,18 +520,40 @@
     <a href="#about">عني</a>
     <a href="#surahs">المصحف المرتل</a>
     <a href="#juz">الأجزاء <span class="new-nav-badge">New</span></a>
+    <button id="openQueueBtn" class="theme-toggle-btn" title="قائمة التشغيل" aria-label="قائمة التشغيل" style="font-size:.85rem">☰<span id="qBadge" style="position:absolute;top:-4px;left:-4px;min-width:16px;height:16px;border-radius:999px;background:var(--gold);color:#0a0f1e;font-size:.6rem;font-weight:800;display:none;place-items:center;padding:0 3px"></span></button>
+    <button id="openCmdBtn" class="theme-toggle-btn" title="بحث سريع (Ctrl+K)" aria-label="بحث سريع" style="font-size:.85rem">⌕</button>
     <button id="themeToggle" class="theme-toggle-btn" title="تغيير المظهر" aria-label="تبديل الوضع الليلي/النهاري">☀️</button>
+    <button id="mobileToggle" class="theme-toggle-btn" title="القائمة" aria-label="القائمة" style="font-size:.9rem">☰</button>
   </div>
 </nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#videos">الفيديوهات المميزة</a>
+  <a href="#about">عن باسل عصام</a>
+  <a href="#surahs">المصحف المرتل (114 سورة)</a>
+  <a href="#juz">الأجزاء الثلاثة</a>
+</div>
 
 <div class="hero">
   <div class="quran-deco anim-init">﷽</div>
   <div class="hero-badge anim-init">Tadabbur Al-Quran</div>
   <h1 class="anim-init">القرآن الكريم<br>من <span>الحرم المكي</span></h1>
   <p class="anim-init">استمع إلى المصحف المرتل كاملاً بصوت الشيخ أ.د ماهر المعيقلي من المسجد الحرام في مكة المكرمة — تجربة روحانية لا مثيل لها</p>
+  <div class="resume-bar anim-init" id="resumeBar" style="display:none;align-items:center;justify-content:space-between;gap:.75rem;padding:.65rem .95rem;border-radius:14px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.25);margin-bottom:1.35rem;max-width:480px">
+    <div style="display:flex;align-items:center;gap:.65rem;min-width:0">
+      <div style="width:34px;height:34px;border-radius:10px;background:rgba(201,168,76,0.12);color:var(--gold);display:grid;place-items:center;flex-shrink:0;font-size:.85rem">▶</div>
+      <div style="min-width:0">
+        <div style="font-size:.68rem;color:var(--gold);font-weight:700">استكمل من حيث توقفت</div>
+        <div style="font-size:.9rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="resumeText">—</div>
+      </div>
+    </div>
+    <button type="button" class="btn-primary btn-sm" id="resumeBtn" style="padding:.46rem .88rem;font-size:.78rem;border-radius:10px">متابعة</button>
+  </div>
+
   <div class="hero-btns anim-init">
     <a href="https://youtube.com/@tadabburquran360?si=goy6cCWoRjpY-2pu" class="btn-primary" target="_blank" rel="noopener noreferrer">اشترك في القناة</a>
     <a href="https://youtube.com/playlist?list=PLbmqYj4HTstumH44E4qU7cdNXTJ1TsAJr" class="btn-outline" target="_blank" rel="noopener noreferrer">المصحف المرتل كاملاً</a>
+    <a href="#surahs" class="btn-outline" style="background:rgba(201,168,76,0.03)">تصفح السور ↓</a>
   </div>
   <div class="stat-row anim-init">
     <div class="stat">
@@ -530,6 +567,21 @@
     <div class="stat">
       <div class="stat-num">114</div>
       <div class="stat-label">سورة في المصحف المرتل</div>
+    </div>
+  </div>
+
+  <div class="quick-play anim-init" id="quickPlay" style="margin-top:2rem;max-width:420px;margin-left:auto;margin-right:auto;background:linear-gradient(145deg,rgba(26,35,64,0.9),rgba(10,15,30,0.9));border:1px solid rgba(201,168,76,0.25);border-radius:16px;padding:1.2rem;display:flex;flex-direction:column;gap:.8rem">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:.72rem;font-weight:700;color:var(--gold);background:rgba(201,168,76,0.12);padding:.2rem .65rem;border-radius:999px">استماع سريع</span>
+      <button type="button" id="shufflePickBtn" style="background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer" title="سورة أخرى" aria-label="سورة أخرى">⤮</button>
+    </div>
+    <div>
+      <div style="font-family:'Amiri',serif;font-size:1.5rem;color:#fff;font-weight:700;line-height:1.25" id="qpTitle">سورة الكهف</div>
+      <div style="font-size:.8rem;color:var(--muted);margin-top:.2rem" id="qpSub">سورة رقم 18 • مكية • 110 آية</div>
+    </div>
+    <div style="display:flex;gap:.5rem">
+      <button type="button" class="btn-primary btn-sm" style="flex:1" id="qpPlayBtn">▶ تشغيل الآن</button>
+      <button type="button" class="btn-outline btn-sm" id="qpOpenBtn">التفاصيل</button>
     </div>
   </div>
 </div>
@@ -603,6 +655,18 @@
       <button class="filter-btn" onclick="setFilter('مفضلة', this)">المفضلة ♥</button>
     </div>
   </div>
+  <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:1.2rem">
+    <select id="sortSelect" style="background:var(--dark3);border:1px solid rgba(201,168,76,0.2);color:var(--text);padding:.5rem .8rem;border-radius:10px;font-family:'Cairo',sans-serif;font-size:.82rem" aria-label="ترتيب السور">
+      <option value="order">ترتيب المصحف (1–114)</option>
+      <option value="short">الأقصر أولاً</option>
+      <option value="long">الأطول أولاً</option>
+      <option value="alpha">ترتيب أبجدي</option>
+    </select>
+    <div style="display:inline-flex;padding:3px;border-radius:11px;background:var(--dark3);border:1px solid rgba(201,168,76,0.2)" role="group" aria-label="طريقة العرض">
+      <button type="button" class="view-btn active" data-view="grid" style="border:none;background:transparent;color:var(--muted);padding:0 .8rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer">شبكة</button>
+      <button type="button" class="view-btn" data-view="list" style="border:none;background:transparent;color:var(--muted);padding:0 .8rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer">قائمة</button>
+    </div>
+  </div>
   <div class="surah-count" id="surahCount"><span>114</span> سورة</div>
   <div class="surahs-grid" id="surahsGrid"></div>
 </section>
@@ -662,6 +726,7 @@
     <input class="audio-progress" type="range" id="spProgress" min="0" max="100" value="0" step="0.1" aria-label="تقدم التلاوة">
     <span id="spDuration">--:--</span>
     <button type="button" class="speed-btn" id="spSpeedBtn" onclick="cyclePlaybackRate()" title="سرعة التلاوة" aria-label="تغيير سرعة التلاوة">1x</button>
+    <button type="button" class="speed-btn" id="spRepeatBtn" title="التشغيل: متواصل" aria-label="وضع التكرار" style="min-width:34px">🔁</button>
   </div>
   <div class="sp-volume-wrap">
     <span class="sp-vol-icon" id="spVolIcon" onclick="toggleMute()" title="كتم/تشغيل الصوت">🔊</span>
@@ -670,6 +735,32 @@
   <button class="sp-close" onclick="stopGlobalAudio()" title="إيقاف" aria-label="إغلاق المشغل وإيقاف التلاوة">✕</button>
 </div>
 <audio id="globalAudio" preload="none"></audio>
+
+<!-- Command Palette -->
+<div class="cmd-overlay" id="cmdOverlay" style="display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.72);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:1rem">
+  <div style="width:100%;max-width:540px;max-height:90vh;overflow:hidden;background:var(--dark2);border:1px solid rgba(201,168,76,0.28);border-radius:18px;box-shadow:0 24px 80px rgba(0,0,0,0.48)">
+    <div style="display:flex;align-items:center;gap:.65rem;padding:.85rem 1.05rem;border-bottom:1px solid rgba(201,168,76,0.18)">
+      <input type="text" id="cmdInput" placeholder="ابحث عن أي سورة أو جزء..." autocomplete="off" style="flex:1;background:transparent;border:none;color:var(--text);font-family:'Cairo',sans-serif;font-size:.94rem;outline:none">
+      <button type="button" id="closeCmd" style="background:var(--dark3);border:1px solid rgba(201,168,76,0.2);color:var(--muted);padding:.3rem .7rem;border-radius:8px;cursor:pointer">Esc</button>
+    </div>
+    <div id="cmdList" style="max-height:360px;overflow-y:auto;padding:.5rem;display:flex;flex-direction:column;gap:.2rem"></div>
+  </div>
+</div>
+
+<!-- Queue Drawer -->
+<div class="queue-overlay" id="queueOverlay" style="display:none;position:fixed;inset:0;z-index:620;background:rgba(0,0,0,0.62);backdrop-filter:blur(6px);justify-content:flex-end">
+  <div style="width:min(92vw,370px);height:100%;background:var(--dark2);border-right:1px solid rgba(201,168,76,0.2);padding:1.35rem;display:flex;flex-direction:column;gap:.9rem;box-shadow:0 24px 80px rgba(0,0,0,0.48)">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <h3 style="font-size:1.15rem;font-weight:800;color:var(--text)">قائمة التشغيل التالية</h3>
+      <button type="button" id="closeQueue" style="background:none;border:1px solid rgba(201,168,76,0.2);border-radius:50%;color:var(--muted);width:34px;height:34px;cursor:pointer">✕</button>
+    </div>
+    <p style="font-size:.78rem;color:var(--muted)">السور المضافة هنا تُشغّل تلقائياً بعد انتهاء السورة الحالية.</p>
+    <div id="queueItems" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:.5rem"></div>
+    <button type="button" id="clearQueue" style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);color:var(--gold);padding:.5rem;border-radius:8px;cursor:pointer;font-family:'Cairo',sans-serif">مسح القائمة</button>
+  </div>
+</div>
+
+<div id="toast" style="position:fixed;top:86px;left:50%;transform:translateX(-50%) translateY(-10px);z-index:950;background:rgba(10,15,30,0.95);color:var(--text);border:1px solid rgba(201,168,76,0.4);padding:.6rem 1.2rem;border-radius:999px;font-size:.82rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.35);opacity:0;pointer-events:none;transition:all .22s ease"></div>
 
 <button class="back-to-top" id="backToTop" title="العودة للأعلى" aria-label="العودة إلى أعلى الصفحة">↑</button>
 
@@ -944,6 +1035,7 @@ function buildGrid() {
       </div>
       ${badges.length ? `<div class="surah-badges">${badges.join('')}</div>` : '<div class="surah-badges"><span style="font-size:.62rem;color:var(--muted);font-style:italic">قريباً</span></div>'}
       ${s.hasMp3 ? `<button class="card-play-btn" data-card-action="play" data-n="${s.n}" aria-label="تشغيل سورة ${s.name}" title="تشغيل مباشر">▶</button>` : ''}
+      ${s.hasMp3 ? `<button class="card-queue-btn" data-card-action="queue" data-n="${s.n}" aria-label="أضف سورة ${s.name} لقائمة التشغيل" title="إضافة لقائمة التشغيل" style="position:absolute;bottom:.7rem;right:.72rem;display:inline-flex;align-items:center;justify-content:center;width:31px;height:31px;border:1px solid rgba(201,168,76,0.36);border-radius:50%;background:rgba(201,168,76,0.1);color:var(--gold);cursor:pointer;font-size:.85rem;line-height:1;z-index:2">+</button>` : ''}
     `;
     fragment.appendChild(card);
   });
@@ -954,6 +1046,11 @@ function runSurahCardAction(control) {
   const n = Number(control.dataset.n);
   if (control.dataset.cardAction === 'play') {
     playSurahAudio(n);
+    return;
+  }
+  if (control.dataset.cardAction === 'queue') {
+    if (!window.playQueue) window.playQueue = [];
+    if (!window.playQueue.includes(n)) { window.playQueue.push(n); renderQueueDrawer(); showToast(`أُضيفت سورة ${surahByNumber.get(n)?.name} لقائمة التشغيل`); }
     return;
   }
   if (control.dataset.cardAction === 'favorite') {
@@ -1670,7 +1767,16 @@ globalAudio.addEventListener('ended', () => {
   syncModalPlayBtn();
   updatePlayingCardIndicator();
   
-  if (currentPlayingSurah && currentPlayingSurah.n < 114) {
+  const _rm = (window.repeatMode || 'continuous');
+  if (_rm === 'one') {
+    // replay handled by enhancement listener
+  } else if (_rm === 'shuffle') {
+    // handled by enhancement listener
+  } else if (window.playQueue && window.playQueue.length) {
+    const nq = window.playQueue.shift();
+    if (typeof renderQueueDrawer === 'function') renderQueueDrawer();
+    playSurahAudio(nq);
+  } else if (currentPlayingSurah && currentPlayingSurah.n < 114) {
     playAdjacentSurah(1);
   }
 });
@@ -2208,6 +2314,272 @@ window.setTimeout(() => {
   globalAudio.addEventListener('ended', () => {
     navigator.mediaSession.playbackState = 'none';
   });
+})();
+</script>
+
+<script>
+/* =========================================================
+   Enhancements ported from tadabbur_al_quran
+   ========================================================= */
+(function() {
+  // State
+  window.playQueue = window.playQueue || [];
+  let repeatMode = 'continuous'; // continuous | one | shuffle
+  window.repeatMode = repeatMode;
+  let surahSort = 'order';
+  let surahView = 'grid';
+
+  // Toast helper
+  window.showToast = function(msg) {
+    const el = document.getElementById('toast');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.opacity = '1';
+    el.style.pointerEvents = 'auto';
+    clearTimeout(el._t);
+    el._t = setTimeout(() => { el.style.opacity = '0'; el.style.pointerEvents = 'none'; }, 2200);
+  };
+
+  // Mobile menu
+  const mobileToggle = document.getElementById('mobileToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  if (mobileToggle && mobileMenu) {
+    mobileToggle.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.remove('open')));
+  }
+
+  // Command palette
+  const cmdOverlay = document.getElementById('cmdOverlay');
+  const cmdInput = document.getElementById('cmdInput');
+  const cmdList = document.getElementById('cmdList');
+  const openCmdBtn = document.getElementById('openCmdBtn');
+  const closeCmdBtn = document.getElementById('closeCmd');
+
+  function renderCmd(q) {
+    const qn = (q||'').trim().toLowerCase();
+    const norm = s => (s||'').replace(/[\u064B-\u065F\u0670\u0640]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي');
+    const qNorm = norm(qn);
+    const sMatches = surahs.filter(s => !qNorm || norm(s.name).includes(qNorm) || String(s.n) === q.trim()).slice(0,12);
+    const jMatches = juzParts.filter(p => !qNorm || norm(p.name).includes(qNorm));
+    const items = [
+      ...sMatches.map(s => ({ title: `سورة ${s.name} (${s.n})`, sub: `${s.type} • ${s.ayat} آية`, run: () => { closeCmd(); openModal(s); } })),
+      ...jMatches.map(p => ({ title: p.name, sub: `${p.kicker} • ${p.range}`, run: () => { closeCmd(); openModal(p); } }))
+    ];
+    cmdList.innerHTML = items.length
+      ? items.map((it,i) => `<button type="button" class="cmd-row" data-ci="${i}"><span>${it.title}</span><small>${it.sub}</small></button>`).join('')
+      : `<div style="padding:1.4rem;text-align:center;color:var(--muted);font-size:.84rem">لا توجد نتائج مطابقة</div>`;
+    cmdList._runs = items.map(it => it.run);
+  }
+  function openCmd() { cmdOverlay.style.display = 'flex'; cmdInput.value = ''; renderCmd(''); setTimeout(() => cmdInput.focus(), 40); }
+  function closeCmd() { cmdOverlay.style.display = 'none'; }
+  if (openCmdBtn) openCmdBtn.addEventListener('click', openCmd);
+  if (closeCmdBtn) closeCmdBtn.addEventListener('click', closeCmd);
+  if (cmdOverlay) cmdOverlay.addEventListener('click', e => { if (e.target === cmdOverlay) closeCmd(); });
+  if (cmdInput) cmdInput.addEventListener('input', e => renderCmd(e.target.value));
+  if (cmdList) cmdList.addEventListener('click', e => {
+    const row = e.target.closest('[data-ci]');
+    const runs = cmdList._runs;
+    if (row && runs) runs[Number(row.dataset.ci)]?.();
+  });
+
+  // Queue drawer
+  const queueOverlay = document.getElementById('queueOverlay');
+  const queueItems = document.getElementById('queueItems');
+  const openQueueBtn = document.getElementById('openQueueBtn');
+  const closeQueueBtn = document.getElementById('closeQueue');
+  const clearQueueBtn = document.getElementById('clearQueue');
+  const qBadge = document.getElementById('qBadge');
+
+  function renderQueueDrawer() {
+    if (qBadge) {
+      qBadge.textContent = playQueue.length;
+      qBadge.style.display = playQueue.length > 0 ? 'grid' : 'none';
+    }
+    if (!queueItems) return;
+    if (!playQueue.length) {
+      queueItems.innerHTML = `<div style="text-align:center;padding:1.6rem 1rem;color:var(--muted);font-size:.84rem">القائمة فارغة — اضغط (+) على أي سورة لإضافتها.</div>`;
+      return;
+    }
+    queueItems.innerHTML = playQueue.map((n,i) => {
+      const s = surahByNumber.get(n);
+      return `<div class="queue-item">
+        <div><strong style="font-family:'Amiri',serif;font-size:1.05rem;color:var(--text)">${s ? 'سورة '+s.name : n}</strong><div style="font-size:.72rem;color:var(--muted)">${s ? s.type+' • '+s.ayat+' آية' : ''}</div></div>
+        <div style="display:flex;gap:.25rem">
+          <button type="button" class="mini-btn" data-qplay="${i}" style="background:transparent;border:1px solid rgba(201,168,76,0.2);color:var(--gold);width:30px;height:30px;border-radius:8px;cursor:pointer">▶</button>
+          <button type="button" class="mini-btn" data-qdel="${i}" style="background:transparent;border:1px solid rgba(201,168,76,0.2);color:var(--muted);width:30px;height:30px;border-radius:8px;cursor:pointer">✕</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  window.renderQueueDrawer = renderQueueDrawer;
+
+  if (openQueueBtn) openQueueBtn.addEventListener('click', () => { queueOverlay.style.display = 'flex'; renderQueueDrawer(); });
+  if (closeQueueBtn) closeQueueBtn.addEventListener('click', () => { queueOverlay.style.display = 'none'; });
+  if (queueOverlay) queueOverlay.addEventListener('click', e => { if (e.target === queueOverlay) queueOverlay.style.display = 'none'; });
+  if (clearQueueBtn) clearQueueBtn.addEventListener('click', () => { playQueue = []; window.playQueue = playQueue; renderQueueDrawer(); showToast('تم مسح القائمة'); });
+  if (queueItems) queueItems.addEventListener('click', e => {
+    const p = e.target.closest('[data-qplay]');
+    if (p) { const n = playQueue.splice(Number(p.dataset.qplay),1)[0]; window.playQueue = playQueue; renderQueueDrawer(); playSurahAudio(n); return; }
+    const d = e.target.closest('[data-qdel]');
+    if (d) { playQueue.splice(Number(d.dataset.qdel),1); window.playQueue = playQueue; renderQueueDrawer(); }
+  });
+
+  // Queue consumption handled in main ended handler above.
+
+  // Repeat mode button
+  const spRepeatBtn = document.getElementById('spRepeatBtn');
+  const repeatIcons = { continuous: '🔁', one: '🔂', shuffle: '🔀' };
+  const repeatNames = { continuous: 'تشغيل متواصل', one: 'تكرار السورة', shuffle: 'تشغيل عشوائي' };
+  if (spRepeatBtn) {
+    spRepeatBtn.addEventListener('click', () => {
+      const order = ['continuous','one','shuffle'];
+      repeatMode = order[(order.indexOf(repeatMode)+1)%order.length];
+      window.repeatMode = repeatMode;
+      spRepeatBtn.textContent = repeatIcons[repeatMode];
+      spRepeatBtn.title = 'التشغيل: ' + repeatNames[repeatMode];
+      showToast('الوضع: ' + repeatNames[repeatMode]);
+    });
+  }
+  // Apply repeat on ended: hook
+  globalAudio.addEventListener('ended', () => {
+    if (repeatMode === 'one' && currentPlayingItem) {
+      globalAudio.currentTime = 0;
+      globalAudio.play().catch(()=>{});
+    } else if (repeatMode === 'shuffle' && currentPlayingSurah) {
+      playSurahAudio(Math.floor(Math.random()*114)+1);
+    }
+  });
+
+  // Resume bar + lastPlay tracking
+  const resumeBar = document.getElementById('resumeBar');
+  const resumeText = document.getElementById('resumeText');
+  const resumeBtn = document.getElementById('resumeBtn');
+
+  function renderResume() {
+    if (!resumeBar) return;
+    let last = null;
+    try { last = JSON.parse(localStorage.getItem('tq_last') || 'null'); } catch(_) {}
+    if (!last) { resumeBar.style.display = 'none'; return; }
+    const label = last.kind === 'juz'
+      ? (juzParts.find(p=>p.id===last.id)?.name || '')
+      : (surahByNumber.has(Number(last.id)) ? `سورة ${surahByNumber.get(Number(last.id)).name}` : '');
+    if (!label) { resumeBar.style.display = 'none'; return; }
+    resumeBar.style.display = 'flex';
+    resumeText.textContent = `${label} • ${fmtTime(last.time||0)}`;
+    resumeBar._last = last;
+  }
+
+  if (resumeBtn) resumeBtn.addEventListener('click', () => {
+    const last = resumeBar._last;
+    if (!last) return;
+    const item = last.kind === 'juz' ? juzParts.find(p=>p.id===last.id) : surahByNumber.get(Number(last.id));
+    if (item) {
+      if (item.kind === 'juz' || !item.hasMp3) { /* juz */ }
+      playSurahOrJuz(item, last.time || 0);
+    }
+  });
+
+  function playSurahOrJuz(item, startAt) {
+    if (item.kind === 'juz') playJuzAudio(item.id); else playSurahAudio(item.n);
+    if (startAt > 0) {
+      const seek = () => {
+        if (isFinite(globalAudio.duration) && startAt < globalAudio.duration - 2) globalAudio.currentTime = startAt;
+        globalAudio.removeEventListener('loadedmetadata', seek);
+      };
+      globalAudio.addEventListener('loadedmetadata', seek);
+    }
+  }
+
+  // Save last play on timeupdate
+  let saveTick = 0;
+  globalAudio.addEventListener('timeupdate', () => {
+    if (!currentPlayingItem) return;
+    const now = Date.now();
+    if (now - saveTick < 4000) return;
+    saveTick = now;
+    const last = { kind: currentPlayingItem.kind === 'juz' ? 'juz' : 'surah', id: currentPlayingItem.kind === 'juz' ? currentPlayingItem.id : currentPlayingItem.n, time: Math.floor(globalAudio.currentTime) };
+    try { localStorage.setItem('tq_last', JSON.stringify(last)); } catch(_) {}
+    renderResume();
+  });
+
+  // Quick play
+  let quickPickN = 18;
+  const qpTitle = document.getElementById('qpTitle');
+  const qpSub = document.getElementById('qpSub');
+  const qpPlayBtn = document.getElementById('qpPlayBtn');
+  const qpOpenBtn = document.getElementById('qpOpenBtn');
+  const shufflePickBtn = document.getElementById('shufflePickBtn');
+
+  function renderQuickPick(n) {
+    const s = surahByNumber.get(n) || surahByNumber.get(18);
+    quickPickN = s.n;
+    if (qpTitle) qpTitle.textContent = `سورة ${s.name}`;
+    if (qpSub) qpSub.textContent = `سورة رقم ${s.n} • ${s.type} • ${s.ayat} آية`;
+  }
+  if (shufflePickBtn) shufflePickBtn.addEventListener('click', () => renderQuickPick(Math.floor(Math.random()*114)+1));
+  if (qpPlayBtn) qpPlayBtn.addEventListener('click', () => playSurahAudio(quickPickN));
+  if (qpOpenBtn) qpOpenBtn.addEventListener('click', () => openModal(surahByNumber.get(quickPickN)));
+  renderQuickPick(18);
+
+  // Sort + view
+  const sortSelect = document.getElementById('sortSelect');
+  const viewBtns = document.querySelectorAll('.view-btn');
+
+  function applySortAndView() {
+    const grid = document.getElementById('surahsGrid');
+    if (!grid) return;
+    // sort cards in DOM
+    const cards = Array.from(grid.querySelectorAll('.surah-card'));
+    if (surahSort !== 'order') {
+      cards.sort((a,b) => {
+        const sa = surahByNumber.get(Number(a.dataset.n));
+        const sb = surahByNumber.get(Number(b.dataset.n));
+        if (surahSort === 'short') return sa.ayat - sb.ayat;
+        if (surahSort === 'long') return sb.ayat - sa.ayat;
+        if (surahSort === 'alpha') return sa.name.localeCompare(sb.name, 'ar');
+        return sa.n - sb.n;
+      });
+    } else {
+      cards.sort((a,b) => Number(a.dataset.n) - Number(b.dataset.n));
+    }
+    cards.forEach(c => grid.appendChild(c));
+    grid.classList.toggle('list', surahView === 'list');
+  }
+
+  if (sortSelect) sortSelect.addEventListener('change', e => { surahSort = e.target.value; applySortAndView(); });
+  viewBtns.forEach(b => b.addEventListener('click', () => {
+    surahView = b.dataset.view;
+    viewBtns.forEach(x => x.classList.toggle('active', x === b));
+    applySortAndView();
+  }));
+
+  // Hook filterSurahs to also apply sort/view after filter
+  const _origFilter = window.filterSurahs;
+  // filterSurahs is global function; wrap
+  if (typeof filterSurahs === 'function') {
+    const base = filterSurahs;
+    window.filterSurahs = function() {
+      base();
+      applySortAndView();
+    };
+    // also replace global reference used by inline onclick? onclick calls filterSurahs() global; reassign global
+    filterSurahs = window.filterSurahs;
+  }
+
+  // Keyboard shortcut Ctrl+K
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      openCmd();
+    }
+  });
+
+  // Mobile menu CSS display toggle already.
+
+  // Init
+  renderResume();
+  renderQueueDrawer();
+  applySortAndView();
 })();
 </script>
 </body>
